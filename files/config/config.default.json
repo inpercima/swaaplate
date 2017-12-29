@@ -1,0 +1,10 @@
+{
+  "appname": "",
+  "theme": "",
+  "activateLogin": true,
+  "routes": {
+    "showLogin": true,
+    "showFeatures": true,
+    "defaultRoute": ""
+  }
+}

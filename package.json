@@ -1,0 +1,20 @@
+{
+  "author": "Marcel Jänicke",
+  "contributors": [
+    {
+      "name": "Marcel Jänicke",
+      "email": "inpercima@gmail.com"
+    }
+  ],
+  "description": "[s]imple [w]eb [a]pp [a]ngular tem[plate]",
+  "devDependencies": {
+    "colors": "1.1.2",
+    "replace": "0.3.0",
+    "shelljs": "0.7.8"
+  },
+  "engines": {
+    "node": ">=6.9.0"
+  },
+  "name": "swaaplate",
+  "version": "1.0.0-SNAPSHOT"
+}
