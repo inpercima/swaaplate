@@ -14,10 +14,10 @@ export class AuthService {
   // store the URL so we can redirect after logging in
   public redirectUrl: string;
 
-  constructor(private http: HttpClient, private formService: FormService) { }
+  constructor(private formService: FormService, private http: HttpClient) { }
 
   public login(formGroup: FormGroup): Observable<boolean> {
-    return this.http.post<boolean>('./auth.handler.php?authenticate', this.formService.createBody(formGroup), this.formService.createHeader()).map(
+    return this.http.post<boolean>('PROJECTDATA_AUTHENTICATEURL', this.formService.createBody(formGroup), this.formService.createHeader()).map(
       response => this.isAuthenticated = response
     );
   }

@@ -1,6 +1,7 @@
 'use strict';
 
 /* requirements */
+const os = require('os');
 const replace = require('replace');
 const shjs = require('shelljs');
 const sTools = require('./swaaplate-tools');
@@ -20,6 +21,7 @@ function init() {
   const packageJsonData = updatePackageJsonData(projectDir, packageJson, swaaplateJsonData.projectData);
   replaceData(projectDir, packageJsonData, swaaplateJsonData.projectData);
   updateConfigJsonData(projectDir, swaaplateJsonData.projectData);
+  doExtendedServices(swaaplateJsonData.projectData.serverComponent);
 }
 
 function createAndCopyProject(projectDir, outputDir, projectName) {
@@ -52,10 +54,10 @@ function updateConfigJsonData(projectDir, projectData) {
   const config = 'config/config.json';
   sTools.infoLog(`update ${projectDir}/${configDefault}`);
   const configJsonData = sTools.readJson(configDefault);
-  configJsonData.appname = projectData.name;
-  configJsonData.theme = projectData.config.theme;
   configJsonData.activateLogin = projectData.config.activateLogin;
+  configJsonData.appname = projectData.name;
   configJsonData.routes = projectData.config.routes;
+  configJsonData.theme = projectData.config.theme;
   sTools.writeJson(configDefault, configJsonData);
   sTools.infoLog(`create ${projectDir}/${config}`);
   shjs.cp(configDefault, config);
@@ -72,15 +74,26 @@ function replaceData(projectDir, packageJsonData, projectData) {
   const name = packageJsonData.name;
   let cloneUrl = `https://anyurl/${name}`;
   let description = '';
-  if (projectData.github.existsAccount) {
+  if (projectData.github.useAccount) {
     const username = projectData.github.username;
     description = `[![dependencies Status](https://david-dm.org/${username}/${name}/status.svg)](https://david-dm.org/${username}/${name})`;
-    description += `\n[![dependencies Status](https://david-dm.org/${username}/${name}/dev-status.svg)](https://david-dm.org/${username}/${name}?type=dev)\n`;
+    description += `${os.EOL}[![dependencies Status](https://david-dm.org/${username}/${name}/dev-status.svg)](https://david-dm.org/${username}/${name}?type=dev)${os.EOL}`;
     cloneUrl = `https://github.com/${username}/${name}`;
   }
-  description += '\n' + packageJsonData.description;
+  description += os.EOL + packageJsonData.description;
   replace({ regex: 'PROJECTDATA_CLONEURL', replacement: cloneUrl, paths: ['README.md'], silent: true });
   replace({ regex: 'PROJECTDATA_COMPONENTSHORT', replacement: projectData.componentShort, paths: ['client/index.html', 'client/app/components/'], silent: true, recursive: true });
   replace({ regex: 'PROJECTDATA_DESCRIPTION', replacement: description, paths: ['README.md'], silent: true });
   replace({ regex: 'PROJECTDATA_NAME', replacement: name, paths: ['README.md'], silent: true });
+}
+
+function doExtendedServices(serverComponent) {
+  const useServer = serverComponent.useServer;
+  if (useServer) {
+    sTools.infoLog('create server component');
+    shjs.mkdir('server');
+  }
+  replace({ regex: 'PROJECTDATA_AUTHENTICATEURL', replacement: useServer ? serverComponent.authenticateUrl : '', paths: ['client/app/services/auth.service.ts'], silent: true });
+  const fromServer = `${os.EOL}      {${os.EOL}        from: './src/server',${os.EOL}      },`;
+  replace({ regex: 'PROJECTDATA_SERVER', replacement: useServer ? fromServer : '', paths: ['webpack.common.js'], silent: true });
 }

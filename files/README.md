@@ -34,13 +34,13 @@ yarn
 npm/yarn run build:server
 http://localhost:8080/
 
-# build resources in devMode without devSever
+# build resources in devMode, used with own server component
 npm/yarn run build:dev
 
-# build resources in devMode without devSever, watch changes and rebuild
+# build resources in devMode, used with own server component, watch changes and rebuild
 npm/yarn run build:watch
 
-# build resources in prodMode
+# build resources in prodMode, used with own server component, compressed
 npm/yarn run build:prod
 ```
 

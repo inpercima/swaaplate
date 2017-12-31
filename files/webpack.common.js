@@ -65,7 +65,7 @@ module.exports = {
     new CopyWebpackPlugin([
       {
         from: './config/config.json',
-      },
+      },PROJECTDATA_SERVER
     ]),
     // tell angular the theme from material build-in themes
     new webpack.DefinePlugin({

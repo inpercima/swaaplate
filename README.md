@@ -11,7 +11,7 @@ A very simple own template on which for example [publicmedia](https://github.com
 * npm 5.3 or higher
 * yarn 1.0.1 or higher
 
-# Simple usage
+# Usage
 
 ```
 # clone project

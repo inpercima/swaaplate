@@ -16,12 +16,16 @@
     "contributorEmail": "inpercima@gmail.com",
     "description": "publicmedia",
     "github": {
-      "existsAccount": true,
+      "useAccount": true,
       "username": "inpercima"
     },
     "homepage": "http://publicmedia.inpercima.net",
     "name": "publicmedia2",
-    "repository": "https://github.com/inpercima/publicmedia.git"
+    "repository": "https://github.com/inpercima/publicmedia.git",
+    "serverComponent": {
+      "useServer": false,
+      "authenticateUrl": "./auth.handler.php?authenticate"
+    }
   },
   "workData": {
     "outputDir": "/home/marcel/dev/workspace-github/"
