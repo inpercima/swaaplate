@@ -10,7 +10,8 @@
   "devDependencies": {
     "colors": "1.1.2",
     "replace": "0.3.0",
-    "shelljs": "0.7.8"
+    "shelljs": "0.7.8",
+    "uppercamelcase": "3.0.0"
   },
   "engines": {
     "node": ">=6.9.0"

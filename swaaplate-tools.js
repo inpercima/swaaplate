@@ -33,5 +33,8 @@ module.exports = {
   },
   writeJson: function(filename, data) {
     fs.writeFileSync(filename, JSON.stringify(data, null, 2));
+  },
+  writeFile: function(filename, data) {
+    fs.writeFileSync(filename, data);
   }
 }

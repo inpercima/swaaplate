@@ -5,11 +5,11 @@ import { NgModule } from '@angular/core';
 import { FeaturesRoutingModule } from './features-routing.module';
 import { MaterialModule } from '../material/material.module';
 
-import { HomeComponent } from '../../components/home/home.component';
+import { PROJECTDATA_DEFAULTCOMPONENT } from '../../components/PROJECTDATA_DEFAULTROUTE/PROJECTDATA_DEFAULTROUTE.component';
 
 @NgModule({
   declarations: [
-    HomeComponent,
+    PROJECTDATA_DEFAULTCOMPONENT,
   ],
   imports: [
     CommonModule,

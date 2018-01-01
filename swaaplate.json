@@ -6,9 +6,9 @@
       "theme": "indigo-pink",
       "activateLogin": true,
       "routes": {
-        "showLogin": true,
+        "showLogin": false,
         "showFeatures": true,
-        "defaultRoute": "home"
+        "defaultRoute": "last-post"
       }
     },
     "componentShort": "pm",
@@ -23,7 +23,8 @@
     "name": "publicmedia2",
     "repository": "https://github.com/inpercima/publicmedia.git",
     "serverComponent": {
-      "useServer": false,
+      "useSimpleServer": true,
+      "useSpringBoot": false,
       "authenticateUrl": "./auth.handler.php?authenticate"
     }
   },

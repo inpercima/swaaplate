@@ -3,11 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from '../../services/auth-guard.service';
 
-import { HomeComponent } from '../../components/home/home.component';
+import { PROJECTDATA_DEFAULTCOMPONENT } from '../../components/PROJECTDATA_DEFAULTROUTE/PROJECTDATA_DEFAULTROUTE.component';
 
 const routes: Routes = [{
-  component: HomeComponent,
-  path: 'home',
+  component: PROJECTDATA_DEFAULTCOMPONENT,
+  path: 'PROJECTDATA_DEFAULTROUTE',
   canActivate: [AuthGuard],
 }];
 

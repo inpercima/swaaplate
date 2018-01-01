@@ -1,6 +1,7 @@
 'use strict';
 
 /* requirements */
+const uppercamelcase = require('uppercamelcase');
 const os = require('os');
 const replace = require('replace');
 const shjs = require('shelljs');
@@ -18,6 +19,7 @@ function init() {
   const projectDir = outputDir + projectName;
   const packageJson = 'package.json';
   createAndCopyProject(projectDir, outputDir, projectName);
+  createComponents(swaaplateJsonData.projectData);
   const packageJsonData = updatePackageJsonData(projectDir, packageJson, swaaplateJsonData.projectData);
   replaceData(projectDir, packageJsonData, swaaplateJsonData.projectData);
   updateConfigJsonData(projectDir, swaaplateJsonData.projectData);
@@ -33,6 +35,25 @@ function createAndCopyProject(projectDir, outputDir, projectName) {
   shjs.cp('swaaplate-update.js', projectDir);
   shjs.cp('swaaplate-update.json', projectDir);
   shjs.cd(projectDir);
+}
+
+function createComponents(projectData) {
+  createComponent(projectData, 'page-not-found');
+  createComponent(projectData, projectData.config.routes.defaultRoute);
+}
+
+function createComponent(projectData, filename) {
+  const className = uppercamelcase(filename);
+  sTools.infoLog(`create component ${className}`);
+  const compImport = `import { Component } from '@angular/core'${os.EOL}${os.EOL}`;
+  const compAnnotation = `@Component({${os.EOL}  selector: '${projectData.componentShort}-${filename}',${os.EOL}  templateUrl: './${filename}.component.html',${os.EOL}})${os.EOL}`;
+  const compExport = `export class ${className}Component { }`;
+  const path = `client/app/components/${filename}`;
+  const file = `${path}/${filename}.component`;
+  shjs.mkdir('-p', path);
+  shjs.touch(`${file}.ts`);
+  sTools.writeFile(`${file}.ts`, compImport + compAnnotation + compExport);
+  shjs.touch(`${file}.html`);
 }
 
 function updatePackageJsonData(projectDir, packageJson, projectData) {
@@ -82,18 +103,28 @@ function replaceData(projectDir, packageJsonData, projectData) {
   }
   description += os.EOL + packageJsonData.description;
   replace({ regex: 'PROJECTDATA_CLONEURL', replacement: cloneUrl, paths: ['README.md'], silent: true });
-  replace({ regex: 'PROJECTDATA_COMPONENTSHORT', replacement: projectData.componentShort, paths: ['client/index.html', 'client/app/components/'], silent: true, recursive: true });
+  replace({ regex: 'PROJECTDATA_COMPONENTSHORT', replacement: projectData.componentShort, paths: [
+    'client/index.html',
+    'client/app/components/'
+  ], silent: true, recursive: true });
   replace({ regex: 'PROJECTDATA_DESCRIPTION', replacement: description, paths: ['README.md'], silent: true });
   replace({ regex: 'PROJECTDATA_NAME', replacement: name, paths: ['README.md'], silent: true });
+  replace({ regex: 'PROJECTDATA_DEFAULTROUTE', replacement: projectData.config.routes.defaultRoute, paths: ['client/app/modules/'], silent: true, recursive: true });
+  const className = `${uppercamelcase(projectData.config.routes.defaultRoute)}Component`;
+  replace({ regex: 'PROJECTDATA_DEFAULTCOMPONENT', replacement: className, paths: ['client/app/modules/features/'], silent: true, recursive: true });
 }
 
 function doExtendedServices(serverComponent) {
-  const useServer = serverComponent.useServer;
-  if (useServer) {
-    sTools.infoLog('create server component');
+  const useSimpleServer = serverComponent.useSimpleServer;
+  const useSpringBoot = serverComponent.useSpringBoot;
+  if (useSimpleServer) {
+    sTools.infoLog('create simple server component');
     shjs.mkdir('server');
   }
-  replace({ regex: 'PROJECTDATA_AUTHENTICATEURL', replacement: useServer ? serverComponent.authenticateUrl : '', paths: ['client/app/services/auth.service.ts'], silent: true });
-  const fromServer = `${os.EOL}      {${os.EOL}        from: './src/server',${os.EOL}      },`;
-  replace({ regex: 'PROJECTDATA_SERVER', replacement: useServer ? fromServer : '', paths: ['webpack.common.js'], silent: true });
+  replace({ regex: 'PROJECTDATA_AUTHENTICATEURL', replacement: useSimpleServer ? serverComponent.authenticateUrl : '', paths: ['client/app/services/auth.service.ts'], silent: true });
+  const fromServer = `${os.EOL}      {${os.EOL}        from: './server',${os.EOL}      },`;
+  replace({ regex: 'PROJECTDATA_SERVER', replacement: useSimpleServer ? fromServer : '', paths: ['webpack.common.js'], silent: true });
+  if (useSpringBoot) {
+    // TODO: next steps
+  }
 }
