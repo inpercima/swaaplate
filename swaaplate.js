@@ -18,21 +18,36 @@ function init() {
   const projectName = swaaplateJsonData.projectData.name;
   const projectDir = outputDir + projectName;
   const packageJson = 'package.json';
-  createAndCopyProject(projectDir, outputDir, projectName);
+  createAndCopyProject(projectDir, outputDir, projectName, swaaplateJsonData.projectData.serverComponent.springBoot);
   createComponents(swaaplateJsonData.projectData);
   const packageJsonData = updatePackageJsonData(projectDir, packageJson, swaaplateJsonData.projectData);
   replaceData(projectDir, packageJsonData, swaaplateJsonData.projectData);
   updateConfigJsonData(projectDir, swaaplateJsonData.projectData);
-  doExtendedServices(swaaplateJsonData.projectData.serverComponent);
+  doExtendedServices(swaaplateJsonData.projectData);
 }
 
-function createAndCopyProject(projectDir, outputDir, projectName) {
+function createAndCopyProject(projectDir, outputDir, projectName, springBoot) {
   sTools.infoLog(`create project '${projectName}' in '${outputDir}'`);
   shjs.mkdir('-p', projectDir);
   shjs.cp('-r', 'files/*', projectDir);
   shjs.cp('files/.*', projectDir);
   shjs.cp('swaaplate-*.js*', projectDir);
   shjs.cp('swaaplate.json', `${projectDir}/swaaplate-recovery.json`);
+  if (springBoot.use) {
+    shjs.cp('springBoot/pom.xml', projectDir);
+    const srcMain = 'src/main/';
+    const srcTest = 'src/test/';
+    const javaPath = `java/${springBoot.packagePath}`;
+    const srcMainJavaPath = `${projectDir}/${srcMain}${javaPath}`;
+    const srcMainResources = `${projectDir}/${srcMain}resources`;
+    shjs.mkdir('-p', srcMainJavaPath);
+    shjs.cp('springBoot/Application.java', srcMainJavaPath);
+    shjs.mkdir('-p', srcMainResources);
+    shjs.cp('springBoot/logback.xml', srcMainResources);
+    shjs.cp('springBoot/application.properties', srcMainResources);
+    shjs.mkdir('-p', `${projectDir}/${srcTest}${javaPath}`);
+    shjs.mkdir('-p', `${projectDir}/${srcTest}resources/`);
+  }
   shjs.cd(projectDir);
 }
 
@@ -100,7 +115,7 @@ function replaceData(projectDir, packageJsonData, projectData) {
   if (projectData.github.useAccount) {
     const username = projectData.github.username;
     description = `[![dependencies Status](https://david-dm.org/${username}/${name}/status.svg)](https://david-dm.org/${username}/${name})`;
-    description += `${os.EOL}[![dependencies Status](https://david-dm.org/${username}/${name}/dev-status.svg)](https://david-dm.org/${username}/${name}?type=dev)${os.EOL}`;
+    description += `${os.EOL}[![devDependencies Status](https://david-dm.org/${username}/${name}/dev-status.svg)](https://david-dm.org/${username}/${name}?type=dev)${os.EOL}`;
     cloneUrl = `https://github.com/${username}/${name}`;
   }
   description += os.EOL + packageJsonData.description;
@@ -117,17 +132,21 @@ function replaceData(projectDir, packageJsonData, projectData) {
   replace({ regex: 'PROJECTDATA_DEFAULTCOMPONENT', replacement: className, paths: ['client/app/modules/features/'], silent: true, recursive: true });
 }
 
-function doExtendedServices(serverComponent) {
-  const useSimpleServer = serverComponent.useSimpleServer;
-  const useSpringBoot = serverComponent.useSpringBoot;
+function doExtendedServices(projectData) {
+  const useSimpleServer = projectData.serverComponent.useSimpleServer;
+  const useSpringBoot = projectData.serverComponent.springBoot.use;
   if (useSimpleServer) {
     sTools.infoLog('create simple server component');
     shjs.mkdir('server');
   }
-  replace({ regex: 'PROJECTDATA_AUTHENTICATEURL', replacement: useSimpleServer ? serverComponent.authenticateUrl : '', paths: ['client/app/services/auth.service.ts'], silent: true });
+  replace({ regex: 'PROJECTDATA_AUTHENTICATEURL', replacement: useSimpleServer ? projectData.serverComponent.authenticateUrl : '', paths: ['client/app/services/auth.service.ts'], silent: true });
   const fromServer = `${os.EOL}      {${os.EOL}        from: './server',${os.EOL}      },`;
   replace({ regex: 'PROJECTDATA_SERVER', replacement: useSimpleServer ? fromServer : '', paths: ['webpack.common.js'], silent: true });
   if (useSpringBoot) {
-    // TODO: next steps
+    replace({ regex: 'PROJECTDATA_AUTHOR', replacement: projectData.author, paths: ['src/'], silent: true, recursive: true });
+    replace({ regex: 'PROJECTDATA_BUILDDIR', replacement: projectData.buildDir, paths: ['pom.xml', 'src/'], silent: true, recursive: true });
+    replace({ regex: 'PROJECTDATA_DESCRIPTION', replacement: projectData.description, paths: ['pom.xml', 'src/'], silent: true, recursive: true });
+    replace({ regex: 'PROJECTDATA_NAME', replacement: projectData.name, paths: ['pom.xml', 'src/'], silent: true, recursive: true });
+    replace({ regex: 'PROJECTDATA_PACKAGEPATH', replacement: projectData.serverComponent.springBoot.packagePath, paths: ['pom.xml', 'src/'], silent: true, recursive: true });
   }
 }

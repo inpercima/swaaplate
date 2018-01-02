@@ -25,7 +25,10 @@
     "serverComponent": {
       "authenticateUrl": "",
       "useSimpleServer": false,
-      "useSpringBoot": false
+      "springBoot": {
+        "packagePath": "",
+        "use": false
+      }
     }
   },
   "workData": {

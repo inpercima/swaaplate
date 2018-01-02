@@ -60,7 +60,8 @@ The options in `config` will be copied in `config.json` and can be changed later
 | repository | String | EMPTY | the repository of the project |
 | serverComponent/authenticateUrl | String | EMPTY | if one of the server component will be used, this address will be used for authentication |
 | serverComponent/useSimpleServer | Boolean | false | define that a simple server component should be used (`true`/`false`) |
-| serverComponent/useSpringBoot | Boolean | false | define that spring-boot should be used (`true`/`false`) |
+| serverComponent/springBoot/use | Boolean | false | define that spring-boot should be used (`true`/`false`) |
+| serverComponent/springBoot/packagePath | String | EMPTY | the package structure |
 
 ## WorkData
 | Name | Type | Default | Description |
