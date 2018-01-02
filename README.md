@@ -58,7 +58,11 @@ The options in `config` will be copied in `config.json` and can be changed later
 | homepage | String | EMPTY | the website of the project |
 | name | String | helloWorld | the projectname, this will be copied in `config.json` as `appname` |
 | repository | String | EMPTY | the repository of the project |
-| serverComponent/ | String | EMPTY | the username of the github account |
 | serverComponent/authenticateUrl | String | EMPTY | if one of the server component will be used, this address will be used for authentication |
 | serverComponent/useSimpleServer | Boolean | false | define that a simple server component should be used (`true`/`false`) |
 | serverComponent/useSpringBoot | Boolean | false | define that spring-boot should be used (`true`/`false`) |
+
+## WorkData
+| Name | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| outputDir | String | /path/to/workspace/ | path to the main directory of the project |

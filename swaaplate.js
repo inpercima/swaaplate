@@ -31,9 +31,8 @@ function createAndCopyProject(projectDir, outputDir, projectName) {
   shjs.mkdir('-p', projectDir);
   shjs.cp('-r', 'files/*', projectDir);
   shjs.cp('files/.*', projectDir);
-  shjs.cp('swaaplate-tools.js', projectDir);
-  shjs.cp('swaaplate-update.js', projectDir);
-  shjs.cp('swaaplate-update.json', projectDir);
+  shjs.cp('swaaplate-*.js*', projectDir);
+  shjs.cp('swaaplate.json', `${projectDir}/swaaplate-recovery.json`);
   shjs.cd(projectDir);
 }
 
@@ -86,7 +85,10 @@ function updateConfigJsonData(projectDir, projectData) {
 
 function replaceData(projectDir, packageJsonData, projectData) {
   sTools.infoLog(`update files in '${projectDir}' with project data`);
-  replace({ regex: 'PROJECTDATA_AUTHOR', replacement: packageJsonData.author, paths: ['LICENSE.md'], silent: true });
+  replace({ regex: 'PROJECTDATA_AUTHOR', replacement: packageJsonData.author, paths: [
+    'LICENSE.md',
+    'client/app/components/app/app.component.css'
+  ], silent: true });
   replace({ regex: 'PROJECTDATA_BUILDDIR', replacement: projectData.buildDir, paths: [
     'webpack.common.js',
     'config/webpack.dev.js',
