@@ -18,6 +18,9 @@ A very simple own template on which for example [publicmedia](https://github.com
 git clone https://github.com/inpercima/swaaplate
 cd swaaplate
 
+# copy swaaplate.default.json to swaaplate.json
+cp swaaplate.default.json swaaplate.json
+
 # install tools manually via npm or yarn
 # npm
 npm install
