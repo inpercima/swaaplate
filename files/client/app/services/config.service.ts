@@ -5,49 +5,49 @@ import * as config from '../../../config/config.json';
 @Injectable()
 export class ConfigService {
 
-  private appname: string;
-
-  private theme: string;
-
   private activateLogin: boolean;
 
-  private showLogin: boolean;
-
-  private showFeatures: boolean;
+  private appname: string;
 
   private defaultRoute: string;
 
+  private showFeatures: boolean;
+
+  private showLogin: boolean;
+
+  private theme: string;
+
   constructor() {
-    this.appname = (<any>config).appname;
-    this.theme = (<any>config).theme;
     this.activateLogin = (<any>config).activateLogin;
-    this.showLogin = (<any>config).routes.showLogin;
-    this.showFeatures = (<any>config).routes.showFeatures;
+    this.appname = (<any>config).appname;
     this.defaultRoute = (<any>config).routes.defaultRoute;
-  }
-
-  public getAppname() {
-    return this.appname;
-  }
-
-  public getTheme() {
-    return this.theme;
+    this.showFeatures = (<any>config).routes.showFeatures;
+    this.showLogin = (<any>config).routes.showLogin;
+    this.theme = (<any>config).theme;
   }
 
   public isActivateLogin() {
     return this.activateLogin;
   }
 
-  public isShowLogin() {
-    return this.showLogin;
+  public getAppname() {
+    return this.appname;
+  }
+
+  public getDefaultRoute() {
+    return this.defaultRoute;
   }
 
   public isShowFeatures() {
     return this.showFeatures;
   }
 
-  public getDefaultRoute() {
-    return this.defaultRoute;
+  public isShowLogin() {
+    return this.showLogin;
+  }
+
+  public getTheme() {
+    return this.theme;
   }
 
 }

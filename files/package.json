@@ -58,7 +58,7 @@
     "build:prod": "webpack --config config/webpack.prod.js --progress",
     "build:server": "webpack-dev-server --config config/webpack.dev.js --progress --open",
     "build:watch": "webpack --config config/webpack.dev.js --watch --progress",
-    "lint": "node_modules/tslint/bin/tslint --config tslint.json 'client/**/*.ts'"
+    "lint": "node_modules/tslint/bin/tslint --type-check --project tsconfig.json --config tslint.json 'client/**/*.ts'"
   },
   "version": "1.0.0-SNAPSHOT"
 }

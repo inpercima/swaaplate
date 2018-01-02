@@ -48,7 +48,7 @@ npm/yarn run build:prod
 | Name | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | appname | String | helloWorld | applicationwide title of the app, displayed in title and toolbar |
-| routes/activateLogin | Boolean | true | define that a login page should be used (`true`/`false`) |
+| activateLogin | Boolean | true | define that a login page should be used (`true`/`false`) |
 | routes/defaultRoute | String | home | the default route after login if no route is stored |
 | routes/showFeatures | Boolean | true | define that the feature routes should be displayed in the navigation (`true`/`false`) |
 | routes/showLogin | Boolean | false | define that the login route should be displayed in the navigation (`true`/`false`), works in combination with `activateLogin`, the login route will be displayed only if both options set to `true` |

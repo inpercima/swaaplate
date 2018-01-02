@@ -45,9 +45,9 @@ function createComponents(projectData) {
 function createComponent(projectData, filename) {
   const className = uppercamelcase(filename);
   sTools.infoLog(`create component ${className}`);
-  const compImport = `import { Component } from '@angular/core'${os.EOL}${os.EOL}`;
+  const compImport = `import { Component } from '@angular/core';${os.EOL}${os.EOL}`;
   const compAnnotation = `@Component({${os.EOL}  selector: '${projectData.componentShort}-${filename}',${os.EOL}  templateUrl: './${filename}.component.html',${os.EOL}})${os.EOL}`;
-  const compExport = `export class ${className}Component { }`;
+  const compExport = `export class ${className}Component { }${os.EOL}`;
   const path = `client/app/components/${filename}`;
   const file = `${path}/${filename}.component`;
   shjs.mkdir('-p', path);
@@ -103,7 +103,8 @@ function replaceData(projectDir, packageJsonData, projectData) {
   }
   description += os.EOL + packageJsonData.description;
   replace({ regex: 'PROJECTDATA_CLONEURL', replacement: cloneUrl, paths: ['README.md'], silent: true });
-  replace({ regex: 'PROJECTDATA_COMPONENTSHORT', replacement: projectData.componentShort, paths: [
+  replace({ regex: 'PROJECTDATA_SELECTORPREFIX', replacement: projectData.selectorPrefix, paths: [
+    'tslint.json',
     'client/index.html',
     'client/app/components/'
   ], silent: true, recursive: true });

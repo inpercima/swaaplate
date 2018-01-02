@@ -1,4 +1,4 @@
-import { FormGroup } from "@angular/forms";
+import { FormGroup } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -17,9 +17,10 @@ export class AuthService {
   constructor(private formService: FormService, private http: HttpClient) { }
 
   public login(formGroup: FormGroup): Observable<boolean> {
-    return this.http.post<boolean>('PROJECTDATA_AUTHENTICATEURL', this.formService.createBody(formGroup), this.formService.createHeader()).map(
-      response => this.isAuthenticated = response
-    );
+    return this.http.post<boolean>('PROJECTDATA_AUTHENTICATEURL', this.formService.createBody(formGroup),
+      this.formService.createHeader()).map(
+        response => this.isAuthenticated = response
+      );
   }
 
   public logout(): void {
