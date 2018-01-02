@@ -1,34 +1,34 @@
 {
   "projectData": {
-    "author": "Marcel Jänicke",
+    "author": "",
     "buildDir": "/build",
     "config": {
-      "theme": "indigo-pink",
       "activateLogin": true,
       "routes": {
-        "showLogin": false,
+        "defaultRoute": "home",
         "showFeatures": true,
-        "defaultRoute": "last-post"
-      }
+        "showLogin": false
+      },
+      "theme": "indigo-pink"
     },
-    "componentShort": "pm",
-    "contributorName": "Marcel Jänicke",
-    "contributorEmail": "inpercima@gmail.com",
-    "description": "publicmedia",
+    "componentShort": "hw",
+    "contributorName": "",
+    "contributorEmail": "",
+    "description": "hello world",
     "github": {
-      "useAccount": true,
-      "username": "inpercima"
+      "useAccount": false,
+      "username": ""
     },
-    "homepage": "http://publicmedia.inpercima.net",
-    "name": "publicmedia2",
-    "repository": "https://github.com/inpercima/publicmedia.git",
+    "homepage": "",
+    "name": "helloWorld",
+    "repository": "",
     "serverComponent": {
-      "useSimpleServer": true,
-      "useSpringBoot": false,
-      "authenticateUrl": "./auth.handler.php?authenticate"
+      "authenticateUrl": "",
+      "useSimpleServer": false,
+      "useSpringBoot": false
     }
   },
   "workData": {
-    "outputDir": "/home/marcel/dev/workspace-github/"
+    "outputDir": "/path/to/workspace/"
   }
 }

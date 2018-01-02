@@ -44,17 +44,12 @@ npm/yarn run build:watch
 npm/yarn run build:prod
 ```
 
-# Config
-Under config/config.json some application configuration could be set.
-
-* `appname` applicationwide title of the app, displayed in title and toolbar
-* `theme` name of a build-in theme from angular-material, one of
-  * deeppurple-amber
-  * indigo-pink
-  * pink-bluegrey
-  * purple-green
-* `activateLogin` use **true** if a login page should be used, otherwise **false**
-* `showLogin` use **true** if the login route should be displayed in the navigation, otherwise **false**, this option is in combination
-with `activateLogin`, the login route will be displayed only if both options set to **true**
-* `showFeatures` use **true** if the feature routes should be displayed in the navigation, otherwise **false**
-* `defaultRoute` the default route after login if no route is stored
+# Configuration
+| Name | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| appname | String | helloWorld | applicationwide title of the app, displayed in title and toolbar |
+| routes/activateLogin | Boolean | true | define that a login page should be used (`true`/`false`) |
+| routes/defaultRoute | String | home | the default route after login if no route is stored |
+| routes/showFeatures | Boolean | true | define that the feature routes should be displayed in the navigation (`true`/`false`) |
+| routes/showLogin | Boolean | false | define that the login route should be displayed in the navigation (`true`/`false`), works in combination with `activateLogin`, the login route will be displayed only if both options set to `true` |
+| theme | String | indigo-pink | name of a build-in theme from angular-material, one of `deeppurple-amber`, `indigo-pink`, `pink-bluegrey`, `purple-green` |
