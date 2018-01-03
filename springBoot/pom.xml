@@ -44,11 +44,11 @@
             </plugin>
         </plugins>
         <resources>
-      <resource>
-        <directory>PROJECTDATA_BUILDDIR</directory>
-        <targetPath>../classesPROJECTDATA_BUILDDIR</targetPath>
-      </resource>
-    </resources>
+            <resource>
+                <directory>PROJECTDATA_BUILDDIR</directory>
+                <targetPath>../classes/PROJECTDATA_BUILDDIR</targetPath>
+            </resource>
+        </resources>
     </build>
-    
+
 </project>

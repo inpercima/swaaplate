@@ -37,7 +37,7 @@ function createAndCopyProject(projectDir, outputDir, projectName, springBoot) {
     shjs.cp('springBoot/pom.xml', projectDir);
     const srcMain = 'src/main/';
     const srcTest = 'src/test/';
-    const javaPath = `java/${springBoot.packagePath}`;
+    const javaPath = `java/${springBoot.packagePath}`.replace(/\./g, '/');
     const srcMainJavaPath = `${projectDir}/${srcMain}${javaPath}`;
     const srcMainResources = `${projectDir}/${srcMain}resources`;
     shjs.mkdir('-p', srcMainJavaPath);
@@ -60,7 +60,7 @@ function createComponent(projectData, filename) {
   const className = uppercamelcase(filename);
   sTools.infoLog(`create component ${className}`);
   const compImport = `import { Component } from '@angular/core';${os.EOL}${os.EOL}`;
-  const compAnnotation = `@Component({${os.EOL}  selector: '${projectData.componentShort}-${filename}',${os.EOL}  templateUrl: './${filename}.component.html',${os.EOL}})${os.EOL}`;
+  const compAnnotation = `@Component({${os.EOL}  selector: '${projectData.selectorPrefix}-${filename}',${os.EOL}  templateUrl: './${filename}.component.html',${os.EOL}})${os.EOL}`;
   const compExport = `export class ${className}Component { }${os.EOL}`;
   const path = `client/app/components/${filename}`;
   const file = `${path}/${filename}.component`;
@@ -143,10 +143,14 @@ function doExtendedServices(projectData) {
   const fromServer = `${os.EOL}      {${os.EOL}        from: './server',${os.EOL}      },`;
   replace({ regex: 'PROJECTDATA_SERVER', replacement: useSimpleServer ? fromServer : '', paths: ['webpack.common.js'], silent: true });
   if (useSpringBoot) {
-    replace({ regex: 'PROJECTDATA_AUTHOR', replacement: projectData.author, paths: ['src/'], silent: true, recursive: true });
-    replace({ regex: 'PROJECTDATA_BUILDDIR', replacement: projectData.buildDir, paths: ['pom.xml', 'src/'], silent: true, recursive: true });
-    replace({ regex: 'PROJECTDATA_DESCRIPTION', replacement: projectData.description, paths: ['pom.xml', 'src/'], silent: true, recursive: true });
-    replace({ regex: 'PROJECTDATA_NAME', replacement: projectData.name, paths: ['pom.xml', 'src/'], silent: true, recursive: true });
-    replace({ regex: 'PROJECTDATA_PACKAGEPATH', replacement: projectData.serverComponent.springBoot.packagePath, paths: ['pom.xml', 'src/'], silent: true, recursive: true });
+    replace({ regex: 'PROJECTDATA_AUTHOR', replacement: projectData.author, paths: ['src/main/java/'], silent: true, recursive: true });
+    replace({ regex: 'PROJECTDATA_BUILDDIR', replacement: projectData.buildDir.replace(/\//g, ''), paths: ['pom.xml'], silent: true });
+    replace({ regex: 'PROJECTDATA_DESCRIPTION', replacement: projectData.description, paths: ['pom.xml'], silent: true });
+    replace({ regex: 'PROJECTDATA_NAME', replacement: projectData.name, paths: ['pom.xml'], silent: true });
+    replace({ regex: 'PROJECTDATA_PACKAGEPATH', replacement: projectData.serverComponent.springBoot.packagePath, paths: [
+      'pom.xml',
+      'src/main/java/',
+      'src/main/resources/logback.xml'
+    ], silent: true, recursive: true });
   }
 }
