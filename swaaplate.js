@@ -1,156 +1,219 @@
 'use strict';
 
 /* requirements */
-const uppercamelcase = require('uppercamelcase');
+const lightjs = require('light-js');
 const os = require('os');
+const path = require('path');
 const replace = require('replace');
 const shjs = require('shelljs');
-const sTools = require('./swaaplate-tools');
+const uppercamelcase = require('uppercamelcase');
 
 /* init */
 init();
-sTools.load(true);
 
 function init() {
-  sTools.infoLog('initialize swaaplate');
-  const swaaplateJsonData = sTools.readJson('swaaplate.json');
-  const outputDir = swaaplateJsonData.workData.outputDir
-  const projectName = swaaplateJsonData.projectData.name;
-  const projectDir = outputDir + projectName;
-  const packageJson = 'package.json';
-  createAndCopyProject(projectDir, outputDir, projectName, swaaplateJsonData.projectData.serverComponent.springBoot);
-  createComponents(swaaplateJsonData.projectData);
-  const packageJsonData = updatePackageJsonData(projectDir, packageJson, swaaplateJsonData.projectData);
-  replaceData(projectDir, packageJsonData, swaaplateJsonData.projectData);
-  updateConfigJsonData(projectDir, swaaplateJsonData.projectData);
-  doExtendedServices(swaaplateJsonData.projectData);
+  lightjs.info('initialize swaaplate');
+
+  const swaaplateJsonData = lightjs.readJson('swaaplate.json');
+  createProject(swaaplateJsonData);
+  updateComponents(swaaplateJsonData);
+  const packageJsonData = updatePackageJsonData(swaaplateJsonData);
+  updateConfigJsonData(swaaplateJsonData);
+  updateProject(swaaplateJsonData);
+  //doExtendedServices(swaaplateJsonData);
 }
 
-function createAndCopyProject(projectDir, outputDir, projectName, springBoot) {
-  sTools.infoLog(`create project '${projectName}' in '${outputDir}'`);
+function createProject(swaaplateJsonData) {
+  const projectDir = getProjectDir(swaaplateJsonData);
+  const outputDir = swaaplateJsonData.generalConfig.outputDir;
+  const projectName = swaaplateJsonData.packageJsonConfig.name;
+  lightjs.info(`create project '${projectName}' in '${outputDir}'`);
+
   shjs.mkdir('-p', projectDir);
-  shjs.cp('-r', 'files/*', projectDir);
-  shjs.cp('files/.*', projectDir);
+  shjs.cp('-r', 'node_modules/angular-webpack-minimum/*', projectDir);
+  shjs.cp('-r', 'node_modules/angular-webpack-minimum/.gitignore', projectDir);
   shjs.cp('swaaplate-*.js*', projectDir);
-  shjs.cp('swaaplate.json', `${projectDir}/swaaplate-recovery.json`);
-  if (springBoot.use) {
+  shjs.cp('swaaplate.json', path.join(projectDir, 'swaaplate-recovery.json'));
+  const serverConfig = swaaplateJsonData.serverConfig;
+  if (serverConfig.simpleServer.use) {
+    // TODO
+  } else {
     shjs.cp('springBoot/pom.xml', projectDir);
     const srcMain = 'src/main/';
     const srcTest = 'src/test/';
-    const javaPath = `java/${springBoot.packagePath}`.replace(/\./g, '/');
-    const srcMainJavaPath = `${projectDir}/${srcMain}${javaPath}`;
-    const srcMainResources = `${projectDir}/${srcMain}resources`;
+    const javaPath = path.join('java', serverConfig.springBoot.packagePath.replace(/\./g, '/'));
+    const srcMainJavaPath = path.join(projectDir, srcMain, javaPath);
+    const srcMainResources = path.join(projectDir, srcMain, 'resources');
     shjs.mkdir('-p', srcMainJavaPath);
     shjs.cp('springBoot/Application.java', srcMainJavaPath);
     shjs.mkdir('-p', srcMainResources);
     shjs.cp('springBoot/logback.xml', srcMainResources);
     shjs.cp('springBoot/application.properties', srcMainResources);
-    shjs.mkdir('-p', `${projectDir}/${srcTest}${javaPath}`);
-    shjs.mkdir('-p', `${projectDir}/${srcTest}resources/`);
+    shjs.mkdir('-p', path.join(projectDir, srcTest, javaPath));
+    shjs.mkdir('-p', path.join(projectDir, srcTest, 'resources'));
   }
-  shjs.cd(projectDir);
+  shjs.rm(path.join(projectDir, 'yarn.lock'));
 }
 
-function createComponents(projectData) {
-  createComponent(projectData, 'page-not-found');
-  createComponent(projectData, projectData.config.routes.defaultRoute);
+function getProjectDir(swaaplateJsonData) {
+  return swaaplateJsonData.generalConfig.outputDir + swaaplateJsonData.packageJsonConfig.name;
 }
 
-function createComponent(projectData, filename) {
-  const className = uppercamelcase(filename);
-  sTools.infoLog(`create component ${className}`);
-  const compImport = `import { Component } from '@angular/core';${os.EOL}${os.EOL}`;
-  const compAnnotation = `@Component({${os.EOL}  selector: '${projectData.selectorPrefix}-${filename}',${os.EOL}  templateUrl: './${filename}.component.html',${os.EOL}})${os.EOL}`;
-  const compExport = `export class ${className}Component { }${os.EOL}`;
-  const path = `client/app/components/${filename}`;
-  const file = `${path}/${filename}.component`;
-  shjs.mkdir('-p', path);
-  shjs.touch(`${file}.ts`);
-  sTools.writeFile(`${file}.ts`, compImport + compAnnotation + compExport);
-  shjs.touch(`${file}.html`);
+function updateComponents(swaaplateJsonData) {
+  const routes = ['dashboard', 'login', 'not-found'];
+  const routeConfig = swaaplateJsonData.routeConfig;
+  const configRoutes = [swaaplateJsonData.routeConfig.default, routeConfig.login.name, routeConfig.notFound.name];
+  const projectDir = getProjectDir(swaaplateJsonData);
+  const srcDir = path.join(projectDir, 'src');
+  const selectorPrefix = swaaplateJsonData.generalConfig.selectorPrefix;
+
+  if (selectorPrefix !== 'app') {
+    replace({ regex: 'app-root', replacement: `${selectorPrefix}-root`, paths: [path.join(srcDir, 'index.html')], silent: true });
+    const tslintJson = path.join(projectDir, 'tslint.json');
+    const tslintJsonData = lightjs.readJson(tslintJson);
+    tslintJsonData.rules["directive-selector"] = [true, "attribute", selectorPrefix, "camelCase"];
+    tslintJsonData.rules["component-selector"] = [true, "element", selectorPrefix, "kebab-case"];
+    lightjs.writeJson(tslintJson, tslintJsonData);
+  }
+  for (let i = 0; i < routes.length; i++) {
+    const template = `'${selectorPrefix}-${configRoutes[i]}'`;
+    replace({ regex: `'app-${routes[i]}'`, replacement: template, paths: [ path.join(srcDir, 'app')], silent: true, recursive: true });
+    if (configRoutes[i] !== routes[i]) {
+      updateComponent(swaaplateJsonData, routes[i], configRoutes[i]);
+    }
+  }
 }
 
-function updatePackageJsonData(projectDir, packageJson, projectData) {
-  sTools.infoLog(`update '${projectDir}/${packageJson}'`);
-  const packageJsonData = sTools.readJson(packageJson);
-  packageJsonData.author = projectData.author;
-  packageJsonData.contributors[0].email = projectData.contributorEmail;
-  packageJsonData.contributors[0].name = projectData.contributorName;
-  packageJsonData.description = projectData.description;
-  packageJsonData.homepage = projectData.homepage;
-  packageJsonData.name = projectData.name;
-  packageJsonData.repository = projectData.repository;
-  sTools.writeJson(packageJson, packageJsonData);
+function updateComponent(swaaplateJsonData, oldName, newName) {
+  lightjs.info(`update component '${oldName}' to '${newName}'`);
+
+  const srcDir = path.join(getProjectDir(swaaplateJsonData), 'src/app', oldName === 'dashboard' ? 'features' : '');
+  shjs.mv(path.join(srcDir, oldName), path.join(srcDir, newName));
+
+  shjs.mv(path.join(srcDir, newName, `${oldName}.component.html`), path.join(srcDir, newName, `${newName}.component.html`));
+  shjs.mv(path.join(srcDir, newName, `${oldName}.component.ts`), path.join(srcDir, newName, `${newName}.component.ts`));
+  // changes not needed for dashboard
+  if (oldName !== 'dashboard') {
+    shjs.mv(path.join(srcDir, newName, `${oldName}.module.ts`), path.join(srcDir, newName, `${newName}.module.ts`));
+    shjs.mv(path.join(srcDir, newName, `${oldName}-routing.module.ts`), path.join(srcDir, newName, `${newName}-routing.module.ts`));
+  }
+  // changes not needed for login
+  if (oldName !== 'login') {
+    replace({ regex: `${oldName}`, replacement: `${newName}`, paths: [
+      path.join(srcDir, newName, `${newName}.component.html`)
+    ], silent: true });
+  }
+
+  const oldUpper = uppercamelcase(oldName);
+  const newUpper = uppercamelcase(newName);
+  replace({ regex: `${oldUpper}Component`, replacement: `${newUpper}Component`, paths: [srcDir], silent: true, recursive: true });
+  replace({ regex: `${oldUpper}Module`, replacement: `${newUpper}Module`, paths: [srcDir], silent: true, recursive: true });
+  replace({ regex: `${oldUpper}RoutingModule`, replacement: `${newUpper}RoutingModule`, paths: [srcDir], silent: true, recursive: true });
+  replace({ regex: `(\\'|\\/|\\s)(${oldName})(\\'|\\.|-)`, replacement: `$1${newName}$3`, paths: [srcDir], silent: true, recursive: true });
+  replace({ regex: `(\\./)(${oldName})(/${newName})`, replacement: `$1${newName}$3`, paths: [srcDir], silent: true, recursive: true });
+
+  // changes needed for login only after movement
+  if (oldName === 'login') {
+    replace({ regex: 'loginForm', replacement: `${newName}Form`, paths: [path.join(srcDir, newName)], silent: true, recursive: true });
+  }
+}
+
+function updatePackageJsonData(swaaplateJsonData) {
+  const projectDir = getProjectDir(swaaplateJsonData);
+  const packageJson = path.join(projectDir, 'package.json');
+  lightjs.info(`update '${packageJson}'`);
+
+  const packageJsonData = lightjs.readJson(packageJson);
+  const config = swaaplateJsonData.packageJsonConfig;
+  packageJsonData.author = config.author;
+  packageJsonData.contributors = config.contributors;
+  packageJsonData.description = config.description;
+  packageJsonData.homepage = config.homepage;
+  packageJsonData.name = config.name;
+  packageJsonData.repository = config.repository;
+  lightjs.writeJson(packageJson, packageJsonData);
   return packageJsonData;
 }
 
-function updateConfigJsonData(projectDir, projectData) {
-  const configDefault = 'config/config.default.json';
-  const config = 'config/config.json';
-  sTools.infoLog(`update ${projectDir}/${configDefault}`);
-  const configJsonData = sTools.readJson(configDefault);
-  configJsonData.activateLogin = projectData.config.activateLogin;
-  configJsonData.appname = projectData.name;
-  configJsonData.routes = projectData.config.routes;
-  configJsonData.theme = projectData.config.theme;
-  sTools.writeJson(configDefault, configJsonData);
-  sTools.infoLog(`create ${projectDir}/${config}`);
-  shjs.cp(configDefault, config);
+function updateConfigJsonData(swaaplateJsonData) {
+  const projectDir = getProjectDir(swaaplateJsonData);
+  const configDefaultJson = path.join(projectDir, 'src/config.default.json');
+  lightjs.info(`update '${configDefaultJson}'`);
+
+  const configDefaultJsonData = lightjs.readJson(configDefaultJson);
+  configDefaultJsonData.appname = swaaplateJsonData.generalConfig.title;
+  configDefaultJsonData.routes.default = swaaplateJsonData.routeConfig.default;
+  configDefaultJsonData.routes.features.show = swaaplateJsonData.routeConfig.features.show;
+  configDefaultJsonData.routes.login.activate = swaaplateJsonData.routeConfig.login.activate;
+  configDefaultJsonData.routes.login.show = swaaplateJsonData.routeConfig.login.show;
+  configDefaultJsonData.routes.notFound.redirect = swaaplateJsonData.routeConfig.notFound.redirect;
+  configDefaultJsonData.theme = swaaplateJsonData.generalConfig.theme;
+  lightjs.writeJson(configDefaultJson, configDefaultJsonData);
+
+  const configJson = path.join(projectDir, 'src/config.json');
+  lightjs.info(`create '${configJson}'`);
+  shjs.cp(configDefaultJson, configJson);
 }
 
-function replaceData(projectDir, packageJsonData, projectData) {
-  sTools.infoLog(`update files in '${projectDir}' with project data`);
-  replace({ regex: 'PROJECTDATA_AUTHOR', replacement: packageJsonData.author, paths: [
-    'LICENSE.md',
-    'client/app/components/app/app.component.css'
-  ], silent: true });
-  replace({ regex: 'PROJECTDATA_BUILDDIR', replacement: projectData.buildDir, paths: [
-    'webpack.common.js',
-    'config/webpack.dev.js',
-    '.gitignore',
-  ], silent: true });
-  const name = packageJsonData.name;
-  let cloneUrl = `https://anyurl/${name}`;
-  let description = '';
-  if (projectData.github.useAccount) {
-    const username = projectData.github.username;
-    description = `[![dependencies Status](https://david-dm.org/${username}/${name}/status.svg)](https://david-dm.org/${username}/${name})`;
-    description += `${os.EOL}[![devDependencies Status](https://david-dm.org/${username}/${name}/dev-status.svg)](https://david-dm.org/${username}/${name}?type=dev)${os.EOL}`;
-    cloneUrl = `https://github.com/${username}/${name}`;
+function updateProject(swaaplateJsonData) {
+  const projectDir = getProjectDir(swaaplateJsonData);
+  lightjs.info(`update files in '${projectDir}' with project data`);
+
+  const buildDir = swaaplateJsonData.generalConfig.buildDir;
+  if (buildDir !== 'dist') {
+    replace({
+      regex: `(\\'|\\s|\\/)(dist)(\\'|\\/|\\s)`, replacement: `$1${buildDir}$3`, paths: [
+        path.join(projectDir, 'webpack.common.js'),
+        path.join(projectDir, 'webpack.dev.js'),
+        path.join(projectDir, '.gitignore'),
+      ], silent: true
+    });
   }
-  description += os.EOL + packageJsonData.description;
-  replace({ regex: 'PROJECTDATA_CLONEURL', replacement: cloneUrl, paths: ['README.md'], silent: true });
-  replace({ regex: 'PROJECTDATA_SELECTORPREFIX', replacement: projectData.selectorPrefix, paths: [
-    'tslint.json',
-    'client/index.html',
-    'client/app/components/'
-  ], silent: true, recursive: true });
-  replace({ regex: 'PROJECTDATA_DESCRIPTION', replacement: description, paths: ['README.md'], silent: true });
-  replace({ regex: 'PROJECTDATA_NAME', replacement: name, paths: ['README.md'], silent: true });
-  replace({ regex: 'PROJECTDATA_DEFAULTROUTE', replacement: projectData.config.routes.defaultRoute, paths: ['client/app/modules/'], silent: true, recursive: true });
-  const className = `${uppercamelcase(projectData.config.routes.defaultRoute)}Component`;
-  replace({ regex: 'PROJECTDATA_DEFAULTCOMPONENT', replacement: className, paths: ['client/app/modules/features/'], silent: true, recursive: true });
+
+  const author = swaaplateJsonData.packageJsonConfig.author;
+  if (author !== 'Marcel Jänicke') {
+    replace({regex: 'Marcel Jänicke', replacement: author, paths: [path.join(projectDir, 'LICENSE.md')], silent: true });
+  }
+
+  const packageJsonConfig = swaaplateJsonData.packageJsonConfig;
+  const name = packageJsonConfig.name;
+  const repository = packageJsonConfig.repository;
+  replace({regex: '(- |cd )(angular-webpack-minimum)', replacement: `$1${name}`, paths: [path.join(projectDir, 'README.md')], silent: true });
+  replace({regex: '(git clone )(.+)', replacement: `$1${repository}`, paths: [path.join(projectDir, 'README.md')], silent: true });
+
+  const github = swaaplateJsonData.generalConfig.github;
+  if (github.use) {
+    replace({regex: '(org\\/)(inpercima)', replacement: `$1${github.username}`, paths: [path.join(projectDir, 'README.md')], silent: true });
+    replace({regex: '(\\/)(angular-webpack-minimum)(\\/|\\?|\\))', replacement: `$1${name}$3`, paths: [path.join(projectDir, 'README.md')], silent: true });
+  } else {
+    // TODO, remove lines linking github
+  }
+
+  replace({regex: 'This.+tests.\\s*', replacement: '', paths: [path.join(projectDir, 'README.md')], silent: true });
+  replace({regex: 'This project.+', replacement: packageJsonConfig.description, paths: [path.join(projectDir, 'README.md')], silent: true });
 }
 
-function doExtendedServices(projectData) {
-  const useSimpleServer = projectData.serverComponent.useSimpleServer;
-  const useSpringBoot = projectData.serverComponent.springBoot.use;
+function doExtendedServices(swaaplateJsonData) {
+  const useSimpleServer = swaaplateJsonData.serverComponent.useSimpleServer;
+  const useSpringBoot = swaaplateJsonData.serverComponent.springBoot.use;
   if (useSimpleServer) {
-    sTools.infoLog('create simple server component');
+    lightjs.infoLog('create simple server component');
     shjs.mkdir('server');
   }
-  replace({ regex: 'PROJECTDATA_AUTHENTICATEURL', replacement: useSimpleServer ? projectData.serverComponent.authenticateUrl : '', paths: ['client/app/services/auth.service.ts'], silent: true });
+  //replace({ regex: 'PROJECTDATA_AUTHENTICATEURL', replacement: useSimpleServer ? swaaplateJsonData.serverComponent.authenticateUrl : '', paths: ['client/app/services/auth.service.ts'], silent: true });
   const fromServer = `${os.EOL}      {${os.EOL}        from: './server',${os.EOL}      },`;
   replace({ regex: 'PROJECTDATA_SERVER', replacement: useSimpleServer ? fromServer : '', paths: ['webpack.common.js'], silent: true });
   if (useSpringBoot) {
-    replace({ regex: 'PROJECTDATA_AUTHOR', replacement: projectData.author, paths: ['src/main/java/'], silent: true, recursive: true });
-    replace({ regex: 'PROJECTDATA_BUILDDIR', replacement: projectData.buildDir.replace(/\//g, ''), paths: ['pom.xml'], silent: true });
-    replace({ regex: 'PROJECTDATA_DESCRIPTION', replacement: projectData.description, paths: ['pom.xml'], silent: true });
-    replace({ regex: 'PROJECTDATA_NAME', replacement: projectData.name, paths: ['pom.xml'], silent: true });
-    replace({ regex: 'PROJECTDATA_PACKAGEPATH', replacement: projectData.serverComponent.springBoot.packagePath, paths: [
-      'pom.xml',
-      'src/main/java/',
-      'src/main/resources/logback.xml'
-    ], silent: true, recursive: true });
+    replace({ regex: 'PROJECTDATA_AUTHOR', replacement: swaaplateJsonData.author, paths: ['src/main/java/'], silent: true, recursive: true });
+    replace({ regex: 'PROJECTDATA_BUILDDIR', replacement: swaaplateJsonData.buildDir.replace(/\//g, ''), paths: ['pom.xml'], silent: true });
+    replace({ regex: 'PROJECTDATA_DESCRIPTION', replacement: swaaplateJsonData.description, paths: ['pom.xml'], silent: true });
+    replace({ regex: 'PROJECTDATA_NAME', replacement: swaaplateJsonData.name, paths: ['pom.xml'], silent: true });
+    replace({
+      regex: 'PROJECTDATA_PACKAGEPATH', replacement: swaaplateJsonData.serverComponent.springBoot.packagePath, paths: [
+        'pom.xml',
+        'src/main/java/',
+        'src/main/resources/logback.xml'
+      ], silent: true, recursive: true
+    });
   }
 }
