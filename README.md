@@ -1,32 +1,32 @@
-# About swaaplate
-The name `swaaplate` stands for `simple web app angular template`.
+# About this - swaaplate
+[s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple own template for webapps.
 
-A very simple own template on which for example [publicmedia](https://github.com/inpercima/publicmedia) or 
-[run-and-fun-2](https://github.com/inpercima/run-and-fun-2) are build on.
+Projects like [publicmedia](https://github.com/inpercima/publicmedia) or [run-and-fun-2](https://github.com/inpercima/run-and-fun-2) are build on it.
 
-# Necessary tools
-* node 6.9.x or higher
+# Prerequisites
+## Node, npm or yarn
+* `node 8.10.0` or higher in combination with
+  * `npm 5.7.1` or higher or
+  * `yarn 1.5.1` or higher, used in this repository
 
-# Optionally tools
-* npm 5.3 or higher
-* yarn 1.0.1 or higher
-
-# Usage
+# Getting started
 
 ```
 # clone project
 git clone https://github.com/inpercima/swaaplate
 cd swaaplate
+```
 
+# Usage
+
+```
 # copy swaaplate.default.json to swaaplate.json
 cp swaaplate.default.json swaaplate.json
 
-# install tools manually via npm or yarn
-# npm
-npm install
-
-# yarn
+# install dependencies
 yarn
+# or
+npm install
 
 # change data in swaaplate.json (more info see below) and run swaaplate
 node swaaplate.js

@@ -1,37 +1,46 @@
 {
-  "projectData": {
-    "author": "",
-    "buildDir": "/build",
-    "config": {
-      "activateLogin": true,
-      "routes": {
-        "defaultRoute": "home",
-        "showFeatures": true,
-        "showLogin": false
-      },
-      "theme": "indigo-pink"
-    },
-    "contributorName": "",
-    "contributorEmail": "",
-    "description": "hello world",
+  "generalConfig": {
+    "buildDir": "dist",
     "github": {
-      "useAccount": false,
+      "use": false,
       "username": ""
     },
+    "outputDir": "/path/to/workspace/",
+    "selectorPrefix": "hw",
+    "theme": "indigo-pink",
+    "title": "Hello world"
+  },
+  "packageJsonConfig": {
+    "author": "",
+    "contributors": [],
+    "description": "",
     "homepage": "",
     "name": "helloWorld",
-    "repository": "",
-    "selectorPrefix": "hw",
-    "serverComponent": {
-      "authenticateUrl": "",
-      "useSimpleServer": false,
-      "springBoot": {
-        "packagePath": "",
-        "use": false
-      }
+    "repository": ""
+  },
+  "routeConfig": {
+    "default": "dashboard",
+    "features": {
+      "show": true
+    },
+    "login": {
+      "activate": true,
+      "name": "login",
+      "show": false
+    },
+    "notFound": {
+      "name": "not-found",
+      "redirect": false
     }
   },
-  "workData": {
-    "outputDir": "/path/to/workspace/"
+  "serverConfig": {
+    "authenticateUrl": "",
+    "simpleServer": {
+      "use": true
+    },
+    "springBoot": {
+      "packagePath": "",
+      "use": false
+    }
   }
 }
