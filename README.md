@@ -1,4 +1,8 @@
 # About this - swaaplate
+[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
+[![dependencies Status](https://david-dm.org/inpercima/swaaplate/status.svg)](https://david-dm.org/inpercima/swaaplate)
+[![devDependencies Status](https://david-dm.org/inpercima/swaaplate/dev-status.svg)](https://david-dm.org/inpercima/swaaplate?type=dev)
+
 [s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple own template for webapps.
 
 Projects like [publicmedia](https://github.com/inpercima/publicmedia) or [run-and-fun-2](https://github.com/inpercima/run-and-fun-2) are build on it.
@@ -34,36 +38,173 @@ node swaaplate.js
 
 # Configuration
 ## General
-The configuration for swaaplate is devided in two main parts: `projectData` and `workData`.
-The section projectData includes all things for the project while workData includes all things for creationtime.
+All options have to bet set but some of them do not need to be changed.
+Some of this options will be copied in `config.json` of the new project and can be changed later.
 
-## ProjectData
-The options in `config` will be copied in `config.json` and can be changed later.
+## Table of contents
+* [generalConfig/buildDir](#generalconfigbuilddir)
+* [generalConfig/github/use](#generalconfiggithubuse)
+* [generalConfig/github/username](#generalconfiggithubusername)
+* [generalConfig/outputDir](#generalconfigoutputdir)
+* [generalConfig/selectorPrefix](#generalconfigselectorprefix)
+* [generalConfig/theme](#generalconfigtheme)
+* [generalConfig/title](#generalconfigtitle)
+* [generalConfig/useNpm](#generalconfiguseNpm)
+* [packageJsonConfig/author](#packagejsonconfigauthor)
+* [packageJsonConfig/contributors](#packagejsonconfigcontributors)
+* [packageJsonConfig/description](#packagejsonconfigdescription)
+* [packageJsonConfig/homepage](#packagejsonconfighomepage)
+* [packageJsonConfig/name](#packagejsonconfigname)
+* [packageJsonConfig/repository](#packagejsonconfigrepository)
+* [routeConfig/default](#routeconfigdefault)
+* [routeConfig/features/show](#routeconfigfeaturesshow)
+* [routeConfig/login/activate](#routeconfigloginactivate)
+* [routeConfig/login/name](#routeconfigloginname)
+* [routeConfig/login/show](#routeconfigloginshow)
+* [routeConfig/notFound/name](#routeconfignotfoundname)
+* [routeConfig/notFound/redirect](#routeconfignotfoundredirect)
+* [serverConfig/authenticateUrl](#serverconfigauthenticateurl)
+* [serverConfig/simpleServer/use](#serverconfigsimpleserveruse)
+* [serverConfig/springBoot/packagePath](#serverconfigspringbootpackagepath)
+* [serverConfig/springBoot/use](#serverconfigspringbootuse)
 
-| Name | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| author | String | EMPTY | the name of the creator of the project |
-| buildDir | String | /build | path to the exports from angular for buildtime |
-| config/activateLogin | Boolean | true | define that a login page should be used (`true`/`false`) |
-| config/routes/defaultRoute | String | home | the default route after login if no route is stored |
-| config/routes/showFeatures | Boolean | true | define that the feature routes should be displayed in the navigation (`true`/`false`) |
-| config/routes/showLogin | Boolean | false | define that the login route should be displayed in the navigation (`true`/`false`), works in combination with `activateLogin`, the login route will be displayed only if both options set to `true` |
-| config/theme | String | indigo-pink | name of a build-in theme from angular-material, one of `deeppurple-amber`, `indigo-pink`, `pink-bluegrey`, `purple-green` |
-| selectorPrefix | String | hw | a shortcut of the project, used in components like `hw-home` or `hw-app` |
-| contributorName | String | EMPTY | the name of the first cntributor |
-| contributorEmail | String | EMPTY | the e-mail-address of the first cntributor |
-| description | String | hello world | the name of the creator of the project |
-| github/useAccount | Boolean | false | for sharing the project on github you can define it (`true`/`false`), will be used in `package.json` |
-| github/username | String | EMPTY | the username of the github account |
-| homepage | String | EMPTY | the website of the project |
-| name | String | helloWorld | the projectname, this will be copied in `config.json` as `appname` |
-| repository | String | EMPTY | the repository of the project |
-| serverComponent/authenticateUrl | String | EMPTY | if one of the server component will be used, this address will be used for authentication |
-| serverComponent/useSimpleServer | Boolean | false | define that a simple server component should be used (`true`/`false`) |
-| serverComponent/springBoot/use | Boolean | false | define that spring-boot should be used (`true`/`false`) |
-| serverComponent/springBoot/packagePath | String | EMPTY | the package structure |
+## `generalConfig/buildDir`
+Path to the exports from angular for buildtime.
+* default: `dist`
+* type: `string`
 
-## WorkData
-| Name | Type | Default | Description |
-| ---- | ---- | ------- | ----------- |
-| outputDir | String | /path/to/workspace/ | path to the main directory of the project |
+## `generalConfig/github/use`
+Defines whether the project is shared on github or not. With `true` dependencies will be displayed with by [david-dm.org](https://david-dm.org).
+* default: `false`
+* type: `boolean`
+* values: `true`/`false`
+
+## `generalConfig/github/username`
+If `generalConfig/github/use` is set to `true` you need to define a github username.
+* default: EMPTY
+* type: `string`
+
+## `generalConfig/outputDir`
+Path to the main directory without the name of the project itself.
+* default: ` /path/to/workspace/`
+* type: `string`
+
+## `generalConfig/selectorPrefix`
+A shortcut of the project, used in components like `hw-home` or `hw-app`.
+* default: `hw`
+* type: `string`
+
+## `generalConfig/theme`
+Name of a build-in theme from angular-material. This option ca be changed in the project by `config.json`.
+* config-name: `theme`
+* default: `indigo-pink`
+* type: `string`
+* values: `deeppurple-amber`/`indigo-pink`/`pink-bluegrey`/`purple-green`
+
+## `generalConfig/title`
+Applicationwide title of the app, displayed in title and toolbar. This option ca be changed in the project by `config.json`.
+* config-name: `appname`
+* default: `Hello world`
+* type: `string`
+
+## `generalConfig/useNpm`
+Defines whatever npm should be used or not. If this option is set to `false` yarn will be used.
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
+
+## `packageJsonConfig/author`
+The name of the creator.
+* default: `true`
+* type: `string`
+
+## `packageJsonConfig/contributors`
+An array of contributers.
+* default: EMPTY
+* type: `array`
+
+## `packageJsonConfig/description`
+A description.
+* default: EMPTY
+* type: `string`
+
+## `packageJsonConfig/homepage`
+The website.
+* default: EMPTY
+* type: `string`
+
+## `packageJsonConfig/name`
+The name (foldername) of the project in the workspace. See `generalConfig/outputDir` to combinate.
+* default: `helloWorld`
+* type: `string`
+
+## `packageJsonConfig/repository`
+The repository.
+* default: EMPTY
+* type: `string`
+
+## `routeConfig/default`
+The main route and the redirect route after login if no route is stored. This option ca be changed in the project by `config.json`.
+* config-name: `routes/default`
+* default: `dashboard`
+* type: `string`
+
+## `routeConfig/features/show`
+Defines whether feature routes will be displayed or not. This option ca be changed in the project by `config.json`.
+* config-name: `routes/features/show`
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
+
+## `routeConfig/login/activate`
+Defines whether a login will be used or not. This option ca be changed in the project by `config.json`.
+* config-name: `routes/login/activate`
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
+
+## `routeConfig/login/name`
+Defines the name of the login route.
+* default: `login`
+* type: `string`
+
+## `routeConfig/login/show`
+Defines whether login route will be displayed or not. This option ca be changed in the project by `config.json`.
+* config-name: `routes/login/show`
+* default: `false`
+* type: `boolean`
+* values: `true`/`false`
+
+## `routeConfig/notFound/name`
+The main route and the redirect route after login if no route is stored.
+* default: `not-found`
+* type: `string`
+
+## `routeConfig/notFound/redirect`
+Defines whether the 404 route will redirect to the default route or not. This option ca be changed in the project by `config.json`.
+* config-name: `routes/notFound/redirect`
+* default: `false`
+* type: `boolean`
+* values: `true`/`false`
+
+## `serverConfig/authenticateUrl`
+If one of the server component will be used, this address will be used for authenticazion.
+* default: EMPTY
+* type: `string`
+
+## `serverConfig/simpleServer/use`
+Defines whether a simple server will be used or not.
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
+
+## `serverConfig/springBoot/packagePath`
+The package structure for java.
+* default: EMPTY
+* type: `string`
+
+## `serverConfig/springBoot/use`
+Defines whether springBoot will be used or not.
+* default: `false`
+* type: `boolean`
+* values: `true`/`false`

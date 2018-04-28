@@ -8,7 +8,8 @@
     "outputDir": "/path/to/workspace/",
     "selectorPrefix": "hw",
     "theme": "indigo-pink",
-    "title": "Hello world"
+    "title": "Hello world",
+    "useNpm": true
   },
   "packageJsonConfig": {
     "author": "",

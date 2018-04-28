@@ -20,7 +20,6 @@ function init() {
   const packageJsonData = updatePackageJsonData(swaaplateJsonData);
   updateConfigJsonData(swaaplateJsonData);
   updateProject(swaaplateJsonData);
-  //doExtendedServices(swaaplateJsonData);
 }
 
 function createProject(swaaplateJsonData) {
@@ -36,7 +35,7 @@ function createProject(swaaplateJsonData) {
   shjs.cp('swaaplate.json', path.join(projectDir, 'swaaplate-recovery.json'));
   const serverConfig = swaaplateJsonData.serverConfig;
   if (serverConfig.simpleServer.use) {
-    // TODO
+    // TODO update data with simple Server
   } else {
     shjs.cp('springBoot/pom.xml', projectDir);
     const srcMain = 'src/main/';
@@ -131,6 +130,7 @@ function updatePackageJsonData(swaaplateJsonData) {
   packageJsonData.homepage = config.homepage;
   packageJsonData.name = config.name;
   packageJsonData.repository = config.repository;
+  packageJsonData.devDependencies['light-js'] = 'inpercima/light-js#v0.1.0';
   lightjs.writeJson(packageJson, packageJsonData);
   return packageJsonData;
 }
@@ -191,29 +191,4 @@ function updateProject(swaaplateJsonData) {
 
   replace({regex: 'This.+tests.\\s*', replacement: '', paths: [path.join(projectDir, 'README.md')], silent: true });
   replace({regex: 'This project.+', replacement: packageJsonConfig.description, paths: [path.join(projectDir, 'README.md')], silent: true });
-}
-
-function doExtendedServices(swaaplateJsonData) {
-  const useSimpleServer = swaaplateJsonData.serverComponent.useSimpleServer;
-  const useSpringBoot = swaaplateJsonData.serverComponent.springBoot.use;
-  if (useSimpleServer) {
-    lightjs.infoLog('create simple server component');
-    shjs.mkdir('server');
-  }
-  //replace({ regex: 'PROJECTDATA_AUTHENTICATEURL', replacement: useSimpleServer ? swaaplateJsonData.serverComponent.authenticateUrl : '', paths: ['client/app/services/auth.service.ts'], silent: true });
-  const fromServer = `${os.EOL}      {${os.EOL}        from: './server',${os.EOL}      },`;
-  replace({ regex: 'PROJECTDATA_SERVER', replacement: useSimpleServer ? fromServer : '', paths: ['webpack.common.js'], silent: true });
-  if (useSpringBoot) {
-    replace({ regex: 'PROJECTDATA_AUTHOR', replacement: swaaplateJsonData.author, paths: ['src/main/java/'], silent: true, recursive: true });
-    replace({ regex: 'PROJECTDATA_BUILDDIR', replacement: swaaplateJsonData.buildDir.replace(/\//g, ''), paths: ['pom.xml'], silent: true });
-    replace({ regex: 'PROJECTDATA_DESCRIPTION', replacement: swaaplateJsonData.description, paths: ['pom.xml'], silent: true });
-    replace({ regex: 'PROJECTDATA_NAME', replacement: swaaplateJsonData.name, paths: ['pom.xml'], silent: true });
-    replace({
-      regex: 'PROJECTDATA_PACKAGEPATH', replacement: swaaplateJsonData.serverComponent.springBoot.packagePath, paths: [
-        'pom.xml',
-        'src/main/java/',
-        'src/main/resources/logback.xml'
-      ], silent: true, recursive: true
-    });
-  }
 }
