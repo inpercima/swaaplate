@@ -49,7 +49,7 @@ Some of this options will be copied in `config.json` of the new project and can 
 * [generalConfig/selectorPrefix](#generalconfigselectorprefix)
 * [generalConfig/theme](#generalconfigtheme)
 * [generalConfig/title](#generalconfigtitle)
-* [generalConfig/useNpm](#generalconfiguseNpm)
+* [generalConfig/useNpm](#generalconfigusenpm)
 * [packageJsonConfig/author](#packagejsonconfigauthor)
 * [packageJsonConfig/contributors](#packagejsonconfigcontributors)
 * [packageJsonConfig/description](#packagejsonconfigdescription)
