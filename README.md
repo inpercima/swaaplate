@@ -19,20 +19,14 @@ Projects like [publicmedia](https://github.com/inpercima/publicmedia), [mittagst
 # clone project
 git clone https://github.com/inpercima/swaaplate
 cd swaaplate
-```
 
-# Usage
-
-```
 # copy swaaplate.default.json to swaaplate.json
 cp swaaplate.default.json swaaplate.json
 
-# install dependencies
+# install tools
 yarn
-# or
-npm install
 
-# change data in swaaplate.json (more info see below) and run swaaplate
+# change data in swaaplate.json (more info see in configuration) and run swaaplate
 node swaaplate.js
 ```
 
