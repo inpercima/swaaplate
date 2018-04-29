@@ -67,7 +67,10 @@ function updateComponents(swaaplateJsonData) {
   const selectorPrefix = swaaplateJsonData.generalConfig.selectorPrefix;
 
   if (selectorPrefix !== 'app') {
-    replace({ regex: 'app-root', replacement: `${selectorPrefix}-root`, paths: [path.join(srcDir, 'index.html')], silent: true });
+    replace({ regex: 'app-root', replacement: `${selectorPrefix}-root`, paths: [
+      path.join(srcDir, 'app/app.component.ts'),
+      path.join(srcDir, 'index.html')
+    ], silent: true });
     const tslintJson = path.join(projectDir, 'tslint.json');
     const tslintJsonData = lightjs.readJson(tslintJson);
     tslintJsonData.rules["directive-selector"] = [true, "attribute", selectorPrefix, "camelCase"];
