@@ -193,5 +193,7 @@ function updateProject(swaaplateJsonData) {
   }
 
   replace({regex: 'This.+tests.\\s*', replacement: '', paths: [path.join(projectDir, 'README.md')], silent: true });
-  replace({regex: 'This project.+', replacement: packageJsonConfig.description, paths: [path.join(projectDir, 'README.md')], silent: true });
+  const generated = 'This project was generated with [swaaplate](https://github.com/inpercima/swaaplate).';
+  const description = `${packageJsonConfig.description}${os.EOL}${os.EOL}${generated}`;
+  replace({regex: 'This project.+', replacement: description, paths: [path.join(projectDir, 'README.md')], silent: true });
 }
