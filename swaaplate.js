@@ -31,6 +31,8 @@ function createProject(swaaplateJsonData) {
 
   shjs.mkdir('-p', projectDir);
   shjs.cp('-r', 'node_modules/angular-webpack-minimum/*', projectDir);
+  shjs.cp('-r', 'node_modules/angular-webpack-minimum/.editorconfig', projectDir);
+  shjs.cp('-r', 'node_modules/angular-webpack-minimum/.gitattributes', projectDir);
   shjs.cp('-r', 'node_modules/angular-webpack-minimum/.gitignore', projectDir);
   shjs.cp('swaaplate-*.js*', projectDir);
   shjs.cp('swaaplate.json', path.join(projectDir, 'swaaplate-recovery.json'));
