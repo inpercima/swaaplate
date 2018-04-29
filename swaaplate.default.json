@@ -9,7 +9,7 @@
     "selectorPrefix": "hw",
     "theme": "indigo-pink",
     "title": "Hello world",
-    "useNpm": true
+    "useYarn": true
   },
   "packageJsonConfig": {
     "author": "",

@@ -19,7 +19,8 @@ function init() {
   updateComponents(swaaplateJsonData);
   const packageJsonData = updatePackageJsonData(swaaplateJsonData);
   updateConfigJsonData(swaaplateJsonData);
-  updateProject(swaaplateJsonData);
+  updateGenralProjectData(swaaplateJsonData);
+  updateProjectDataByOption(swaaplateJsonData);
 }
 
 function createProject(swaaplateJsonData) {
@@ -158,11 +159,31 @@ function updateConfigJsonData(swaaplateJsonData) {
   shjs.cp(configDefaultJson, configJson);
 }
 
-function updateProject(swaaplateJsonData) {
+function updateGenralProjectData(swaaplateJsonData) {
   const projectDir = getProjectDir(swaaplateJsonData);
-  lightjs.info(`update files in '${projectDir}' with project data`);
+  lightjs.info(`update general files in '${projectDir}' with project data`);
 
-  const buildDir = swaaplateJsonData.generalConfig.buildDir;
+  const packageJsonConfig = swaaplateJsonData.packageJsonConfig;
+  const readmePath = path.join(projectDir, 'README.md');
+  const name = packageJsonConfig.name;
+  const repository = packageJsonConfig.repository;
+  replace({regex: '(- |cd )(angular-webpack-minimum)', replacement: `$1${name}`, paths: [readmePath], silent: true });
+  replace({regex: '(git clone )(.+)', replacement: `$1${repository}`, paths: [readmePath], silent: true });
+
+  const generated = 'This project was generated with [swaaplate](https://github.com/inpercima/swaaplate).';
+  const description = `${packageJsonConfig.description}${os.EOL}${os.EOL}${generated}`;
+  replace({regex: 'This.+tests.\\s*', replacement: '', paths: [readmePath], silent: true });
+  replace({regex: 'This project.+', replacement: description, paths: [readmePath], silent: true });
+}
+
+function updateProjectDataByOption(swaaplateJsonData) {
+  const projectDir = getProjectDir(swaaplateJsonData);
+  lightjs.info(`update specific files in '${projectDir}' with project data`);
+  
+  const generalConfig = swaaplateJsonData.generalConfig;
+  const name = swaaplateJsonData.packageJsonConfig.name;
+  const readmePath = path.join(projectDir, 'README.md');
+  const buildDir = generalConfig.buildDir;
   if (buildDir !== 'dist') {
     replace({
       regex: `(\\'|\\s|\\/)(dist)(\\'|\\/|\\s)`, replacement: `$1${buildDir}$3`, paths: [
@@ -178,22 +199,18 @@ function updateProject(swaaplateJsonData) {
     replace({regex: 'Marcel Jänicke', replacement: author, paths: [path.join(projectDir, 'LICENSE.md')], silent: true });
   }
 
-  const packageJsonConfig = swaaplateJsonData.packageJsonConfig;
-  const name = packageJsonConfig.name;
-  const repository = packageJsonConfig.repository;
-  replace({regex: '(- |cd )(angular-webpack-minimum)', replacement: `$1${name}`, paths: [path.join(projectDir, 'README.md')], silent: true });
-  replace({regex: '(git clone )(.+)', replacement: `$1${repository}`, paths: [path.join(projectDir, 'README.md')], silent: true });
-
-  const github = swaaplateJsonData.generalConfig.github;
+  const github = generalConfig.github;
   if (github.use) {
-    replace({regex: '(org\\/)(inpercima)', replacement: `$1${github.username}`, paths: [path.join(projectDir, 'README.md')], silent: true });
-    replace({regex: '(\\/)(angular-webpack-minimum)(\\/|\\?|\\))', replacement: `$1${name}$3`, paths: [path.join(projectDir, 'README.md')], silent: true });
+    replace({regex: '(org\\/)(inpercima)', replacement: `$1${github.username}`, paths: [readmePath], silent: true });
+    replace({regex: '(\\/)(angular-webpack-minimum)(\\/|\\?|\\))', replacement: `$1${name}$3`, paths: [readmePath], silent: true });
   } else {
     // TODO, remove lines linking github
   }
 
-  replace({regex: 'This.+tests.\\s*', replacement: '', paths: [path.join(projectDir, 'README.md')], silent: true });
-  const generated = 'This project was generated with [swaaplate](https://github.com/inpercima/swaaplate).';
-  const description = `${packageJsonConfig.description}${os.EOL}${os.EOL}${generated}`;
-  replace({regex: 'This project.+', replacement: description, paths: [path.join(projectDir, 'README.md')], silent: true });
+  if (!generalConfig.useYarn) {
+    replace({regex: 'or higher,.*', replacement: 'or higher', paths: [readmePath], silent: true });
+    replace({regex: 'or higher or', replacement: 'or higher, used in this repository, or', paths: [readmePath], silent: true });
+    replace({regex: 'yarn run', replacement: 'npm run', paths: [readmePath], silent: true });
+    replace({regex: '(dependencies\\s)(yarn)', replacement: `$1npm install`, paths: [readmePath], silent: true });
+  }
 }

@@ -49,7 +49,7 @@ Some of this options will be copied in `config.json` of the new project and can 
 * [generalConfig/selectorPrefix](#generalconfigselectorprefix)
 * [generalConfig/theme](#generalconfigtheme)
 * [generalConfig/title](#generalconfigtitle)
-* [generalConfig/useNpm](#generalconfigusenpm)
+* [generalConfig/useYarn](#generalconfiguseyarn)
 * [packageJsonConfig/author](#packagejsonconfigauthor)
 * [packageJsonConfig/contributors](#packagejsonconfigcontributors)
 * [packageJsonConfig/description](#packagejsonconfigdescription)
@@ -107,8 +107,8 @@ Applicationwide title of the app, displayed in title and toolbar. This option ca
 * default: `Hello world`
 * type: `string`
 
-## `generalConfig/useNpm`
-Defines whatever npm should be used or not. If this option is set to `false` yarn will be used.
+## `generalConfig/useYarn`
+Defines whatever yarn should be used or not. If this option is set to `false` npm will be used.
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
