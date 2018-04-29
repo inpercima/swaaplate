@@ -206,7 +206,7 @@ function updateProjectDataByOption(swaaplateJsonData) {
     replace({regex: '(org\\/)(inpercima)', replacement: `$1${github.username}`, paths: [readmePath], silent: true });
     replace({regex: '(\\/)(angular-webpack-minimum)(\\/|\\?|\\))', replacement: `$1${name}$3`, paths: [readmePath], silent: true });
   } else {
-    // TODO, remove lines linking github
+    replace({regex: '\\[!\\[dependencies.*\\s\\[.*\\s', replacement: '', paths: [readmePath], silent: true });
   }
 
   if (!generalConfig.useYarn) {
