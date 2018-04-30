@@ -17,7 +17,7 @@ function init() {
   const swaaplateJsonData = lightjs.readJson('swaaplate.json');
   createProject(swaaplateJsonData);
   updateComponents(swaaplateJsonData);
-  const packageJsonData = updatePackageJsonData(swaaplateJsonData);
+  updatePackageJsonData(swaaplateJsonData);
   updateConfigJsonData(swaaplateJsonData);
   updateGenralProjectData(swaaplateJsonData);
   updateProjectDataByOption(swaaplateJsonData);
@@ -36,23 +36,44 @@ function createProject(swaaplateJsonData) {
   shjs.cp('-r', 'node_modules/angular-webpack-minimum/.gitignore', projectDir);
   shjs.cp('swaaplate-*.js*', projectDir);
   shjs.cp('swaaplate.json', path.join(projectDir, 'swaaplate-recovery.json'));
+
   const serverConfig = swaaplateJsonData.serverConfig;
-  if (serverConfig.simpleServer.use) {
-    // TODO update data with simple Server
-  } else {
-    shjs.cp('springBoot/pom.xml', projectDir);
-    const srcMain = 'src/main/';
+  // used for java and php
+  const srcMain = 'src/main/';
+  if (serverConfig.endpoint === 'java') {
+    shjs.cp('endpoints/java/pom.xml', projectDir);
     const srcTest = 'src/test/';
-    const javaPath = path.join('java', serverConfig.springBoot.packagePath.replace(/\./g, '/'));
+    const javaPath = path.join('java', serverConfig.packagePath.replace(/\./g, '/'));
     const srcMainJavaPath = path.join(projectDir, srcMain, javaPath);
     const srcMainResources = path.join(projectDir, srcMain, 'resources');
     shjs.mkdir('-p', srcMainJavaPath);
-    shjs.cp('springBoot/Application.java', srcMainJavaPath);
+    shjs.cp('endpoints/java/Application.java', srcMainJavaPath);
     shjs.mkdir('-p', srcMainResources);
-    shjs.cp('springBoot/logback.xml', srcMainResources);
-    shjs.cp('springBoot/application.properties', srcMainResources);
+    shjs.cp('endpoints/java/logback.xml', srcMainResources);
+    shjs.cp('endpoints/java/application.properties', srcMainResources);
     shjs.mkdir('-p', path.join(projectDir, srcTest, javaPath));
     shjs.mkdir('-p', path.join(projectDir, srcTest, 'resources'));
+  }
+  if (serverConfig.endpoint === 'php') {
+    const srcMainPath = path.join(projectDir, srcMain);
+    shjs.mkdir('-p', srcMainPath);
+    shjs.cp('endpoints/php/*', srcMainPath);
+    const copyWebpackPlugin = `$1${os.EOL}const CopyWebpackPlugin = require('copy-webpack-plugin');`;
+    replace({ regex: '(Clean.*=.*)', replacement: copyWebpackPlugin, paths: [path.join(projectDir, 'webpack.common.js')], silent: true });
+    const copyWebpackPluginSection = `$1${os.EOL}    new CopyWebpackPlugin([{${os.EOL}      from: './src/main',${os.EOL}    }]),`;
+    replace({ regex: '(new Clean.*)', replacement: copyWebpackPluginSection, paths: [path.join(projectDir, 'webpack.common.js')], silent: true });
+    const authServicePath = path.join(projectDir, 'src/app/core/auth.service.ts');
+    replace({ regex: '\\/api\\/authenticate', replacement: './auth.handler.php?authenticate', paths: [authServicePath], silent: true });
+  }
+  if (serverConfig.endpoint !== 'js') {
+    replace({ regex: 'import { fake.*\\s*', replacement: os.EOL, paths: [path.join(projectDir, 'src/app/app.module.ts')], silent: true });
+    replace({ regex: '  providers.*\\s*.*\\s*.*\\s*}', replacement: '}', paths: [path.join(projectDir, 'src/app/app.module.ts')], silent: true });
+    shjs.rm(path.join(projectDir, 'src/app/login/fake-backend-interceptor.ts'));
+
+    let post = `$1${os.EOL}    const body = this.formService.createBody(formGroup);${os.EOL}`;
+    post += '    const header = this.formService.createHeader();';
+    replace({ regex: '(Observable<boolean> {)', replacement: post, paths: [path.join(projectDir, 'src/app/core/auth.service.ts')], silent: true });
+    replace({ regex: 'formGroup.value', replacement: 'body, header', paths: [path.join(projectDir, 'src/app/core/auth.service.ts')], silent: true });
   }
   shjs.rm(path.join(projectDir, 'yarn.lock'));
 }
@@ -137,8 +158,11 @@ function updatePackageJsonData(swaaplateJsonData) {
   packageJsonData.name = config.name;
   packageJsonData.repository = config.repository;
   packageJsonData.devDependencies['light-js'] = 'inpercima/light-js#v0.1.0';
+  if (swaaplateJsonData.serverConfig.endpoint === 'php') {
+    packageJsonData.devDependencies['copy-webpack-plugin'] = '4.5.1';
+  }
+  packageJsonData.version = '0.0.1-SNAPSHOT';
   lightjs.writeJson(packageJson, packageJsonData);
-  return packageJsonData;
 }
 
 function updateConfigJsonData(swaaplateJsonData) {

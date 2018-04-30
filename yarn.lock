@@ -74,9 +74,9 @@
   dependencies:
     url "^0.11.0"
 
-angular-webpack-minimum@inpercima/angular-webpack-minimum#v0.0.2:
-  version "0.0.2"
-  resolved "https://codeload.github.com/inpercima/angular-webpack-minimum/tar.gz/77859deabb86cd23d63ef2b6b029aab285bfece0"
+angular-webpack-minimum@inpercima/angular-webpack-minimum#v0.0.3:
+  version "0.0.3"
+  resolved "https://codeload.github.com/inpercima/angular-webpack-minimum/tar.gz/632c0d367dd73eb91ae6b25451362adb33873bc4"
   dependencies:
     "@angular/animations" "5.2.10"
     "@angular/cdk" "5.2.5"

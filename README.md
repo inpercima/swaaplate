@@ -57,10 +57,8 @@ Some of this options will be copied in `config.json` of the new project and can 
 * [routeConfig/login/show](#routeconfigloginshow)
 * [routeConfig/notFound/name](#routeconfignotfoundname)
 * [routeConfig/notFound/redirect](#routeconfignotfoundredirect)
-* [serverConfig/authenticateUrl](#serverconfigauthenticateurl)
-* [serverConfig/simpleServer/use](#serverconfigsimpleserveruse)
-* [serverConfig/springBoot/packagePath](#serverconfigspringbootpackagepath)
-* [serverConfig/springBoot/use](#serverconfigspringbootuse)
+* [serverConfig/endpoint](#serverconfigendpoint)
+* [serverConfig/packagePath](#serverconfigpackagepath)
 
 ## `generalConfig/buildDir`
 Path to the exports from angular for buildtime.
@@ -181,24 +179,13 @@ Defines whether the 404 route will redirect to the default route or not. This op
 * type: `boolean`
 * values: `true`/`false`
 
-## `serverConfig/authenticateUrl`
-If one of the server component will be used, this address will be used for authenticazion.
-* default: EMPTY
-* type: `string`
-
-## `serverConfig/simpleServer/use`
+## `serverConfig/endpoint`
 Defines whether a simple server will be used or not.
-* default: `true`
-* type: `boolean`
-* values: `true`/`false`
+* default: `js`
+* type: `string`
+* values: `java`/`js`/`php`
 
-## `serverConfig/springBoot/packagePath`
+## `serverConfig/packagePath`
 The package structure for java.
 * default: EMPTY
 * type: `string`
-
-## `serverConfig/springBoot/use`
-Defines whether springBoot will be used or not.
-* default: `false`
-* type: `boolean`
-* values: `true`/`false`
