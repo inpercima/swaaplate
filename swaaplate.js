@@ -194,6 +194,7 @@ function updateGenralProjectData(swaaplateJsonData) {
   const name = packageJsonConfig.name;
   const repository = packageJsonConfig.repository;
   replace({regex: '(- |cd )(angular-webpack-minimum)', replacement: `$1${name}`, paths: [readmePath], silent: true });
+  replace({regex: '`angular-webpack-minimum`', replacement: `\`${name}\``, paths: [readmePath], silent: true });
   replace({regex: '(git clone )(.+)', replacement: `$1${repository}`, paths: [readmePath], silent: true });
 
   const generated = 'This project was generated with [swaaplate](https://github.com/inpercima/swaaplate).';
