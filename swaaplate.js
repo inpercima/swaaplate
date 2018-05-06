@@ -19,7 +19,7 @@ function init() {
   updateComponents(swaaplateJsonData);
   updatePackageJsonData(swaaplateJsonData);
   updateConfigJsonData(swaaplateJsonData);
-  updateGenralProjectData(swaaplateJsonData);
+  updateGeneralProjectData(swaaplateJsonData);
   updateProjectDataByOption(swaaplateJsonData);
 }
 
@@ -46,6 +46,7 @@ function createProject(swaaplateJsonData) {
     const javaPath = path.join('java', serverConfig.packagePath.replace(/\./g, '/'));
     const srcMainJavaPath = path.join(projectDir, srcMain, javaPath);
     const srcMainResources = path.join(projectDir, srcMain, 'resources');
+    const pomXml = path.join(projectDir, 'pom.xml');
     shjs.mkdir('-p', srcMainJavaPath);
     shjs.cp('endpoints/java/Application.java', srcMainJavaPath);
     shjs.mkdir('-p', srcMainResources);
@@ -53,15 +54,25 @@ function createProject(swaaplateJsonData) {
     shjs.cp('endpoints/java/application.properties', srcMainResources);
     shjs.mkdir('-p', path.join(projectDir, srcTest, javaPath));
     shjs.mkdir('-p', path.join(projectDir, srcTest, 'resources'));
+    replace({ regex: 'net.inpercima.swaaplate', replacement: serverConfig.packagePath, paths: [
+      path.join(projectDir, srcMain, javaPath, 'Application.java'),
+      path.join(srcMainResources, 'logback.xml'),
+      pomXml,
+    ], silent: true });
+    replace({ regex: 'swaaplate', replacement: projectName, paths: [pomXml], silent: true });
+    const description = '\\[s\\]imple \\[w\\]eb \\[a\\]pp \\[a\\]ngular tem\\[plate\\]. A very simple own template for webapps.';
+    const newDescription = swaaplateJsonData.packageJsonConfig.description;
+    replace({ regex: `${description}`, replacement: newDescription, paths: [pomXml], silent: true });
   }
   if (serverConfig.endpoint === 'php') {
     const srcMainPath = path.join(projectDir, srcMain);
     shjs.mkdir('-p', srcMainPath);
     shjs.cp('endpoints/php/*', srcMainPath);
     const copyWebpackPlugin = `$1${os.EOL}const CopyWebpackPlugin = require('copy-webpack-plugin');`;
-    replace({ regex: '(Clean.*=.*)', replacement: copyWebpackPlugin, paths: [path.join(projectDir, 'webpack.common.js')], silent: true });
+    const webpackCommonJs = path.join(projectDir, 'webpack.common.js');
+    replace({ regex: '(Clean.*=.*)', replacement: copyWebpackPlugin, paths: [webpackCommonJs], silent: true });
     const copyWebpackPluginSection = `$1${os.EOL}    new CopyWebpackPlugin([{${os.EOL}      from: './src/main',${os.EOL}    }]),`;
-    replace({ regex: '(new Clean.*)', replacement: copyWebpackPluginSection, paths: [path.join(projectDir, 'webpack.common.js')], silent: true });
+    replace({ regex: '(new Clean.*)', replacement: copyWebpackPluginSection, paths: [webpackCommonJs], silent: true });
     const authServicePath = path.join(projectDir, 'src/app/core/auth.service.ts');
     replace({ regex: '\\/api\\/authenticate', replacement: './auth.handler.php?authenticate', paths: [authServicePath], silent: true });
   }
@@ -185,7 +196,7 @@ function updateConfigJsonData(swaaplateJsonData) {
   shjs.cp(configDefaultJson, configJson);
 }
 
-function updateGenralProjectData(swaaplateJsonData) {
+function updateGeneralProjectData(swaaplateJsonData) {
   const projectDir = getProjectDir(swaaplateJsonData);
   lightjs.info(`update general files in '${projectDir}' with project data`);
 
@@ -208,22 +219,32 @@ function updateProjectDataByOption(swaaplateJsonData) {
   lightjs.info(`update specific files in '${projectDir}' with project data`);
   
   const generalConfig = swaaplateJsonData.generalConfig;
+  const serverConfig = swaaplateJsonData.serverConfig;
   const name = swaaplateJsonData.packageJsonConfig.name;
   const readmePath = path.join(projectDir, 'README.md');
   const buildDir = generalConfig.buildDir;
-  if (buildDir !== 'dist') {
+  const distDir = 'dist';
+  if (buildDir !== distDir) {
     replace({
-      regex: `(\\'|\\s|\\/)(dist)(\\'|\\/|\\s)`, replacement: `$1${buildDir}$3`, paths: [
+      regex: `(\\'|\\s|\\/)(${distDir})(\\'|\\/|\\s)`, replacement: `$1${buildDir}$3`, paths: [
         path.join(projectDir, 'webpack.common.js'),
         path.join(projectDir, 'webpack.dev.js'),
         path.join(projectDir, '.gitignore'),
       ], silent: true
     });
+    if (serverConfig.endpoint === 'java') {
+      replace({ regex: distDir, replacement: buildDir, paths: [path.join(projectDir, 'pom.xml')], silent: true });
+    }
   }
 
   const author = swaaplateJsonData.packageJsonConfig.author;
-  if (author !== 'Marcel Jänicke') {
-    replace({regex: 'Marcel Jänicke', replacement: author, paths: [path.join(projectDir, 'LICENSE.md')], silent: true });
+  const authorMj = 'Marcel Jänicke';
+  if (author !== authorMj) {
+    replace({regex: authorMj, replacement: author, paths: [path.join(projectDir, 'LICENSE.md')], silent: true });
+    if (serverConfig.endpoint === 'java') {
+      const javaPath = path.join(projectDir, 'src/main/java', serverConfig.packagePath.replace(/\./g, '/'));
+      replace({ regex: authorMj, replacement: author, paths: [path.join(javaPath, 'Application.java')], silent: true });
+    }
   }
 
   const github = generalConfig.github;
