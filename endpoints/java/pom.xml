@@ -7,16 +7,16 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.9.RELEASE</version>
+        <version>2.0.1.RELEASE</version>
     </parent>
 
-    <groupId>PROJECTDATA_PACKAGEPATH</groupId>
-    <artifactId>PROJECTDATA_NAME</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <groupId>net.inpercima.swaaplate</groupId>
+    <artifactId>swaaplate</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>PROJECTDATA_NAME</name>
-    <description>PROJECTDATA_DESCRIPTION</description>
+    <name>swaaplate</name>
+    <description>[s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple own template for webapps.</description>
 
     <dependencies>
         <dependency>
@@ -45,8 +45,8 @@
         </plugins>
         <resources>
             <resource>
-                <directory>PROJECTDATA_BUILDDIR</directory>
-                <targetPath>../classes/PROJECTDATA_BUILDDIR</targetPath>
+                <directory>dist</directory>
+                <targetPath>../classes/public</targetPath>
             </resource>
         </resources>
     </build>

@@ -11,5 +11,5 @@
         <appender-ref ref="con" />
     </root>
 
-    <logger name="PROJECTDATA_PACKAGEPATH" level="debug" />
+    <logger name="net.inpercima.swaaplate" level="debug" />
 </configuration>

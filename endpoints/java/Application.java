@@ -1,4 +1,4 @@
-package PROJECTDATA_PACKAGEPATH;
+package net.inpercima.swaaplate;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 
 /**
- * @author PROJECTDATA_AUTHOR
+ * @author Marcel Jänicke
  */
 @SpringBootApplication // same as @Configuration @EnableAutoConfiguration @ComponentScan
 public class Application {
