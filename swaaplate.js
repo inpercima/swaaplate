@@ -63,6 +63,9 @@ function createProject(swaaplateJsonData) {
     const description = '\\[s\\]imple \\[w\\]eb \\[a\\]pp \\[a\\]ngular tem\\[plate\\]. A very simple own template for webapps.';
     const newDescription = swaaplateJsonData.packageJsonConfig.description;
     replace({ regex: `${description}`, replacement: newDescription, paths: [pomXml], silent: true });
+    const config = `${os.EOL}${os.EOL}[logback.xml]${os.EOL}indent_size = 4${os.EOL}${os.EOL}[*.java]${os.EOL}indent_size = 4`;
+    const editorconfig = path.join(projectDir, '.editorconfig');
+    replace({ regex: '(trim_trailing_whitespace = true)', replacement: `$1${config}`, paths: [editorconfig], silent: true });
   }
   if (serverConfig.endpoint === 'php') {
     const srcMainPath = path.join(projectDir, srcMain);
