@@ -212,6 +212,7 @@ function updateGeneralProjectData(swaaplateJsonData) {
   const description = `${packageJsonConfig.description}${os.EOL}${os.EOL}${generated}`;
   replace({regex: 'This.+tests.\\s*', replacement: '', paths: [readmePath], silent: true });
   replace({regex: 'This project.+', replacement: description, paths: [readmePath], silent: true });
+  replace({regex: '(config.json)', replacement: `$1${os.EOL}swaaplate-recovery.json`, paths: [path.join(projectDir, '.gitignore')], silent: true });
 }
 
 function updateProjectDataByOption(swaaplateJsonData) {
