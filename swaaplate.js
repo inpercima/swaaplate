@@ -171,7 +171,7 @@ function updatePackageJsonData(swaaplateJsonData) {
   packageJsonData.homepage = config.homepage;
   packageJsonData.name = config.name;
   packageJsonData.repository = config.repository;
-  packageJsonData.devDependencies['light-js'] = 'inpercima/light-js#v0.1.0';
+  packageJsonData.devDependencies['light-js'] = 'inpercima/light-js#v0.1.1';
   if (swaaplateJsonData.serverConfig.endpoint === 'php') {
     packageJsonData.devDependencies['copy-webpack-plugin'] = '4.5.1';
   }

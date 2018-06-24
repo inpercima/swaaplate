@@ -9,9 +9,9 @@ Projects like [publicmedia](https://github.com/inpercima/publicmedia), [mittagst
 
 # Prerequisites
 ## Node, npm or yarn
-* `node 8.10.0` or higher in combination with
-  * `npm 5.7.1` or higher or
-  * `yarn 1.5.1` or higher, used in this repository
+* `node 8.11.3` or higher in combination with
+  * `npm 5.6.0` or higher or
+  * `yarn 1.7.0` or higher, used in this repository
 
 # Getting started
 
