@@ -1,19 +1,18 @@
-# About this - swaaplate
+# swaaplate
+## Intro
 [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
 [![dependencies Status](https://david-dm.org/inpercima/swaaplate/status.svg)](https://david-dm.org/inpercima/swaaplate)
 [![devDependencies Status](https://david-dm.org/inpercima/swaaplate/dev-status.svg)](https://david-dm.org/inpercima/swaaplate?type=dev)
-
 [s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple own template for webapps.
 
 Projects like [publicmedia](https://github.com/inpercima/publicmedia), [mittagstisch](https://github.com/inpercima/mittagstisch) or [run-and-fun-2](https://github.com/inpercima/run-and-fun-2) are build on it.
 
-# Prerequisites
-## Node, npm or yarn
+## Prerequisites
 * `node 8.11.3` or higher in combination with
   * `npm 5.6.0` or higher or
   * `yarn 1.7.0` or higher, used in this repository
 
-# Getting started
+## Getting started
 
 ```
 # clone project
@@ -30,12 +29,12 @@ yarn
 node swaaplate.js
 ```
 
-# Configuration
-## General
+## Configuration
+### General
 All options have to bet set but some of them do not need to be changed.
 Some of this options will be copied in `config.json` of the new project and can be changed later.
 
-## Table of contents
+### Table of contents
 * [generalConfig/buildDir](#generalconfigbuilddir)
 * [generalConfig/github/use](#generalconfiggithubuse)
 * [generalConfig/github/username](#generalconfiggithubusername)
@@ -60,132 +59,132 @@ Some of this options will be copied in `config.json` of the new project and can 
 * [serverConfig/endpoint](#serverconfigendpoint)
 * [serverConfig/packagePath](#serverconfigpackagepath)
 
-## `generalConfig/buildDir`
+### `generalConfig/buildDir`
 Path to the exports from angular for buildtime.
 * default: `dist`
 * type: `string`
 
-## `generalConfig/github/use`
+### `generalConfig/github/use`
 Defines whether the project is shared on github or not. With `true` dependencies will be displayed with by [david-dm.org](https://david-dm.org).
 * default: `false`
 * type: `boolean`
 * values: `true`/`false`
 
-## `generalConfig/github/username`
+### `generalConfig/github/username`
 If `generalConfig/github/use` is set to `true` you need to define a github username.
 * default: EMPTY
 * type: `string`
 
-## `generalConfig/outputDir`
+### `generalConfig/outputDir`
 Path to the main directory without the name of the project itself.
 * default: ` /path/to/workspace/`
 * type: `string`
 
-## `generalConfig/selectorPrefix`
+### `generalConfig/selectorPrefix`
 A shortcut of the project, used in components like `hw-home` or `hw-app`.
 * default: `hw`
 * type: `string`
 
-## `generalConfig/theme`
+### `generalConfig/theme`
 Name of a build-in theme from angular-material. This option ca be changed in the project by `config.json`.
 * config-name: `theme`
 * default: `indigo-pink`
 * type: `string`
 * values: `deeppurple-amber`/`indigo-pink`/`pink-bluegrey`/`purple-green`
 
-## `generalConfig/title`
+### `generalConfig/title`
 Applicationwide title of the app, displayed in title and toolbar. This option ca be changed in the project by `config.json`.
 * config-name: `appname`
 * default: `Hello world`
 * type: `string`
 
-## `generalConfig/useYarn`
+### `generalConfig/useYarn`
 Defines whatever yarn should be used or not. If this option is set to `false` npm will be used.
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
 
-## `packageJsonConfig/author`
+### `packageJsonConfig/author`
 The name of the creator.
 * default: `true`
 * type: `string`
 
-## `packageJsonConfig/contributors`
+### `packageJsonConfig/contributors`
 An array of contributers.
 * default: EMPTY
 * type: `array`
 
-## `packageJsonConfig/description`
+### `packageJsonConfig/description`
 A description.
 * default: EMPTY
 * type: `string`
 
-## `packageJsonConfig/homepage`
+### `packageJsonConfig/homepage`
 The website.
 * default: EMPTY
 * type: `string`
 
-## `packageJsonConfig/name`
+### `packageJsonConfig/name`
 The name (foldername) of the project in the workspace. See `generalConfig/outputDir` to combinate.
 * default: `helloWorld`
 * type: `string`
 
-## `packageJsonConfig/repository`
+### `packageJsonConfig/repository`
 The repository.
 * default: EMPTY
 * type: `string`
 
-## `routeConfig/default`
+### `routeConfig/default`
 The main route and the redirect route after login if no route is stored. This option ca be changed in the project by `config.json`.
 * config-name: `routes/default`
 * default: `dashboard`
 * type: `string`
 
-## `routeConfig/features/show`
+### `routeConfig/features/show`
 Defines whether feature routes will be displayed or not. This option ca be changed in the project by `config.json`.
 * config-name: `routes/features/show`
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
 
-## `routeConfig/login/activate`
+### `routeConfig/login/activate`
 Defines whether a login will be used or not. This option ca be changed in the project by `config.json`.
 * config-name: `routes/login/activate`
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
 
-## `routeConfig/login/name`
+### `routeConfig/login/name`
 Defines the name of the login route.
 * default: `login`
 * type: `string`
 
-## `routeConfig/login/show`
+### `routeConfig/login/show`
 Defines whether login route will be displayed or not. This option ca be changed in the project by `config.json`.
 * config-name: `routes/login/show`
 * default: `false`
 * type: `boolean`
 * values: `true`/`false`
 
-## `routeConfig/notFound/name`
+### `routeConfig/notFound/name`
 The main route and the redirect route after login if no route is stored.
 * default: `not-found`
 * type: `string`
 
-## `routeConfig/notFound/redirect`
+### `routeConfig/notFound/redirect`
 Defines whether the 404 route will redirect to the default route or not. This option ca be changed in the project by `config.json`.
 * config-name: `routes/notFound/redirect`
 * default: `false`
 * type: `boolean`
 * values: `true`/`false`
 
-## `serverConfig/endpoint`
+### `serverConfig/endpoint`
 Defines whether a simple server will be used or not.
 * default: `js`
 * type: `string`
 * values: `java`/`js`/`php`
 
-## `serverConfig/packagePath`
+### `serverConfig/packagePath`
 The package structure for java.
 * default: EMPTY
 * type: `string`
