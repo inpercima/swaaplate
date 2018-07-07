@@ -11,6 +11,9 @@ const uppercamelcase = require('uppercamelcase');
 /* init */
 init();
 
+/**
+ * Initialize swaaplate.
+ */
 function init() {
   lightjs.info('initialize swaaplate');
 
@@ -23,6 +26,11 @@ function init() {
   updateProjectDataByOption(swaaplateJsonData);
 }
 
+/**
+ * Creates the project for the specific endpoint.
+ *
+ * @param {object} swaaplateJsonData 
+ */
 function createProject(swaaplateJsonData) {
   const projectDir = getProjectDir(swaaplateJsonData);
   const outputDir = swaaplateJsonData.generalConfig.outputDir;
@@ -41,17 +49,17 @@ function createProject(swaaplateJsonData) {
   // used for java and php
   const srcMain = 'src/main/';
   if (serverConfig.endpoint === 'java') {
-    shjs.cp('endpoints/java/pom.xml', projectDir);
+    shjs.cp('endpoint/java/pom.xml', projectDir);
     const srcTest = 'src/test/';
     const javaPath = path.join('java', serverConfig.packagePath.replace(/\./g, '/'));
     const srcMainJavaPath = path.join(projectDir, srcMain, javaPath);
     const srcMainResources = path.join(projectDir, srcMain, 'resources');
     const pomXml = path.join(projectDir, 'pom.xml');
     shjs.mkdir('-p', srcMainJavaPath);
-    shjs.cp('endpoints/java/Application.java', srcMainJavaPath);
+    shjs.cp('endpoint/java/Application.java', srcMainJavaPath);
     shjs.mkdir('-p', srcMainResources);
-    shjs.cp('endpoints/java/logback.xml', srcMainResources);
-    shjs.cp('endpoints/java/application.properties', srcMainResources);
+    shjs.cp('endpoint/java/logback.xml', srcMainResources);
+    shjs.cp('endpoint/java/application.properties', srcMainResources);
     shjs.mkdir('-p', path.join(projectDir, srcTest, javaPath));
     shjs.mkdir('-p', path.join(projectDir, srcTest, 'resources'));
     replace({ regex: 'net.inpercima.swaaplate', replacement: serverConfig.packagePath, paths: [
@@ -70,7 +78,7 @@ function createProject(swaaplateJsonData) {
   if (serverConfig.endpoint === 'php') {
     const srcMainPath = path.join(projectDir, srcMain);
     shjs.mkdir('-p', srcMainPath);
-    shjs.cp('endpoints/php/*', srcMainPath);
+    shjs.cp('endpoint/php/*', srcMainPath);
     const copyWebpackPlugin = `$1${os.EOL}const CopyWebpackPlugin = require('copy-webpack-plugin');`;
     const webpackCommonJs = path.join(projectDir, 'webpack.common.js');
     replace({ regex: '(Clean.*=.*)', replacement: copyWebpackPlugin, paths: [webpackCommonJs], silent: true });
@@ -92,6 +100,11 @@ function createProject(swaaplateJsonData) {
   shjs.rm(path.join(projectDir, 'yarn.lock'));
 }
 
+/**
+ * Ermittelt das Verzeichnis für das Projekt.
+ *
+ * @param {object} swaaplateJsonData 
+ */
 function getProjectDir(swaaplateJsonData) {
   return swaaplateJsonData.generalConfig.outputDir + swaaplateJsonData.packageJsonConfig.name;
 }

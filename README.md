@@ -60,7 +60,7 @@ Some of this options will be copied in `config.json` of the new project and can 
 * [serverConfig/packagePath](#serverconfigpackagepath)
 
 ### `generalConfig/buildDir`
-Path to the exports from angular for buildtime.
+Path to the target from the angular webapp for buildtime.
 * default: `dist`
 * type: `string`
 
