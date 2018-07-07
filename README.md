@@ -178,13 +178,13 @@ Defines whether the 404 route will redirect to the default route or not. This op
 * type: `boolean`
 * values: `true`/`false`
 
-### `serverConfig/endpoint`
-Defines whether a simple server will be used or not.
+## `serverConfig/endpoint`
+Defines the endpoint of the app.
 * default: `js`
 * type: `string`
-* values: `java`/`js`/`php`
+* values: `java`/`kotlin`/`js`/`php`
 
-### `serverConfig/packagePath`
-The package structure for java.
+## `serverConfig/packagePath`
+The package structure for java or kotlin.
 * default: EMPTY
 * type: `string`
