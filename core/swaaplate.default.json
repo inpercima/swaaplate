@@ -1,6 +1,6 @@
 {
   "generalConfig": {
-    "buildDir": "dist",
+    "buildWebDir": "dist",
     "github": {
       "use": false,
       "username": ""
@@ -36,6 +36,7 @@
   },
   "serverConfig": {
     "endpoint": "js",
+    "management": "",
     "packagePath": ""
   }
 }

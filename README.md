@@ -209,7 +209,7 @@ Defines the endpoint of the app.
 * type: `string`
 * values: `java`/`kotlin`/`js`/`php`
 
-### `serverConfig/managment`
+### `serverConfig/management`
 Defines the management tool of the app.
 * default: EMPTY
 * type: `string`
