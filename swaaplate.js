@@ -15,9 +15,4 @@ function init() {
 
   const swaaplateJsonData = lightjs.readJson('swaaplate.json');
   swcore.createProject(swaaplateJsonData);
-  swcore.updateComponents(swaaplateJsonData);
-  swcore.updatePackageJsonData(swaaplateJsonData);
-  swcore.updateConfigJsonData(swaaplateJsonData);
-  swcore.updateGeneralProjectData(swaaplateJsonData);
-  swcore.updateProjectDataByOption(swaaplateJsonData);
 }
