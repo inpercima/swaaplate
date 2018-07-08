@@ -7,6 +7,29 @@
 
 Projects like [publicmedia](https://github.com/inpercima/publicmedia), [mittagstisch](https://github.com/inpercima/mittagstisch) or [run-and-fun-2](https://github.com/inpercima/run-and-fun-2) are build on it.
 
+## Benefits of swaaplate
+With swaaplate the goal should be to create an Angular-Web App with a backend of your choice.
+With which techniques, languages ​​and tools you would worked, should be set free.
+Swaaplate allows you to combine your choices.
+
+Currently the following combinations are possible.
+* `Angular` - `js` - `npm`
+* `Angular` - `js` - `yarn`
+* `Angular` - `php` - `npm`
+* `Angular` - `php` - `yarn`
+* `Angular` - `java (Spring-Boot)` - `npm`
+* `Angular` - `java (Spring-Boot)` - `yarn`
+* `Angular` - `java (Spring-Boot)` - `maven` - `npm`
+* `Angular` - `java (Spring-Boot)` - `maven` - `yarn`
+* `Angular` - `java (Spring-Boot)` - `gradle` - `npm` in development
+* `Angular` - `java (Spring-Boot)` - `gradle` - `yarn` in development
+* `Angular` - `kotlin (Spring-Boot)` - `npm`
+* `Angular` - `kotlin (Spring-Boot)` - `yarn`
+* `Angular` - `kotlin (Spring-Boot)` - `maven` - `npm`
+* `Angular` - `kotlin (Spring-Boot)` - `maven` - `yarn`
+* `Angular` - `kotlin (Spring-Boot)` - `gradle` - `npm` in development
+* `Angular` - `kotlin (Spring-Boot)` - `gradle` - `yarn`  in development
+
 ## Prerequisites
 * `node 8.11.3` or higher in combination with
   * `npm 5.6.0` or higher or
@@ -19,8 +42,8 @@ Projects like [publicmedia](https://github.com/inpercima/publicmedia), [mittagst
 git clone https://github.com/inpercima/swaaplate
 cd swaaplate
 
-# copy swaaplate.default.json to swaaplate.json
-cp swaaplate.default.json swaaplate.json
+# copy core/swaaplate.default.json to swaaplate.json
+cp core/swaaplate.default.json swaaplate.json
 
 # install tools
 yarn
@@ -35,7 +58,7 @@ All options have to bet set but some of them do not need to be changed.
 Some of this options will be copied in `config.json` of the new project and can be changed later.
 
 ### Table of contents
-* [generalConfig/buildDir](#generalconfigbuilddir)
+* [generalConfig/buildWebDir](#generalconfigbuildwebdir)
 * [generalConfig/github/use](#generalconfiggithubuse)
 * [generalConfig/github/username](#generalconfiggithubusername)
 * [generalConfig/outputDir](#generalconfigoutputdir)
@@ -57,10 +80,12 @@ Some of this options will be copied in `config.json` of the new project and can 
 * [routeConfig/notFound/name](#routeconfignotfoundname)
 * [routeConfig/notFound/redirect](#routeconfignotfoundredirect)
 * [serverConfig/endpoint](#serverconfigendpoint)
+* [serverConfig/management](#serverconfigmanagement)
 * [serverConfig/packagePath](#serverconfigpackagepath)
 
-### `generalConfig/buildDir`
-Path to the exports from angular for buildtime.
+### `generalConfig/buildWebDir`
+Path to the target from the angular webapp for buildtime.
+Hint: This folder will be created in the root of the project.
 * default: `dist`
 * type: `string`
 
@@ -178,13 +203,19 @@ Defines whether the 404 route will redirect to the default route or not. This op
 * type: `boolean`
 * values: `true`/`false`
 
-## `serverConfig/endpoint`
+### `serverConfig/endpoint`
 Defines the endpoint of the app.
 * default: `js`
 * type: `string`
 * values: `java`/`kotlin`/`js`/`php`
 
-## `serverConfig/packagePath`
+### `serverConfig/management`
+Defines the management tool of the app.
+* default: EMPTY
+* type: `string`
+* values: EMPTY/`maven`/`gradle`/
+
+### `serverConfig/packagePath`
 The package structure for java or kotlin.
 * default: EMPTY
 * type: `string`
