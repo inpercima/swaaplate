@@ -1,0 +1,91 @@
+'use strict';
+
+/* requirements */
+const lightjs = require('light-js');
+const os = require('os');
+const path = require('path');
+const replace = require('replace');
+const shjs = require('shelljs');
+
+let endpoint = {};
+
+/**
+ * Configures the endpoint of the app.
+ *
+ * @param {object} swaaplateJsonData 
+ */
+function configureEndpoint(swaaplateJsonData, projectDir) {
+  const serverConfig = swaaplateJsonData.serverConfig;
+  // java, kotlin and php
+  const srcMain = 'src/main/';
+  // java or kotlin
+  if (serverConfig.endpoint === 'java' || serverConfig.endpoint === 'kotlin') {
+    javaKotlin(srcMain, projectDir, serverConfig);
+  }
+  // php
+  if (serverConfig.endpoint === 'php') {
+    php(srcMain, projectDir);
+  }
+  // java, kotlin and php
+  if (serverConfig.endpoint !== 'js') {
+    lightjs.info('remove all unneeded dependencies and replace code for chosen endpoint');
+
+    replace({ regex: 'import { fake.*\\s*', replacement: os.EOL, paths: [path.join(projectDir, 'src/web/app.module.ts')], silent: true });
+    replace({ regex: '  providers.*\\s*.*\\s*.*\\s*}', replacement: '}', paths: [path.join(projectDir, 'src/web/app.module.ts')], silent: true });
+    shjs.rm(path.join(projectDir, 'src/web/login/fake-backend-interceptor.ts'));
+
+    let post = `$1${os.EOL}    const body = this.formService.createBody(formGroup);${os.EOL}`;
+    post += '    const header = this.formService.createHeader();';
+    replace({ regex: '(Observable<boolean> {)', replacement: post, paths: [path.join(projectDir, 'src/web/core/auth.service.ts')], silent: true });
+    replace({ regex: 'formGroup.value', replacement: 'body, header', paths: [path.join(projectDir, 'src/web/core/auth.service.ts')], silent: true });
+  }
+  // js
+  if (serverConfig.endpoint === 'js') {
+    lightjs.info(`use endpoint 'js', nothing special todo`);
+  }
+}
+
+function javaKotlin(srcMain, projectDir, serverConfig) {
+  const endpoint = serverConfig.endpoint;
+  lightjs.info(`use endpoint '${endpoint}', create 'src/main/..' and 'src/test/..'`);
+
+  const srcTest = 'src/test/';
+  const endpointExt = endpoint === 'kotlin' ? 'kt' : endpoint;
+  const endpointPath = path.join(endpoint, serverConfig.packagePath.replace(/\./g, '/'));
+  const srcMainEndpointPath = path.join(projectDir, srcMain, endpointPath);
+  const srcMainResources = path.join(projectDir, srcMain, 'resources');
+  shjs.mkdir('-p', srcMainEndpointPath);
+  shjs.cp(`endpoint/${endpoint}/Application.${endpointExt}`, srcMainEndpointPath);
+  shjs.mkdir('-p', srcMainResources);
+  shjs.cp('endpoint/java-kotlin/logback.xml', srcMainResources);
+  shjs.cp('endpoint/java-kotlin/application.yml', srcMainResources);
+  shjs.mkdir('-p', path.join(projectDir, srcTest, endpointPath));
+  shjs.mkdir('-p', path.join(projectDir, srcTest, 'resources'));
+  replace({ regex: 'net.inpercima.swaaplate', replacement: serverConfig.packagePath, paths: [
+    path.join(projectDir, srcMain, endpointPath, `Application.${endpointExt}`),
+    path.join(srcMainResources, 'logback.xml'),
+  ], silent: true });
+  const indentSizeEndpoint = endpoint === 'kotlin' ? 2 : 4;
+  const config = `${os.EOL}${os.EOL}[logback.xml]${os.EOL}indent_size = 4${os.EOL}${os.EOL}[*.${endpointExt}]${os.EOL}indent_size = ${indentSizeEndpoint}`;
+  const editorconfig = path.join(projectDir, '.editorconfig');
+  replace({ regex: '(trim_trailing_whitespace = true)', replacement: `$1${config}`, paths: [editorconfig], silent: true });
+}
+
+function php(srcMain, projectDir) {
+  lightjs.info(`use endpoint 'php', update webpack config and api-endpoint`);
+
+  const srcMainPath = path.join(projectDir, srcMain);
+  shjs.mkdir('-p', srcMainPath);
+  shjs.cp('endpoint/php/*', srcMainPath);
+  const copyWebpackPlugin = `$1${os.EOL}const CopyWebpackPlugin = require('copy-webpack-plugin');`;
+  const webpackCommonJs = path.join(projectDir, 'webpack.common.js');
+  replace({ regex: '(Clean.*=.*)', replacement: copyWebpackPlugin, paths: [webpackCommonJs], silent: true });
+  const copyWebpackPluginSection = `$1${os.EOL}    new CopyWebpackPlugin([{${os.EOL}      from: './src/main',${os.EOL}    }]),`;
+  replace({ regex: '(new Clean.*)', replacement: copyWebpackPluginSection, paths: [webpackCommonJs], silent: true });
+  const authServicePath = path.join(projectDir, 'src/web/core/auth.service.ts');
+  replace({ regex: '\\/api\\/authenticate', replacement: './auth.handler.php?authenticate', paths: [authServicePath], silent: true });
+}
+
+endpoint.configureEndpoint = configureEndpoint;
+
+module.exports = endpoint;
