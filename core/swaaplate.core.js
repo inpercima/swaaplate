@@ -5,6 +5,7 @@ const lightjs = require('light-js');
 const os = require('os');
 const path = require('path');
 const replace = require('replace');
+const request = require('request');
 const shjs = require('shelljs');
 
 const swcomponent = require('./swaaplate.component.js');
@@ -36,6 +37,7 @@ function createProject(swaaplateJsonData) {
   updatePackageJsonData(swaaplateJsonData, projectDir);
   updateConfigJsonData(swaaplateJsonData, projectDir);
   updateGeneralProjectData(swaaplateJsonData, projectDir);
+  updateGitignore(swaaplateJsonData, projectDir);
 
   swendpoint.configureEndpoint(swaaplateJsonData, projectDir);
   swmanagement.configureManagement(swaaplateJsonData, projectDir);
@@ -143,6 +145,20 @@ function replaceInReadme(swaaplateJsonData, projectDir) {
   const defaultRoute = swaaplateJsonData.routeConfig.default;
   if (defaultRoute !== 'dashboard') {
     replace({regex: '`dashboard`', replacement: `\`${defaultRoute}\``, paths: [readmePath], silent: true });
+  }
+
+}
+
+function updateGitignore(swaaplateJsonData, projectDir) {
+  const endpoint = swaaplateJsonData.serverConfig.endpoint;
+  if (endpoint === 'java' || endpoint === 'kotlin') {
+    const management = swaaplateJsonData.serverConfig.management;
+    const managementApi = management === 'maven' || management === 'gradle' ? `${management},` : '';
+    const gitignore = path.join(projectDir, '.gitignore');
+    const api = `https://www.gitignore.io/api/node,${endpoint},${managementApi}eclipse,intellij+all,visualstudiocode`;
+    request(api, function (error, response, body) {
+      replace({regex: '\\s# Created by https:.*((.|\\n)*)# End of https:.*\\s*', replacement: body, paths: [gitignore], silent: true });
+    });
   }
 }
 

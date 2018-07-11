@@ -11,6 +11,7 @@
     "angular-webpack-minimum": "inpercima/angular-webpack-minimum#5fb75e8",
     "light-js": "inpercima/light-js#v0.1.1",
     "replace": "1.0.0",
+    "request": "2.87.0",
     "shelljs": "0.8.2",
     "uppercamelcase": "3.0.0"
   },
