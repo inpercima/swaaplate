@@ -4,15 +4,14 @@
 [![dependencies Status](https://david-dm.org/inpercima/swaaplate/status.svg)](https://david-dm.org/inpercima/swaaplate)
 [![devDependencies Status](https://david-dm.org/inpercima/swaaplate/dev-status.svg)](https://david-dm.org/inpercima/swaaplate?type=dev)
 
-[s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple own template for webapps.
+[s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple template generator for angular webapps.
 
 Projects like [publicmedia](https://github.com/inpercima/publicmedia), [mittagstisch](https://github.com/inpercima/mittagstisch) or [run-and-fun-2](https://github.com/inpercima/run-and-fun-2) are build on it.
 
 ## Benefits of swaaplate
 
-With swaaplate the goal should be to create an Angular-Web App with a backend of your choice.
-With which techniques, languages ​​and tools you would worked, should be set free.
-Swaaplate allows you to combine your choices.
+With swaaplate, the goal should be to create an Angular web app with a selected backend.
+Which techniques, languages and tools are to be used can be selected and appropriately combined.
 
 Currently the following combinations are possible.
 * `Angular` - `js` - `npm`
