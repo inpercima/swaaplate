@@ -147,6 +147,11 @@ function replaceInReadme(swaaplateJsonData, projectDir) {
     replace({regex: '`dashboard`', replacement: `\`${defaultRoute}\``, paths: [readmePath], silent: true });
   }
 
+  const endpoint = swaaplateJsonData.serverConfig.endpoint;
+  if (endpoint === 'java' || endpoint === 'kotlin') {
+    replace({regex: '(## Usage\\s)', replacement: `$1${os.EOL}TODO: Update usage for ${endpoint}${os.EOL}`, paths: [readmePath], silent: true });
+  }
+
 }
 
 function updateGitignore(swaaplateJsonData, projectDir) {
