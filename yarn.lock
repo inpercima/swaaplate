@@ -85,9 +85,9 @@ ajv@^5.1.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-angular-webpack-minimum@inpercima/angular-webpack-minimum#5fb75e8:
+angular-webpack-minimum@inpercima/angular-webpack-minimum#5795319:
   version "0.0.7-SNAPSHOT"
-  resolved "https://codeload.github.com/inpercima/angular-webpack-minimum/tar.gz/5fb75e810e4f7d751c36a40c214781ef1989123e"
+  resolved "https://codeload.github.com/inpercima/angular-webpack-minimum/tar.gz/57953198f9363b448bf7515410756eec7ae20782"
   dependencies:
     "@angular/animations" "6.0.7"
     "@angular/cdk" "6.3.2"
