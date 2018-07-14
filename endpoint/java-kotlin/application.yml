@@ -4,12 +4,12 @@
 
 # DAO (PersistenceExceptionTranslationAutoConfiguration)
 # needed as a workaround for spring-boot 1.2+
-spring
-  dao
-    exceptiontranslation
+spring:
+  dao:
+    exceptiontranslation:
       enabled: false
 
 # enable gz compression
-server
-  compression
+server:
+  compression:
     enabled: true
