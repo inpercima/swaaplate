@@ -175,7 +175,7 @@ The name (foldername) of the project in the workspace. See `generalConfig/output
 
 ### `packageJsonConfig/repository`
 
-The repository.
+The repository. If `generalConfig/github/use` is activated, the repository will automatically generated.
 * default: EMPTY
 * type: `string`
 

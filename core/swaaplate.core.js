@@ -55,7 +55,9 @@ function updatePackageJsonData(swaaplateJsonData, projectDir) {
   packageJsonData.description = config.description;
   packageJsonData.homepage = config.homepage;
   packageJsonData.name = config.name;
-  packageJsonData.repository = config.repository;
+
+  const github = swaaplateJsonData.generalConfig.github;
+  packageJsonData.repository = github.use ? `https://github.com/${github.username}/${config.name}` : config.repository;
   packageJsonData.devDependencies['light-js'] = 'inpercima/light-js#v0.1.1';
   if (swaaplateJsonData.serverConfig.endpoint === 'php') {
     packageJsonData.devDependencies['copy-webpack-plugin'] = '4.5.1';
