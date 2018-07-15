@@ -4,32 +4,32 @@
 [![dependencies Status](https://david-dm.org/inpercima/swaaplate/status.svg)](https://david-dm.org/inpercima/swaaplate)
 [![devDependencies Status](https://david-dm.org/inpercima/swaaplate/dev-status.svg)](https://david-dm.org/inpercima/swaaplate?type=dev)
 
-[s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple template generator for angular webapps.
+[s]imple [w]eb [a]pp [a]ngular tem[plate] generator. A simple generator of a web app based on angular.
 
 Projects like [publicmedia](https://github.com/inpercima/publicmedia), [mittagstisch](https://github.com/inpercima/mittagstisch) or [run-and-fun-2](https://github.com/inpercima/run-and-fun-2) are build on it.
 
 ## Benefits of swaaplate
 
-With swaaplate, the goal should be to create an Angular web app with a selected backend.
-Which techniques, languages and tools are to be used can be selected and appropriately combined.
+With swaaplate, the goal should be to create an angular web app with one of four backends, one of two management tools and one of two js dependency manager.
+You can choose between `js`, `php`, `java` or `kotlin` as backend, `maven` or `gradle` as management tool and `npm` or `yarn` as js dependency manager.
 
 Currently the following combinations are possible.
-* `Angular` - `js` - `npm`
-* `Angular` - `js` - `yarn`
-* `Angular` - `php` - `npm`
-* `Angular` - `php` - `yarn`
-* `Angular` - `java (Spring-Boot)` - `npm`
-* `Angular` - `java (Spring-Boot)` - `yarn`
-* `Angular` - `java (Spring-Boot)` - `maven` - `npm`
-* `Angular` - `java (Spring-Boot)` - `maven` - `yarn`
-* `Angular` - `java (Spring-Boot)` - `gradle` - `npm` in development
-* `Angular` - `java (Spring-Boot)` - `gradle` - `yarn` in development
-* `Angular` - `kotlin (Spring-Boot)` - `npm`
-* `Angular` - `kotlin (Spring-Boot)` - `yarn`
-* `Angular` - `kotlin (Spring-Boot)` - `maven` - `npm`
-* `Angular` - `kotlin (Spring-Boot)` - `maven` - `yarn`
-* `Angular` - `kotlin (Spring-Boot)` - `gradle` - `npm` in development
-* `Angular` - `kotlin (Spring-Boot)` - `gradle` - `yarn`  in development
+* `angular` - `js` - `npm`
+* `angular` - `js` - `yarn`
+* `angular` - `php` - `npm`
+* `angular` - `php` - `yarn`
+* `angular` - `java (Spring-Boot)` - `npm`
+* `angular` - `java (Spring-Boot)` - `yarn`
+* `angular` - `java (Spring-Boot)` - `maven` - `npm`
+* `angular` - `java (Spring-Boot)` - `maven` - `yarn`
+* `angular` - `java (Spring-Boot)` - `gradle` - `npm` in development
+* `angular` - `java (Spring-Boot)` - `gradle` - `yarn` in development
+* `angular` - `kotlin (Spring-Boot)` - `npm`
+* `angular` - `kotlin (Spring-Boot)` - `yarn`
+* `angular` - `kotlin (Spring-Boot)` - `maven` - `npm`
+* `angular` - `kotlin (Spring-Boot)` - `maven` - `yarn`
+* `angular` - `kotlin (Spring-Boot)` - `gradle` - `npm` in development
+* `angular` - `kotlin (Spring-Boot)` - `gradle` - `yarn`  in development
 
 ## Prerequisites
 
