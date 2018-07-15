@@ -162,7 +162,7 @@ A description.
 
 ### `packageJsonConfig/homepage`
 
-The website.
+The website. If this option is empty and `packageJsonConfig/repository` is set, this will be the same.
 * default: EMPTY
 * type: `string`
 
@@ -174,7 +174,7 @@ The name (foldername) of the project in the workspace. See `generalConfig/output
 
 ### `packageJsonConfig/repository`
 
-The repository. If `generalConfig/github/use` is activated, the repository will automatically generated.
+The repository. If `generalConfig/github/use` is activated, the repository will be generated automatically.
 * default: EMPTY
 * type: `string`
 

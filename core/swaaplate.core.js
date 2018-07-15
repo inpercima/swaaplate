@@ -53,7 +53,6 @@ function updatePackageJsonData(swaaplateJsonData, projectDir) {
   packageJsonData.author = config.author;
   packageJsonData.contributors = config.contributors;
   packageJsonData.description = config.description;
-  packageJsonData.homepage = config.homepage;
   packageJsonData.name = config.name;
 
   const github = swaaplateJsonData.generalConfig.github;
@@ -62,6 +61,13 @@ function updatePackageJsonData(swaaplateJsonData, projectDir) {
   if (swaaplateJsonData.serverConfig.endpoint === 'php') {
     packageJsonData.devDependencies['copy-webpack-plugin'] = '4.5.1';
   }
+
+  if (config.homepage === '' && packageJsonData.repository !== '') {
+    packageJsonData.homepage = packageJsonData.repository;
+  } else {
+    packageJsonData.homepage = config.homepage;
+  }
+
   packageJsonData.version = '0.0.1-SNAPSHOT';
   lightjs.writeJson(packageJson, packageJsonData);
 }
