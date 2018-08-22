@@ -33,6 +33,8 @@ Currently the following combinations are possible.
 
 ## Prerequisites
 
+### Node, npm or yarn
+
 * `node 8.11.3` or higher in combination with
   * `npm 5.6.0` or higher or
   * `yarn 1.7.0` or higher, used in this repository
