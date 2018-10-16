@@ -8,7 +8,7 @@
   ],
   "description": "[s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple own template for webapps.",
   "devDependencies": {
-    "angular-webpack-minimum": "inpercima/angular-webpack-minimum#v0.0.9",
+    "angular-cli-for-swaaplate": "inpercima/angular-cli-for-swaaplate#ba9b925",
     "light-js": "inpercima/light-js#v0.1.1",
     "replace": "1.0.0",
     "request": "2.88.0",
@@ -22,5 +22,5 @@
   "name": "swaaplate",
   "private": true,
   "repository": "https://github.com/inpercima/swaaplate",
-  "version": "0.1.0"
+  "version": "0.1.1-SNAPSHOT"
 }
