@@ -12,12 +12,21 @@ let endpoint = {};
 /**
  * Configures the endpoint of the app.
  *
- * @param {object} swaaplateJsonData 
+ * @param {object} swaaplateJsonData
  */
 function configureEndpoint(swaaplateJsonData, projectDir) {
   const serverConfig = swaaplateJsonData.serverConfig;
   // java, kotlin and php
   const srcMain = 'src/main/';
+  if (serverConfig.endpoint !== 'js') {
+    shjs.mv(path.join(projectDir, 'src'), path.join(projectDir, 'web'));
+    shjs.mkdir('-p', path.join(projectDir, 'src'));
+    shjs.mv(path.join(projectDir, 'web'), path.join(projectDir, 'src/'));
+
+    const tsConfigAppJson = path.join(projectDir, 'src/web/tsconfig.app.json');
+    lightjs.replacement('(tsconfig.json)', '../$1', [tsConfigAppJson]);
+    lightjs.replacement('(out-tsc)', '../$1', [tsConfigAppJson]);
+  }
   // java or kotlin
   if (serverConfig.endpoint === 'java' || serverConfig.endpoint === 'kotlin') {
     javaKotlin(srcMain, projectDir, serverConfig, swaaplateJsonData.packageJsonConfig.author);
@@ -30,14 +39,21 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
   if (serverConfig.endpoint !== 'js') {
     lightjs.info('remove all unneeded dependencies and replace code for chosen endpoint');
 
-    replace({ regex: 'import { fake.*\\s*', replacement: os.EOL, paths: [path.join(projectDir, 'src/web/app.module.ts')], silent: true });
-    replace({ regex: '  providers.*\\s*.*\\s*.*\\s*}', replacement: '}', paths: [path.join(projectDir, 'src/web/app.module.ts')], silent: true });
-    shjs.rm(path.join(projectDir, 'src/web/login/fake-backend-interceptor.ts'));
+    const appModuleTs = path.join(projectDir, 'src/web/app/app.module.ts');
+    lightjs.replacement('import { fake.*\\s*', '', [appModuleTs]);
+    lightjs.replacement('  providers.*\\s*.*\\s*.*\\s*}', '}', [appModuleTs]);
+    shjs.rm(path.join(projectDir, 'src/web/app/login/fake-backend-interceptor.ts'));
+
+    replace({ regex: `(import { map } from 'rxjs/operators';)`, replacement: `$1${os.EOL}${os.EOL}import { FormService } from './form.service';`, paths: [path.join(projectDir, 'src/app/core/auth.service.ts')], silent: true });
+    replace({ regex: '(private http)', replacement: `private formService: FormService, $1`, paths: [path.join(projectDir, 'src/app/core/auth.service.ts')], silent: true });
+
+    replace({ regex: `(import { map } from 'rxjs/operators';)`, replacement: `$1${os.EOL}${os.EOL}import { FormService } from './form.service';`, paths: [path.join(projectDir, 'src/app/core/auth.service.ts')], silent: true });
+    replace({ regex: '(private http)', replacement: `private formService: FormService, $1`, paths: [path.join(projectDir, 'src/app/core/auth.service.ts')], silent: true });
 
     let post = `$1${os.EOL}    const body = this.formService.createBody(formGroup);${os.EOL}`;
     post += '    const header = this.formService.createHeader();';
-    replace({ regex: '(Observable<boolean> {)', replacement: post, paths: [path.join(projectDir, 'src/web/core/auth.service.ts')], silent: true });
-    replace({ regex: 'formGroup.value', replacement: 'body, header', paths: [path.join(projectDir, 'src/web/core/auth.service.ts')], silent: true });
+    replace({ regex: '(Observable<boolean> {)', replacement: post, paths: [path.join(projectDir, 'src/app/core/auth.service.ts')], silent: true });
+    replace({ regex: 'formGroup.value', replacement: 'body, header', paths: [path.join(projectDir, 'src/app/core/auth.service.ts')], silent: true });
   }
   // js
   if (serverConfig.endpoint === 'js') {
@@ -88,12 +104,12 @@ function php(srcMain, projectDir) {
 
   const copyWebpackPlugin = `$1${os.EOL}const CopyWebpackPlugin = require('copy-webpack-plugin');`;
   const webpackCommonJs = path.join(projectDir, 'webpack.common.js');
-  replace({ regex: '(Clean.*=.*)', replacement: copyWebpackPlugin, paths: [webpackCommonJs], silent: true });
+  // replace({ regex: '(Clean.*=.*)', replacement: copyWebpackPlugin, paths: [webpackCommonJs], silent: true });
 
-  const copyWebpackPluginSection = `$1${os.EOL}    new CopyWebpackPlugin([{${os.EOL}      from: './src/main',${os.EOL}    }]),`;
-  replace({ regex: '(new Clean.*)', replacement: copyWebpackPluginSection, paths: [webpackCommonJs], silent: true });
+  // const copyWebpackPluginSection = `$1${os.EOL}    new CopyWebpackPlugin([{${os.EOL}      from: './src/main',${os.EOL}    }]),`;
+  // replace({ regex: '(new Clean.*)', replacement: copyWebpackPluginSection, paths: [webpackCommonJs], silent: true });
 
-  const authServicePath = path.join(projectDir, 'src/web/core/auth.service.ts');
+  const authServicePath = path.join(projectDir, 'src/app/core/auth.service.ts');
   replace({ regex: '\\/api\\/authenticate', replacement: './auth.handler.php?authenticate', paths: [authServicePath], silent: true });
 }
 

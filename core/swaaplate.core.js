@@ -17,7 +17,7 @@ let core = {};
 /**
  * Creates the project for the specific endpoint.
  *
- * @param {object} swaaplateJsonData 
+ * @param {object} swaaplateJsonData
  */
 function createProject(swaaplateJsonData) {
   const projectName = swaaplateJsonData.packageJsonConfig.name;
@@ -26,11 +26,10 @@ function createProject(swaaplateJsonData) {
   lightjs.info(`create project '${projectName}' in '${outputDir}'`);
 
   shjs.mkdir('-p', projectDir);
-  shjs.cp('-r', 'node_modules/angular-webpack-minimum/*', projectDir);
-  shjs.cp('-r', 'node_modules/angular-webpack-minimum/.editorconfig', projectDir);
-  shjs.cp('-r', 'node_modules/angular-webpack-minimum/.gitattributes', projectDir);
-  shjs.cp('-r', 'node_modules/angular-webpack-minimum/.gitignore', projectDir);
-  shjs.cp('core/swaaplate-update*.js*', projectDir);
+  shjs.cp('-r', 'node_modules/angular-cli-for-swaaplate/*', projectDir);
+  shjs.cp('-r', 'node_modules/angular-cli-for-swaaplate/.editorconfig', projectDir);
+  shjs.cp('-r', 'node_modules/angular-cli-for-swaaplate/.gitattributes', projectDir);
+  shjs.cp('-r', 'node_modules/angular-cli-for-swaaplate/.gitignore', projectDir);
   shjs.cp('swaaplate.json', path.join(projectDir, 'swaaplate-backup.json'));
   shjs.rm(path.join(projectDir, 'yarn.lock'));
 
@@ -92,8 +91,6 @@ function updateConfigJsonData(swaaplateJsonData, projectDir) {
 }
 
 function updateGeneralProjectData(swaaplateJsonData, projectDir) {
-  lightjs.info(`update '${path.join(projectDir, 'webpack.common.js')}'`);
-  lightjs.info(`update '${path.join(projectDir, 'webpack.dev.js')}'`);
   lightjs.info(`update '${path.join(projectDir, '.gitignore')}'`);
 
   const buildWebDir = swaaplateJsonData.generalConfig.buildWebDir;
@@ -101,8 +98,6 @@ function updateGeneralProjectData(swaaplateJsonData, projectDir) {
   if (buildWebDir !== distDir) {
     replace({
       regex: `(\\'|\\s|\\/)(${distDir})(\\'|\\/|\\s)`, replacement: `$1${buildWebDir}$3`, paths: [
-        path.join(projectDir, 'webpack.common.js'),
-        path.join(projectDir, 'webpack.dev.js'),
         path.join(projectDir, '.gitignore'),
       ], silent: true
     });
@@ -125,8 +120,8 @@ function replaceInReadme(swaaplateJsonData, projectDir) {
   const packageJsonConfig = swaaplateJsonData.packageJsonConfig;
   const name = packageJsonConfig.name;
   const readmePath = path.join(projectDir, readme);
-  replace({regex: 'angular-webpack-minimum', replacement: `${name}`, paths: [readmePath], silent: true });
-  replace({regex: '`angular-webpack-minimum`', replacement: `\`${name}\``, paths: [readmePath], silent: true });
+  replace({regex: 'angular-cli-for-swaaplate', replacement: `${name}`, paths: [readmePath], silent: true });
+  replace({regex: '`angular-cli-for-swaaplate', replacement: `\`${name}\``, paths: [readmePath], silent: true });
   replace({regex: '(git clone )(.+)', replacement: `$1${packageJsonConfig.repository}`, paths: [readmePath], silent: true });
 
   const generated = 'This project was generated with [swaaplate](https://github.com/inpercima/swaaplate).';
@@ -138,7 +133,7 @@ function replaceInReadme(swaaplateJsonData, projectDir) {
   const github = generalConfig.github;
   if (github.use) {
     replace({regex: '(org\\/)(inpercima)', replacement: `$1${github.username}`, paths: [readmePath], silent: true });
-    replace({regex: '(\\/)(angular-webpack-minimum)(\\/|\\?|\\))', replacement: `$1${name}$3`, paths: [readmePath], silent: true });
+    replace({regex: '(\\/)(angular-cli-for-swaaplate)(\\/|\\?|\\))', replacement: `$1${name}$3`, paths: [readmePath], silent: true });
   } else {
     replace({regex: '\\[!\\[dependencies.*\\s\\[.*\\s', replacement: '', paths: [readmePath], silent: true });
   }
