@@ -46,10 +46,6 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
 
     replace({ regex: `(import { map } from 'rxjs/operators';)`, replacement: `$1${os.EOL}${os.EOL}import { FormService } from './form.service';`, paths: [path.join(projectDir, 'src/app/core/auth.service.ts')], silent: true });
     replace({ regex: '(private http)', replacement: `private formService: FormService, $1`, paths: [path.join(projectDir, 'src/app/core/auth.service.ts')], silent: true });
-
-    replace({ regex: `(import { map } from 'rxjs/operators';)`, replacement: `$1${os.EOL}${os.EOL}import { FormService } from './form.service';`, paths: [path.join(projectDir, 'src/app/core/auth.service.ts')], silent: true });
-    replace({ regex: '(private http)', replacement: `private formService: FormService, $1`, paths: [path.join(projectDir, 'src/app/core/auth.service.ts')], silent: true });
-
     let post = `$1${os.EOL}    const body = this.formService.createBody(formGroup);${os.EOL}`;
     post += '    const header = this.formService.createHeader();';
     replace({ regex: '(Observable<boolean> {)', replacement: post, paths: [path.join(projectDir, 'src/app/core/auth.service.ts')], silent: true });
