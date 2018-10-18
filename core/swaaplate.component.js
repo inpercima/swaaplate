@@ -3,7 +3,6 @@
 /* requirements */
 const lightjs = require('light-js');
 const path = require('path');
-const replace = require('replace');
 const shjs = require('shelljs');
 const uppercamelcase = require('uppercamelcase');
 
@@ -22,10 +21,10 @@ function configureComponents(swaaplateJsonData, projectDir) {
   const selectorPrefix = swaaplateJsonData.generalConfig.selectorPrefix;
 
   if (selectorPrefix !== 'app') {
-    replace({ regex: 'app-root', replacement: `${selectorPrefix}-root`, paths: [
+    lightjs.replacement('app-root', `${selectorPrefix}-root`, [
       path.join(srcDir, 'app/app.component.ts'),
       path.join(srcDir, 'index.html')
-    ], silent: true });
+    ]);
     const tslintJson = path.join(srcDir, 'tslint.json');
     const tslintJsonData = lightjs.readJson(tslintJson);
     tslintJsonData.rules["directive-selector"] = [true, "attribute", selectorPrefix, "camelCase"];
@@ -34,7 +33,7 @@ function configureComponents(swaaplateJsonData, projectDir) {
   }
   for (let i = 0; i < routes.length; i++) {
     const template = `'${selectorPrefix}-${configRoutes[i]}'`;
-    replace({ regex: `'app-${routes[i]}'`, replacement: template, paths: [path.join(srcDir, 'app')], silent: true, recursive: true });
+    lightjs.replacement(`'app-${routes[i]}'`, template, [path.join(srcDir, 'app')], true, true);
     if (configRoutes[i] !== routes[i]) {
       updateComponent(swaaplateJsonData, projectDir, routes[i], configRoutes[i]);
     }
@@ -59,9 +58,7 @@ function updateComponent(swaaplateJsonData, projectDir, oldName, newName) {
   }
   // changes not needed for login
   if (oldName !== 'login') {
-    replace({ regex: `${oldName}`, replacement: `${newName}`, paths: [
-      path.join(srcDir, newName, `${newName}.component.html`)
-    ], silent: true });
+    lightjs.replacement(`${oldName}`, `${newName}`, [path.join(srcDir, newName, `${newName}.component.html`)]);
   }
 
   // special for login
@@ -74,18 +71,15 @@ function updateComponent(swaaplateJsonData, projectDir, oldName, newName) {
   lightjs.replacement(`${oldUpper}Component`, `${newUpper}Component`, [srcDir], true, true);
   lightjs.replacement(`${oldUpper}Module`, `${newUpper}Module`, [srcDir], true, true);
   lightjs.replacement( `${oldUpper}RoutingModule`, `${newUpper}RoutingModule`, [srcDir], true, true);
-  lightjs.replacement(`(\\'|/|\\s)(${oldName})(\\'|\\.|-)`, `$1${newName}$3`, [srcDir], true, true);
+  lightjs.replacement(`(\\'|\\/|\\s)(${oldName})(\\'|\\.|-)`, `$1${newName}$3`, [srcDir], true, true);
   lightjs.replacement(`(\\./)(${oldName})(/${newName})`, `$1${newName}$3`, [srcDir], true, true);
 
-  replace({ regex: `${oldName}Module`, replacement: `${newName}Module`, paths: [srcDir], silent: true, recursive: true });
-  replace({ regex: `${oldName}RoutingModule`, replacement: `${newName}RoutingModule`, paths: [srcDir], silent: true, recursive: true });
-
-  replace({ regex: `${oldName}Module`, replacement: `${newName}Module`, paths: [srcDir], silent: true, recursive: true });
-  replace({ regex: `${oldName}RoutingModule`, replacement: `${newName}RoutingModule`, paths: [srcDir], silent: true, recursive: true });
+  lightjs.replacement(`${oldName}Module`, `${newName}Module`, [srcDir], true, true);
+  lightjs.replacement(`${oldName}RoutingModule`, `${newName}RoutingModule`, [srcDir], true, true);
 
   // changes needed for login only after movement
   if (oldName === 'login') {
-    replace({ regex: 'loginForm', replacement: `${newName}Form`, paths: [path.join(srcDir, newName)], silent: true, recursive: true });
+    lightjs.replacement('loginForm', `${newName}Form`, [path.join(srcDir, newName)], true, true);
   }
 }
 
