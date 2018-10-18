@@ -20,12 +20,13 @@ function configureComponents(swaaplateJsonData, projectDir) {
   const srcDir = path.join(projectDir, 'src');
   const selectorPrefix = swaaplateJsonData.generalConfig.selectorPrefix;
 
+  const appPath = swaaplateJsonData.serverConfig.endpoint !== 'js' ? 'web/' : '';
   if (selectorPrefix !== 'app') {
     lightjs.replacement('app-root', `${selectorPrefix}-root`, [
-      path.join(srcDir, 'app/app.component.ts'),
-      path.join(srcDir, 'index.html')
+      path.join(srcDir, appPath, 'app/app.component.ts'),
+      path.join(srcDir, appPath, 'index.html')
     ]);
-    const tslintJson = path.join(srcDir, 'tslint.json');
+    const tslintJson = path.join(srcDir, appPath, 'tslint.json');
     const tslintJsonData = lightjs.readJson(tslintJson);
     tslintJsonData.rules["directive-selector"] = [true, "attribute", selectorPrefix, "camelCase"];
     tslintJsonData.rules["component-selector"] = [true, "element", selectorPrefix, "kebab-case"];
@@ -33,17 +34,17 @@ function configureComponents(swaaplateJsonData, projectDir) {
   }
   for (let i = 0; i < routes.length; i++) {
     const template = `'${selectorPrefix}-${configRoutes[i]}'`;
-    lightjs.replacement(`'app-${routes[i]}'`, template, [path.join(srcDir, 'app')], true, true);
+    lightjs.replacement(`'app-${routes[i]}'`, template, [path.join(srcDir, appPath, 'app')], true, true);
     if (configRoutes[i] !== routes[i]) {
-      updateComponent(swaaplateJsonData, projectDir, routes[i], configRoutes[i]);
+      updateComponent(appPath, projectDir, routes[i], configRoutes[i]);
     }
   }
 }
 
-function updateComponent(swaaplateJsonData, projectDir, oldName, newName) {
+function updateComponent(appPath, projectDir, oldName, newName) {
   lightjs.info(`update component '${oldName}' to '${newName}'`);
 
-  const srcDir = path.join(projectDir, 'src/app', oldName === 'dashboard' ? 'features' : '');
+  const srcDir = path.join(projectDir, 'src', appPath, 'app', oldName === 'dashboard' ? 'features' : '');
   shjs.mv(path.join(srcDir, oldName), path.join(srcDir, newName));
 
   shjs.mv(path.join(srcDir, newName, `${oldName}.component.html`), path.join(srcDir, newName, `${newName}.component.html`));

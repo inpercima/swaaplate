@@ -38,12 +38,12 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
   if (serverConfig.endpoint !== 'js') {
     lightjs.info('remove all unneeded dependencies and replace code for chosen endpoint');
 
-    const appModuleTs = path.join(projectDir, 'src/app/app.module.ts');
+    const appModuleTs = path.join(projectDir, 'src/web/app/app.module.ts');
     lightjs.replacement('import { fake.*\\s*', os.EOL, [appModuleTs]);
     lightjs.replacement('  providers.*\\s*.*\\s*.*\\s*}', '}', [appModuleTs]);
-    shjs.rm(path.join(projectDir, 'src/app/login/fake-backend-interceptor.ts'));
+    shjs.rm(path.join(projectDir, 'src/web/app/login/fake-backend-interceptor.ts'));
 
-    const authServiceTs = path.join(projectDir, 'src/app/core/auth.service.ts');
+    const authServiceTs = path.join(projectDir, 'src/web/app/core/auth.service.ts');
     lightjs.replacement(`(import { map } from 'rxjs/operators';)`, `$1${os.EOL}${os.EOL}import { FormService } from './form.service';`, [authServiceTs]);
     lightjs.replacement('(private http)', `private formService: FormService, $1`, [authServiceTs]);
 
@@ -106,7 +106,7 @@ function php(srcMain, projectDir) {
   // const copyWebpackPluginSection = `$1${os.EOL}    new CopyWebpackPlugin([{${os.EOL}      from: './src/main',${os.EOL}    }]),`;
   // replace({ regex: '(new Clean.*)', replacement: copyWebpackPluginSection, paths: [webpackCommonJs], silent: true });
 
-  const authServicePath = path.join(projectDir, 'src/app/core/auth.service.ts');
+  const authServicePath = path.join(projectDir, 'src/web/app/core/auth.service.ts');
   lightjs.replacement('\\/api\\/authenticate', './auth.handler.php?authenticate', [authServicePath]);
 }
 
