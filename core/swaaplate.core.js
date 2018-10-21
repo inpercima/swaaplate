@@ -40,6 +40,8 @@ function createProject(swaaplateJsonData) {
   swendpoint.configureEndpoint(swaaplateJsonData, projectDir);
   swmanagement.configureManagement(swaaplateJsonData, projectDir);
   swcomponent.configureComponents(swaaplateJsonData, projectDir);
+
+  installDependencies(swaaplateJsonData, projectDir);
 }
 
 function updatePackageJsonData(swaaplateJsonData, projectDir) {
@@ -195,6 +197,20 @@ function updateGitignore(swaaplateJsonData, projectDir) {
     request(api, function (error, response, body) {
       lightjs.replacement('\\s# Created by https:.*((.|\\n)*)# End of https:.*\\s*', body, [gitignore]);
     });
+  }
+}
+
+function installDependencies(swaaplateJsonData, projectDir) {
+  const generalConfig = swaaplateJsonData.generalConfig;
+  if (generalConfig.installDependencies) {
+    const yarnOrNpm = generalConfig.useYarn ? 'yarn' : 'npm';
+    lightjs.info(`install dependencies via ${yarnOrNpm}`);
+
+    lightjs.setNpmDefault(!generalConfig.useYarn);
+    shjs.cd(path.join(projectDir));
+    lightjs.yarnpm('install');
+  } else {
+    lightjs.info('no dependencies will be installed');
   }
 }
 
