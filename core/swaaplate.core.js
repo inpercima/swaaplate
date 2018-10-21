@@ -4,7 +4,6 @@
 const lightjs = require('light-js');
 const os = require('os');
 const path = require('path');
-const replace = require('replace');
 const request = require('request');
 const shjs = require('shelljs');
 
@@ -17,7 +16,7 @@ let core = {};
 /**
  * Creates the project for the specific endpoint.
  *
- * @param {object} swaaplateJsonData 
+ * @param {object} swaaplateJsonData
  */
 function createProject(swaaplateJsonData) {
   const projectName = swaaplateJsonData.packageJsonConfig.name;
@@ -26,11 +25,10 @@ function createProject(swaaplateJsonData) {
   lightjs.info(`create project '${projectName}' in '${outputDir}'`);
 
   shjs.mkdir('-p', projectDir);
-  shjs.cp('-r', 'node_modules/angular-webpack-minimum/*', projectDir);
-  shjs.cp('-r', 'node_modules/angular-webpack-minimum/.editorconfig', projectDir);
-  shjs.cp('-r', 'node_modules/angular-webpack-minimum/.gitattributes', projectDir);
-  shjs.cp('-r', 'node_modules/angular-webpack-minimum/.gitignore', projectDir);
-  shjs.cp('core/swaaplate-update*.js*', projectDir);
+  shjs.cp('-r', 'node_modules/angular-cli-for-swaaplate/*', projectDir);
+  shjs.cp('-r', 'node_modules/angular-cli-for-swaaplate/.editorconfig', projectDir);
+  shjs.cp('-r', 'node_modules/angular-cli-for-swaaplate/.gitattributes', projectDir);
+  shjs.cp('-r', 'node_modules/angular-cli-for-swaaplate/.gitignore', projectDir);
   shjs.cp('swaaplate.json', path.join(projectDir, 'swaaplate-backup.json'));
   shjs.rm(path.join(projectDir, 'yarn.lock'));
 
@@ -42,6 +40,8 @@ function createProject(swaaplateJsonData) {
   swendpoint.configureEndpoint(swaaplateJsonData, projectDir);
   swmanagement.configureManagement(swaaplateJsonData, projectDir);
   swcomponent.configureComponents(swaaplateJsonData, projectDir);
+
+  installDependencies(swaaplateJsonData, projectDir);
 }
 
 function updatePackageJsonData(swaaplateJsonData, projectDir) {
@@ -59,7 +59,7 @@ function updatePackageJsonData(swaaplateJsonData, projectDir) {
   packageJsonData.repository = github.use ? `https://github.com/${github.username}/${config.name}` : config.repository;
   packageJsonData.devDependencies['light-js'] = 'inpercima/light-js#v0.1.1';
   if (swaaplateJsonData.serverConfig.endpoint === 'php') {
-    packageJsonData.devDependencies['copy-webpack-plugin'] = '4.5.1';
+    packageJsonData.devDependencies['copy-webpack-plugin'] = '4.5.4';
   }
 
   if (config.homepage === '' && packageJsonData.repository !== '') {
@@ -92,30 +92,23 @@ function updateConfigJsonData(swaaplateJsonData, projectDir) {
 }
 
 function updateGeneralProjectData(swaaplateJsonData, projectDir) {
-  lightjs.info(`update '${path.join(projectDir, 'webpack.common.js')}'`);
-  lightjs.info(`update '${path.join(projectDir, 'webpack.dev.js')}'`);
   lightjs.info(`update '${path.join(projectDir, '.gitignore')}'`);
 
   const buildWebDir = swaaplateJsonData.generalConfig.buildWebDir;
   const distDir = 'dist';
   if (buildWebDir !== distDir) {
-    replace({
-      regex: `(\\'|\\s|\\/)(${distDir})(\\'|\\/|\\s)`, replacement: `$1${buildWebDir}$3`, paths: [
-        path.join(projectDir, 'webpack.common.js'),
-        path.join(projectDir, 'webpack.dev.js'),
-        path.join(projectDir, '.gitignore'),
-      ], silent: true
-    });
+    lightjs.replacement(`(\\'|\\s|\\/)(${distDir})(\\'|\\/|\\s)`, `$1${buildWebDir}$3`, [path.join(projectDir, '.gitignore')]);
   }
-  replace({regex: '(config.json)', replacement: `$1${os.EOL}swaaplate-backup.json`, paths: [path.join(projectDir, '.gitignore')], silent: true });
+  lightjs.replacement('(config.json)', `$1${os.EOL}swaaplate-backup.json`, [path.join(projectDir, '.gitignore')]);
 
   const author = swaaplateJsonData.packageJsonConfig.author;
   const authorMj = 'Marcel Jänicke';
   if (author !== authorMj) {
-    replace({regex: authorMj, replacement: author, paths: [path.join(projectDir, 'LICENSE.md')], silent: true });
+    lightjs.replacement(authorMj, author, [path.join(projectDir, 'LICENSE.md')]);
   }
 
   replaceInReadme(swaaplateJsonData, projectDir);
+  replaceInAngularJson(swaaplateJsonData, projectDir);
 }
 
 function replaceInReadme(swaaplateJsonData, projectDir) {
@@ -125,41 +118,73 @@ function replaceInReadme(swaaplateJsonData, projectDir) {
   const packageJsonConfig = swaaplateJsonData.packageJsonConfig;
   const name = packageJsonConfig.name;
   const readmePath = path.join(projectDir, readme);
-  replace({regex: 'angular-webpack-minimum', replacement: `${name}`, paths: [readmePath], silent: true });
-  replace({regex: '`angular-webpack-minimum`', replacement: `\`${name}\``, paths: [readmePath], silent: true });
-  replace({regex: '(git clone )(.+)', replacement: `$1${packageJsonConfig.repository}`, paths: [readmePath], silent: true });
+  lightjs.replacement('angular-cli-for-swaaplate', name, [readmePath]);
+  lightjs.replacement('`angular-cli-for-swaaplate', `\`${name}\``, [readmePath]);
+  lightjs.replacement('(git clone )(.+)', `$1${packageJsonConfig.repository}`, [readmePath]);
 
   const generated = 'This project was generated with [swaaplate](https://github.com/inpercima/swaaplate).';
   const description = `${packageJsonConfig.description}${os.EOL}${os.EOL}${generated}`;
-  replace({regex: 'This.+tests.\\s*', replacement: '', paths: [readmePath], silent: true });
-  replace({regex: 'This project.+', replacement: description, paths: [readmePath], silent: true });
+  lightjs.replacement('This.+projects.\\s*', '', [readmePath]);
+  lightjs.replacement('This project.+', description, [readmePath]);
 
   const generalConfig = swaaplateJsonData.generalConfig;
   const github = generalConfig.github;
   if (github.use) {
-    replace({regex: '(org\\/)(inpercima)', replacement: `$1${github.username}`, paths: [readmePath], silent: true });
-    replace({regex: '(\\/)(angular-webpack-minimum)(\\/|\\?|\\))', replacement: `$1${name}$3`, paths: [readmePath], silent: true });
+    lightjs.replacement('(org\\/)(inpercima)', `$1${github.username}`, [readmePath]);
+    lightjs.replacement('(\\/)(angular-cli-for-swaaplate)(\\/|\\?|\\))', `$1${name}$3`, [readmePath]);
   } else {
-    replace({regex: '\\[!\\[dependencies.*\\s\\[.*\\s', replacement: '', paths: [readmePath], silent: true });
+    lightjs.replacement('\\[!\\[dependencies.*\\s\\[.*\\s', '', [readmePath]);
   }
 
   if (!generalConfig.useYarn) {
-    replace({regex: 'or higher,.*', replacement: 'or higher', paths: [readmePath], silent: true });
-    replace({regex: 'or higher or', replacement: 'or higher, used in this repository, or', paths: [readmePath], silent: true });
-    replace({regex: 'yarn run', replacement: 'npm run', paths: [readmePath], silent: true });
-    replace({regex: '(dependencies\\s)(yarn)', replacement: `$1npm install`, paths: [readmePath], silent: true });
+    lightjs.replacement('or higher,.*', 'or higher', [readmePath]);
+    lightjs.replacement('or higher or', 'or higher, used in this repository, or', [readmePath]);
+    lightjs.replacement('yarn run', 'npm run', [readmePath]);
+    lightjs.replacement('(dependencies\\s)(yarn)', `$1npm install`, [readmePath]);
+  }
+
+  if (generalConfig.theme !== 'indigo-pink') {
+    lightjs.replacement('(default: )`indigo-pink`', `$1\`${generalConfig.theme}\``, [readmePath]);
   }
 
   const defaultRoute = swaaplateJsonData.routeConfig.default;
   if (defaultRoute !== 'dashboard') {
-    replace({regex: '`dashboard`', replacement: `\`${defaultRoute}\``, paths: [readmePath], silent: true });
+    lightjs.replacement('`dashboard`', `\`${defaultRoute}\``, [readmePath]);
   }
 
   const endpoint = swaaplateJsonData.serverConfig.endpoint;
   if (endpoint === 'java' || endpoint === 'kotlin') {
-    replace({regex: '(## Usage\\s)', replacement: `$1${os.EOL}TODO: Update usage for ${endpoint}${os.EOL}`, paths: [readmePath], silent: true });
+    lightjs.replacement('(## Usage\\s)', `$1${os.EOL}TODO: Update usage for ${endpoint}${os.EOL}`, [readmePath]);
+  }
+}
+
+function replaceInAngularJson(swaaplateJsonData, projectDir) {
+  const angularJson = 'angular.json';
+  lightjs.info(`update '${path.join(projectDir, angularJson)}'`);
+
+  const packageJsonConfig = swaaplateJsonData.packageJsonConfig;
+  const name = packageJsonConfig.name;
+  const angularJsonPath = path.join(projectDir, angularJson);
+  lightjs.replacement('angular-cli-for-swaaplate', name, [angularJsonPath]);
+
+  const generalConfig = swaaplateJsonData.generalConfig;
+  if (generalConfig.buildWebDir !== 'dist') {
+    lightjs.replacement('"dist"', `"${generalConfig.buildWebDir}"`, [angularJsonPath]);
   }
 
+  if (generalConfig.theme !== 'indigo-pink') {
+    lightjs.replacement('indigo-pink', generalConfig.theme, [angularJsonPath]);
+  }
+
+  if (generalConfig.selectorPrefix !== 'app') {
+    lightjs.replacement('"app"', `"${generalConfig.selectorPrefix}"`, [angularJsonPath]);
+  }
+
+  const serverConfig = swaaplateJsonData.serverConfig;
+  if (serverConfig.endpoint !== 'js') {
+    lightjs.replacement('(src/)', `$1web/`, [angularJsonPath]);
+    lightjs.replacement('"(src)"', `"$1/web"`, [angularJsonPath]);
+  }
 }
 
 function updateGitignore(swaaplateJsonData, projectDir) {
@@ -168,10 +193,24 @@ function updateGitignore(swaaplateJsonData, projectDir) {
     const management = swaaplateJsonData.serverConfig.management;
     const managementApi = management === 'maven' || management === 'gradle' ? `${management},` : '';
     const gitignore = path.join(projectDir, '.gitignore');
-    const api = `https://www.gitignore.io/api/node,${endpoint},${managementApi}eclipse,intellij+all,visualstudiocode`;
+    const api = `https://www.gitignore.io/api/angular,node,${endpoint},${managementApi}eclipse,intellij+all,visualstudiocode`;
     request(api, function (error, response, body) {
-      replace({regex: '\\s# Created by https:.*((.|\\n)*)# End of https:.*\\s*', replacement: body, paths: [gitignore], silent: true });
+      lightjs.replacement('\\s# Created by https:.*((.|\\n)*)# End of https:.*\\s*', body, [gitignore]);
     });
+  }
+}
+
+function installDependencies(swaaplateJsonData, projectDir) {
+  const generalConfig = swaaplateJsonData.generalConfig;
+  if (generalConfig.installDependencies) {
+    const yarnOrNpm = generalConfig.useYarn ? 'yarn' : 'npm';
+    lightjs.info(`install dependencies via ${yarnOrNpm}`);
+
+    lightjs.setNpmDefault(!generalConfig.useYarn);
+    shjs.cd(path.join(projectDir));
+    lightjs.yarnpm('install');
+  } else {
+    lightjs.info('no dependencies will be installed');
   }
 }
 

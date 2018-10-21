@@ -3,7 +3,6 @@
 /* requirements */
 const lightjs = require('light-js');
 const path = require('path');
-const replace = require('replace');
 const shjs = require('shelljs');
 
 let management = {};
@@ -11,7 +10,7 @@ let management = {};
 /**
  * Configures the management of the app.
  *
- * @param {object} swaaplateJsonData 
+ * @param {object} swaaplateJsonData
  */
 function configureManagement(swaaplateJsonData, projectDir) {
   const serverConfig = swaaplateJsonData.serverConfig;
@@ -46,14 +45,14 @@ function replaceInPomFile(swaaplateJsonData, pomXml) {
   const buildWebDir = swaaplateJsonData.generalConfig.buildDir;
   const distDir = 'dist';
   if (buildWebDir !== distDir) {
-    replace({ regex: distDir, replacement: buildWebDir, paths: [pomXml], silent: true });
+    lightjs.replacement(distDir, buildWebDir, pomXml,);
   }
-  replace({ regex: 'net.inpercima.swaaplate', replacement: swaaplateJsonData.serverConfig.packagePath, paths: [pomXml], silent: true });
-  replace({ regex: 'swaaplate', replacement: swaaplateJsonData.packageJsonConfig.name, paths: [pomXml], silent: true });
+  lightjs.replacement('net.inpercima.swaaplate', swaaplateJsonData.serverConfig.packagePath, pomXml);
+  lightjs.replacement('swaaplate', swaaplateJsonData.packageJsonConfig.name, pomXml);
 
   const description = '\\[s\\]imple \\[w\\]eb \\[a\\]pp \\[a\\]ngular tem\\[plate\\]. A very simple own template for webapps.';
   const newDescription = swaaplateJsonData.packageJsonConfig.description;
-  replace({ regex: `${description}`, replacement: newDescription, paths: [pomXml], silent: true });
+  lightjs.replacement(`${description}`, newDescription, pomXml);
 }
 
 management.configureManagement = configureManagement;

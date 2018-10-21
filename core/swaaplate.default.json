@@ -5,6 +5,7 @@
       "use": false,
       "username": ""
     },
+    "installDependencies": true,
     "outputDir": "/path/to/workspace/",
     "selectorPrefix": "hw",
     "theme": "indigo-pink",

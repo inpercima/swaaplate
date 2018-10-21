@@ -69,6 +69,7 @@ Some of this options will be copied in `config.json` of the new project and can 
 * [generalConfig/buildWebDir](#generalconfigbuildwebdir)
 * [generalConfig/github/use](#generalconfiggithubuse)
 * [generalConfig/github/username](#generalconfiggithubusername)
+* [generalConfig/installDependencies](#generalconfiginstallDependencies)
 * [generalConfig/outputDir](#generalconfigoutputdir)
 * [generalConfig/selectorPrefix](#generalconfigselectorprefix)
 * [generalConfig/theme](#generalconfigtheme)
@@ -113,6 +114,14 @@ If `generalConfig/github/use` is set to `true` you need to define a github usern
 
 * default: EMPTY
 * type: `string`
+
+### `generalConfig/installDependencies`
+
+Defines whether swaaplate should install tools and frontend dependencies or not.
+
+* default: true
+* type: `boolean`
+* values: `true`/`false`
 
 ### `generalConfig/outputDir`
 
