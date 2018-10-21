@@ -8,8 +8,8 @@
   ],
   "description": "[s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple own template for webapps.",
   "devDependencies": {
-    "angular-cli-for-swaaplate": "inpercima/angular-cli-for-swaaplate#692b6",
-    "light-js": "inpercima/light-js#v0.2.0",
+    "angular-cli-for-swaaplate": "inpercima/angular-cli-for-swaaplate#ef359ab",
+    "light-js": "inpercima/light-js#v0.2.1",
     "request": "2.88.0",
     "shelljs": "0.8.2",
     "uppercamelcase": "3.0.0"
