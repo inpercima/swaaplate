@@ -100,11 +100,11 @@ function php(srcMain, projectDir) {
   shjs.cp('endpoint/php/*', srcMainPath);
 
   const copyWebpackPlugin = `$1${os.EOL}const CopyWebpackPlugin = require('copy-webpack-plugin');`;
-  const webpackCommonJs = path.join(projectDir, 'webpack.common.js');
-  // replace({ regex: '(Clean.*=.*)', replacement: copyWebpackPlugin, paths: [webpackCommonJs], silent: true });
+  const webpackConfigJs = path.join(projectDir, 'webpack.config.js');
+  lightjs.replacement('(webpack.*=.*)', copyWebpackPlugin, [webpackConfigJs]);
 
-  // const copyWebpackPluginSection = `$1${os.EOL}    new CopyWebpackPlugin([{${os.EOL}      from: './src/main',${os.EOL}    }]),`;
-  // replace({ regex: '(new Clean.*)', replacement: copyWebpackPluginSection, paths: [webpackCommonJs], silent: true });
+  const copyWebpackPluginSection = `$1${os.EOL}  plugins: [${os.EOL}    new CopyWebpackPlugin([{${os.EOL}      from: './src/main',${os.EOL}    }]),${os.EOL}  ],`;
+  lightjs.replacement('(},)', copyWebpackPluginSection, [webpackConfigJs]);
 
   const authServicePath = path.join(projectDir, 'src/web/app/core/auth.service.ts');
   lightjs.replacement('\\/api\\/authenticate', './auth.handler.php?authenticate', [authServicePath]);

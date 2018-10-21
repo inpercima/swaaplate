@@ -59,7 +59,7 @@ function updatePackageJsonData(swaaplateJsonData, projectDir) {
   packageJsonData.repository = github.use ? `https://github.com/${github.username}/${config.name}` : config.repository;
   packageJsonData.devDependencies['light-js'] = 'inpercima/light-js#v0.1.1';
   if (swaaplateJsonData.serverConfig.endpoint === 'php') {
-    packageJsonData.devDependencies['copy-webpack-plugin'] = '4.5.1';
+    packageJsonData.devDependencies['copy-webpack-plugin'] = '4.5.4';
   }
 
   if (config.homepage === '' && packageJsonData.repository !== '') {
