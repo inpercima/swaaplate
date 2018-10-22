@@ -25,6 +25,9 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
     const tsConfigAppJson = path.join(projectDir, 'src/web/tsconfig.app.json');
     lightjs.replacement('(tsconfig.json)', '../$1', [tsConfigAppJson]);
     lightjs.replacement('(out-tsc)', '../$1', [tsConfigAppJson]);
+    const tsConfigSpecJson = path.join(projectDir, 'src/web/tsconfig.spec.json');
+    lightjs.replacement('(tsconfig.json)', '../$1', [tsConfigSpecJson]);
+    lightjs.replacement('(out-tsc)', '../$1', [tsConfigSpecJson]);
   }
   // java or kotlin
   if (serverConfig.endpoint === 'java' || serverConfig.endpoint === 'kotlin') {
