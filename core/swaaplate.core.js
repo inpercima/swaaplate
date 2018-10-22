@@ -92,14 +92,15 @@ function updateConfigJsonData(swaaplateJsonData, projectDir) {
 }
 
 function updateGeneralProjectData(swaaplateJsonData, projectDir) {
-  lightjs.info(`update '${path.join(projectDir, '.gitignore')}'`);
+  const gitignore = path.join(projectDir, '.gitignore');
+  lightjs.info(`update '${gitignore}'`);
 
+  lightjs.replacement('(config.json)', `$1${os.EOL}swaaplate-backup.json`, [gitignore]);
   const buildWebDir = swaaplateJsonData.generalConfig.buildWebDir;
   const distDir = 'dist';
   if (buildWebDir !== distDir) {
-    lightjs.replacement(`(\\'|\\s|\\/)(${distDir})(\\'|\\/|\\s)`, `$1${buildWebDir}$3`, [path.join(projectDir, '.gitignore')]);
+    lightjs.replacement('(backup.json)', `$1${os.EOL}/${buildWebDir}`, [gitignore]);
   }
-  lightjs.replacement('(config.json)', `$1${os.EOL}swaaplate-backup.json`, [path.join(projectDir, '.gitignore')]);
 
   const author = swaaplateJsonData.packageJsonConfig.author;
   const authorMj = 'Marcel Jänicke';
@@ -119,7 +120,6 @@ function replaceInReadme(swaaplateJsonData, projectDir) {
   const name = packageJsonConfig.name;
   const readmePath = path.join(projectDir, readme);
   lightjs.replacement('angular-cli-for-swaaplate', name, [readmePath]);
-  lightjs.replacement('`angular-cli-for-swaaplate', `\`${name}\``, [readmePath]);
   lightjs.replacement('(git clone )(.+)', `$1${packageJsonConfig.repository}`, [readmePath]);
 
   const generated = 'This project was generated with [swaaplate](https://github.com/inpercima/swaaplate).';
