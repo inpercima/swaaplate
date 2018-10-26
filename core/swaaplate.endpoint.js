@@ -28,6 +28,12 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
     const tsConfigSpecJson = path.join(projectDir, 'src/web/tsconfig.spec.json');
     lightjs.replacement('(tsconfig.json)', '../$1', [tsConfigSpecJson]);
     lightjs.replacement('(out-tsc)', '../$1', [tsConfigSpecJson]);
+
+    const tsLintJson = path.join(projectDir, 'src/web/tslint.json');
+    lightjs.replacement('(tslint.json)', '../$1', [tsLintJson]);
+
+    const gitignore = path.join(projectDir, '.gitignore');
+    lightjs.replacement('(src/)(config.json)', `$1web/$2`, [gitignore]);
   }
   // java or kotlin
   if (serverConfig.endpoint === 'java' || serverConfig.endpoint === 'kotlin') {
@@ -42,7 +48,7 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
     lightjs.info('remove all unneeded dependencies and replace code for chosen endpoint');
 
     const appModuleTs = path.join(projectDir, 'src/web/app/app.module.ts');
-    lightjs.replacement('import { fake.*\\s*', os.EOL, [appModuleTs]);
+    lightjs.replacement('import { fake.*\\s*(\\r\\n|\\n|\\r)', '', [appModuleTs]);
     lightjs.replacement('  providers.*\\s*.*\\s*.*\\s*}', '}', [appModuleTs]);
     shjs.rm(path.join(projectDir, 'src/web/app/login/fake-backend-interceptor.ts'));
 

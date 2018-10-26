@@ -57,7 +57,6 @@ function updatePackageJsonData(swaaplateJsonData, projectDir) {
 
   const github = swaaplateJsonData.generalConfig.github;
   packageJsonData.repository = github.use ? `https://github.com/${github.username}/${config.name}` : config.repository;
-  packageJsonData.devDependencies['light-js'] = 'inpercima/light-js#v0.1.1';
   if (swaaplateJsonData.serverConfig.endpoint === 'php') {
     packageJsonData.devDependencies['copy-webpack-plugin'] = '4.5.4';
   }
@@ -93,7 +92,7 @@ function updateConfigJsonData(swaaplateJsonData, projectDir) {
 
 function updateGeneralProjectData(swaaplateJsonData, projectDir) {
   const gitignore = path.join(projectDir, '.gitignore');
-  lightjs.info(`update '${gitignore}'`);
+  lightjs.info(`update '${gitignore}', 'LICENSE.md', 'app.component.spec.ts' and 'app.e2e-spec.ts'`);
 
   lightjs.replacement('(config.json)', `$1${os.EOL}swaaplate-backup.json`, [gitignore]);
   const buildWebDir = swaaplateJsonData.generalConfig.buildWebDir;
@@ -106,6 +105,12 @@ function updateGeneralProjectData(swaaplateJsonData, projectDir) {
   const authorMj = 'Marcel Jänicke';
   if (author !== authorMj) {
     lightjs.replacement(authorMj, author, [path.join(projectDir, 'LICENSE.md')]);
+  }
+
+  const oldTitle = 'angular-cli-for-swaaplate';
+  if (swaaplateJsonData.generalConfig.title !== oldTitle) {
+    lightjs.replacement(oldTitle, swaaplateJsonData.generalConfig.title, [path.join(projectDir, 'e2e/src', 'app.e2e-spec.ts')]);
+    lightjs.replacement(oldTitle, swaaplateJsonData.generalConfig.title, [path.join(projectDir, 'src/app', 'app.component.spec.ts')]);
   }
 
   replaceInReadme(swaaplateJsonData, projectDir);
