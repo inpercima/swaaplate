@@ -31,9 +31,6 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
 
     const tsLintJson = path.join(projectDir, 'src/web/tslint.json');
     lightjs.replacement('(tslint.json)', '../$1', [tsLintJson]);
-
-    const gitignore = path.join(projectDir, '.gitignore');
-    lightjs.replacement('(src/)(config.json)', `$1web/$2`, [gitignore]);
   }
   // java or kotlin
   if (serverConfig.endpoint === 'java' || serverConfig.endpoint === 'kotlin') {
@@ -41,27 +38,8 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
   }
   // php
   if (serverConfig.endpoint === 'php') {
-    php(srcMain, projectDir);
+    php(srcMain, projectDir, swaaplateJsonData.generalConfig.title);
   }
-  // java, kotlin and php
-  if (serverConfig.endpoint !== 'js') {
-    lightjs.info('remove all unneeded dependencies and replace code for chosen endpoint');
-
-    const appModuleTs = path.join(projectDir, 'src/web/app/app.module.ts');
-    lightjs.replacement('import { fake.*\\s*(\\r\\n|\\n|\\r)', '', [appModuleTs]);
-    lightjs.replacement('  providers.*\\s*.*\\s*.*\\s*}', '}', [appModuleTs]);
-    shjs.rm(path.join(projectDir, 'src/web/app/login/fake-backend-interceptor.ts'));
-
-    const authServiceTs = path.join(projectDir, 'src/web/app/core/auth.service.ts');
-    lightjs.replacement(`(import { map } from 'rxjs/operators';)`, `$1${os.EOL}${os.EOL}import { FormService } from './form.service';`, [authServiceTs]);
-    lightjs.replacement('(private http)', `private formService: FormService, $1`, [authServiceTs]);
-
-    let post = `$1${os.EOL}    const body = this.formService.createBody(formGroup);${os.EOL}`;
-    post += '    const header = this.formService.createHeader();';
-    lightjs.replacement('(Observable<boolean> {)', post, [authServiceTs]);
-    lightjs.replacement('formGroup.value', 'body, header', [authServiceTs]);
-  }
-  // js
   if (serverConfig.endpoint === 'js') {
     lightjs.info(`use endpoint 'js', nothing special todo`);
   }
@@ -101,7 +79,7 @@ function javaKotlin(srcMain, projectDir, serverConfig, author) {
   }
 }
 
-function php(srcMain, projectDir) {
+function php(srcMain, projectDir, title) {
   lightjs.info(`use endpoint 'php', update webpack config and api-endpoint`);
 
   const srcMainPath = path.join(projectDir, srcMain);
@@ -115,8 +93,8 @@ function php(srcMain, projectDir) {
   const copyWebpackPluginSection = `$1${os.EOL}  plugins: [${os.EOL}    new CopyWebpackPlugin([{${os.EOL}      from: './src/main',${os.EOL}    }]),${os.EOL}  ],`;
   lightjs.replacement('(},)', copyWebpackPluginSection, [webpackConfigJs]);
 
-  const authServicePath = path.join(projectDir, 'src/web/app/core/auth.service.ts');
-  lightjs.replacement('\\/api\\/authenticate', './auth.handler.php?authenticate', [authServicePath]);
+  const authServicePath = path.join(projectDir, 'src/main/auth.service.php');
+  lightjs.replacement('inpercima', title, [authServicePath]);
 }
 
 endpoint.configureEndpoint = configureEndpoint;

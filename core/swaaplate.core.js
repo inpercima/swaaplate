@@ -33,7 +33,7 @@ function createProject(swaaplateJsonData) {
   shjs.rm(path.join(projectDir, 'yarn.lock'));
 
   updatePackageJsonData(swaaplateJsonData, projectDir);
-  updateConfigJsonData(swaaplateJsonData, projectDir);
+  updateEnvironmentData(swaaplateJsonData, projectDir);
   updateGeneralProjectData(swaaplateJsonData, projectDir);
   updateGitignore(swaaplateJsonData, projectDir);
 
@@ -71,30 +71,31 @@ function updatePackageJsonData(swaaplateJsonData, projectDir) {
   lightjs.writeJson(packageJson, packageJsonData);
 }
 
-function updateConfigJsonData(swaaplateJsonData, projectDir) {
-  const configDefaultJson = path.join(projectDir, 'src/config.default.json');
-  lightjs.info(`update '${configDefaultJson}'`);
+function updateEnvironmentData(swaaplateJsonData, projectDir) {
+  replaceInEnvironmentFile(swaaplateJsonData, path.join(projectDir, 'src/environments/environment.ts'));
+  replaceInEnvironmentFile(swaaplateJsonData, path.join(projectDir, 'src/environments/environment.staging.ts'));
+  replaceInEnvironmentFile(swaaplateJsonData, path.join(projectDir, 'src/environments/environment.prod.ts'));
+}
 
-  const configDefaultJsonData = lightjs.readJson(configDefaultJson);
-  configDefaultJsonData.appname = swaaplateJsonData.generalConfig.title;
-  configDefaultJsonData.routes.default = swaaplateJsonData.routeConfig.default;
-  configDefaultJsonData.routes.features.show = swaaplateJsonData.routeConfig.features.show;
-  configDefaultJsonData.routes.login.activate = swaaplateJsonData.routeConfig.login.activate;
-  configDefaultJsonData.routes.login.show = swaaplateJsonData.routeConfig.login.show;
-  configDefaultJsonData.routes.notFound.redirect = swaaplateJsonData.routeConfig.notFound.redirect;
-  configDefaultJsonData.theme = swaaplateJsonData.generalConfig.theme;
-  lightjs.writeJson(configDefaultJson, configDefaultJsonData);
+function replaceInEnvironmentFile(swaaplateJsonData, environmentFile) {
+  lightjs.info(`update '${environmentFile}'`);
 
-  const configJson = path.join(projectDir, 'src/config.json');
-  lightjs.info(`create '${configJson}'`);
-  shjs.cp(configDefaultJson, configJson);
+  const routeConfig = swaaplateJsonData.routeConfig;
+  lightjs.replacement('activateLogin: true', `activateLogin: ${routeConfig.login.activate}`, [environmentFile]);
+  lightjs.replacement('angular-cli-for-swaaplate', swaaplateJsonData.generalConfig.title, [environmentFile]);
+  lightjs.replacement('dashboard', routeConfig.default, [environmentFile]);
+  lightjs.replacement('redirectNotFound: false', `redirectNotFound: ${routeConfig.notFound.redirect}`, [environmentFile]);
+  lightjs.replacement('showFeatures: true', `showFeatures: ${routeConfig.features.show}`, [environmentFile]);
+  lightjs.replacement('showLogin: false', `showLogin: ${routeConfig.login.show}`, [environmentFile]);
+  lightjs.replacement('indigo-pink', swaaplateJsonData.generalConfig.theme, [environmentFile]);
 }
 
 function updateGeneralProjectData(swaaplateJsonData, projectDir) {
   const gitignore = path.join(projectDir, '.gitignore');
   lightjs.info(`update '${gitignore}', 'LICENSE.md', 'app.component.spec.ts' and 'app.e2e-spec.ts'`);
 
-  lightjs.replacement('(config.json)', `$1${os.EOL}swaaplate-backup.json`, [gitignore]);
+  const replacement = `# project specific${os.EOL}${os.EOL}swaaplate-backup.json${os.EOL}${os.EOL}# end of project specific${os.EOL}${os.EOL}$1`;
+  lightjs.replacement('(# Created by https)', replacement, [gitignore]);
   const buildWebDir = swaaplateJsonData.generalConfig.buildWebDir;
   const distDir = 'dist';
   if (buildWebDir !== distDir) {
@@ -107,14 +108,21 @@ function updateGeneralProjectData(swaaplateJsonData, projectDir) {
     lightjs.replacement(authorMj, author, [path.join(projectDir, 'LICENSE.md')]);
   }
 
+  const newTitle = swaaplateJsonData.generalConfig.title;
   const oldTitle = 'angular-cli-for-swaaplate';
   if (swaaplateJsonData.generalConfig.title !== oldTitle) {
-    lightjs.replacement(oldTitle, swaaplateJsonData.generalConfig.title, [path.join(projectDir, 'e2e/src', 'app.e2e-spec.ts')]);
-    lightjs.replacement(oldTitle, swaaplateJsonData.generalConfig.title, [path.join(projectDir, 'src/app', 'app.component.spec.ts')]);
+    lightjs.replacement(oldTitle, newTitle, [path.join(projectDir, 'e2e/src', 'app.e2e-spec.ts')]);
+    lightjs.replacement(oldTitle, newTitle, [path.join(projectDir, 'src/app', 'app.component.spec.ts')]);
   }
 
   replaceInReadme(swaaplateJsonData, projectDir);
   replaceInAngularJson(swaaplateJsonData, projectDir);
+
+  const dbJson = path.join(projectDir, 'mock/db.json');
+  const dbJsonData = lightjs.readJson(dbJson);
+  dbJsonData.users[0].username = newTitle;
+  dbJsonData.users[0].password = newTitle;
+  lightjs.writeJson(dbJson, dbJsonData);
 }
 
 function replaceInReadme(swaaplateJsonData, projectDir) {

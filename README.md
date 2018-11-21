@@ -62,7 +62,7 @@ node swaaplate.js
 ### General
 
 All options have to bet set but some of them do not need to be changed.
-Some of this options will be copied in `config.json` of the new project and can be changed later.
+Some of this options will be copied in the environment files of the new project and can be changed later.
 
 ### Table of contents
 
@@ -139,7 +139,7 @@ A shortcut of the project, used in components like `hw-home` or `hw-app`.
 
 ### `generalConfig/theme`
 
-Name of a build-in theme from angular-material. This option ca be changed in the project by `config.json`.
+Name of a build-in theme from angular-material. This option ca be changed in the environement files.
 
 * config-name: `theme`
 * default: `indigo-pink`
@@ -148,7 +148,7 @@ Name of a build-in theme from angular-material. This option ca be changed in the
 
 ### `generalConfig/title`
 
-Applicationwide title of the app, displayed in title and toolbar. This option ca be changed in the project by `config.json`.
+Applicationwide title of the app, displayed in title and toolbar. This option ca be changed in the environement files.
 
 * config-name: `appname`
 * default: `Hello world`
@@ -206,7 +206,7 @@ The repository. If `generalConfig/github/use` is activated, the repository will 
 
 ### `routeConfig/default`
 
-The main route and the redirect route after login if no route is stored. This option ca be changed in the project by `config.json`.
+The main route and the redirect route after login if no route is stored. This option ca be changed in the environement files.
 
 * config-name: `routes/default`
 * default: `dashboard`
@@ -214,7 +214,7 @@ The main route and the redirect route after login if no route is stored. This op
 
 ### `routeConfig/features/show`
 
-Defines whether feature routes will be displayed or not. This option ca be changed in the project by `config.json`.
+Defines whether feature routes will be displayed or not. This option ca be changed in the environement files.
 
 * config-name: `routes/features/show`
 * default: `true`
@@ -223,7 +223,7 @@ Defines whether feature routes will be displayed or not. This option ca be chang
 
 ### `routeConfig/login/activate`
 
-Defines whether a login will be used or not. This option ca be changed in the project by `config.json`.
+Defines whether a login will be used or not. This option ca be changed in the environement files.
 
 * config-name: `routes/login/activate`
 * default: `true`
@@ -239,7 +239,7 @@ Defines the name of the login route.
 
 ### `routeConfig/login/show`
 
-Defines whether login route will be displayed or not. This option ca be changed in the project by `config.json`.
+Defines whether login route will be displayed or not. This option ca be changed in the environement files.
 
 * config-name: `routes/login/show`
 * default: `false`
@@ -255,7 +255,7 @@ The main route and the redirect route after login if no route is stored.
 
 ### `routeConfig/notFound/redirect`
 
-Defines whether the 404 route will redirect to the default route or not. This option ca be changed in the project by `config.json`.
+Defines whether the 404 route will redirect to the default route or not. This option ca be changed in the environement files.
 
 * config-name: `routes/notFound/redirect`
 * default: `false`
