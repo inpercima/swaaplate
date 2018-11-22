@@ -123,6 +123,9 @@ function updateGeneralProjectData(swaaplateJsonData, projectDir) {
   dbJsonData.users[0].username = newTitle;
   dbJsonData.users[0].password = newTitle;
   lightjs.writeJson(dbJson, dbJsonData);
+
+  const middleware = path.join(projectDir, 'mock/middleware.js');
+  lightjs.replacement('inpercima', newTitle, [middleware]);
 }
 
 function replaceInReadme(swaaplateJsonData, projectDir) {
