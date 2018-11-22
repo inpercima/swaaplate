@@ -126,6 +126,9 @@ function updateGeneralProjectData(swaaplateJsonData, projectDir) {
 
   const middleware = path.join(projectDir, 'mock/middleware.js');
   lightjs.replacement('inpercima', newTitle, [middleware]);
+
+  const appPoTs = path.join(projectDir, 'e2e/src/app.po.ts');
+  lightjs.replacement('app(-root)', `${swaaplateJsonData.generalConfig.selectorPrefix}$1`, [appPoTs]);
 }
 
 function replaceInReadme(swaaplateJsonData, projectDir) {
