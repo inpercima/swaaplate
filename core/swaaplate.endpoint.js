@@ -95,6 +95,12 @@ function php(srcMain, projectDir, title) {
 
   const authServicePath = path.join(projectDir, 'src/main/auth.service.php');
   lightjs.replacement('inpercima', title, [authServicePath]);
+
+  const environmentStaging = path.join(projectDir, 'src/web/environments/environment.staging.ts');
+  lightjs.replacement('(apiPrefix: )\'\'', `$1.php`, [environmentStaging]);
+
+  const environmentProd = path.join(projectDir, 'src/web/environments/environment.prod.ts');
+  lightjs.replacement('(apiPrefix: )\'\'', `$1.php`, [environmentProd]);
 }
 
 endpoint.configureEndpoint = configureEndpoint;

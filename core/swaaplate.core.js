@@ -81,12 +81,12 @@ function replaceInEnvironmentFile(swaaplateJsonData, environmentFile) {
   lightjs.info(`update '${environmentFile}'`);
 
   const routeConfig = swaaplateJsonData.routeConfig;
-  lightjs.replacement('activateLogin: true', `activateLogin: ${routeConfig.login.activate}`, [environmentFile]);
+  lightjs.replacement('(activateLogin: )true', `$1${routeConfig.login.activate}`, [environmentFile]);
   lightjs.replacement('angular-cli-for-swaaplate', swaaplateJsonData.generalConfig.title, [environmentFile]);
   lightjs.replacement('dashboard', routeConfig.default, [environmentFile]);
-  lightjs.replacement('redirectNotFound: false', `redirectNotFound: ${routeConfig.notFound.redirect}`, [environmentFile]);
-  lightjs.replacement('showFeatures: true', `showFeatures: ${routeConfig.features.show}`, [environmentFile]);
-  lightjs.replacement('showLogin: false', `showLogin: ${routeConfig.login.show}`, [environmentFile]);
+  lightjs.replacement('(redirectNotFound: )false', `$1${routeConfig.notFound.redirect}`, [environmentFile]);
+  lightjs.replacement('(showFeatures: )true', `$1${routeConfig.features.show}`, [environmentFile]);
+  lightjs.replacement('(showLogin: )false', `$1${routeConfig.login.show}`, [environmentFile]);
   lightjs.replacement('indigo-pink', swaaplateJsonData.generalConfig.theme, [environmentFile]);
 }
 
