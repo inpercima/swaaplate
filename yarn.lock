@@ -113,9 +113,9 @@ ajv@^5.3.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-angular-cli-for-swaaplate@inpercima/angular-cli-for-swaaplate#v0.1.0:
-  version "0.1.0"
-  resolved "https://codeload.github.com/inpercima/angular-cli-for-swaaplate/tar.gz/cb919dc6f13e0c20c6177db68bc8cbab36a7896c"
+angular-cli-for-swaaplate@inpercima/angular-cli-for-swaaplate#v0.1.1:
+  version "0.1.1"
+  resolved "https://codeload.github.com/inpercima/angular-cli-for-swaaplate/tar.gz/c7470b589e6402d6ff40c14e94db8e9e78aac64f"
   dependencies:
     "@angular/animations" "7.0.4"
     "@angular/cdk" "7.0.4"
