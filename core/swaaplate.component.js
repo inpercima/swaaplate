@@ -34,7 +34,7 @@ function configureComponents(swaaplateJsonData, projectDir) {
   }
   for (let i = 0; i < routes.length; i++) {
     const template = `'${selectorPrefix}-${configRoutes[i]}'`;
-    lightjs.replacement(`'app-${routes[i]}'`, template, [path.join(srcDir, appPath, 'app')], true, true);
+    lightjs.replacement(`'app-${routes[i]}'`, template, [path.join(srcDir, appPath, 'app')]);
     if (configRoutes[i] !== routes[i]) {
       updateComponent(appPath, projectDir, routes[i], configRoutes[i]);
     }
@@ -69,18 +69,18 @@ function updateComponent(appPath, projectDir, oldName, newName) {
 
   const oldUpper = uppercamelcase(oldName);
   const newUpper = uppercamelcase(newName);
-  lightjs.replacement(`${oldUpper}Component`, `${newUpper}Component`, [srcDir], true, true);
-  lightjs.replacement(`${oldUpper}Module`, `${newUpper}Module`, [srcDir], true, true);
-  lightjs.replacement( `${oldUpper}RoutingModule`, `${newUpper}RoutingModule`, [srcDir], true, true);
-  lightjs.replacement(`(\\'|\\/|\\s)(${oldName})(\\'|\\.|-)`, `$1${newName}$3`, [srcDir], true, true);
-  lightjs.replacement(`(\\./)(${oldName})(/${newName})`, `$1${newName}$3`, [srcDir], true, true);
+  lightjs.replacement(`${oldUpper}Component`, `${newUpper}Component`, [srcDir]);
+  lightjs.replacement(`${oldUpper}Module`, `${newUpper}Module`, [srcDir]);
+  lightjs.replacement( `${oldUpper}RoutingModule`, `${newUpper}RoutingModule`, [srcDir]);
+  lightjs.replacement(`(\\'|\\/|\\s)(${oldName})(\\'|\\.|-)`, `$1${newName}$3`, [srcDir]);
+  lightjs.replacement(`(\\./)(${oldName})(/${newName})`, `$1${newName}$3`, [srcDir]);
 
-  lightjs.replacement(`${oldName}Module`, `${newName}Module`, [srcDir], true, true);
-  lightjs.replacement(`${oldName}RoutingModule`, `${newName}RoutingModule`, [srcDir], true, true);
+  lightjs.replacement(`${oldName}Module`, `${newName}Module`, [srcDir]);
+  lightjs.replacement(`${oldName}RoutingModule`, `${newName}RoutingModule`, [srcDir]);
 
   // changes needed for login only after movement
   if (oldName === 'login') {
-    lightjs.replacement('loginForm', `${newName}Form`, [path.join(srcDir, newName)], true, true);
+    lightjs.replacement('loginForm', `${newName}Form`, [path.join(srcDir, newName)]);
   }
 }
 
