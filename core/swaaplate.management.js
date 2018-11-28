@@ -42,17 +42,17 @@ function configureManagement(swaaplateJsonData, projectDir) {
 }
 
 function replaceInPomFile(swaaplateJsonData, pomXml) {
-  const buildWebDir = swaaplateJsonData.generalConfig.buildDir;
+  const buildWebDir = swaaplateJsonData.generalConfig.buildWebDir;
   const distDir = 'dist';
   if (buildWebDir !== distDir) {
-    lightjs.replacement(distDir, buildWebDir, pomXml,);
+    lightjs.replacement(distDir, buildWebDir, [pomXml]);
   }
-  lightjs.replacement('net.inpercima.swaaplate', swaaplateJsonData.serverConfig.packagePath, pomXml);
-  lightjs.replacement('swaaplate', swaaplateJsonData.packageJsonConfig.name, pomXml);
+  lightjs.replacement('net.inpercima.swaaplate', swaaplateJsonData.serverConfig.packagePath, [pomXml]);
+  lightjs.replacement('swaaplate', swaaplateJsonData.packageJsonConfig.name, [pomXml]);
 
   const description = '\\[s\\]imple \\[w\\]eb \\[a\\]pp \\[a\\]ngular tem\\[plate\\]. A very simple own template for webapps.';
   const newDescription = swaaplateJsonData.packageJsonConfig.description;
-  lightjs.replacement(`${description}`, newDescription, pomXml);
+  lightjs.replacement(`${description}`, newDescription, [pomXml]);
 }
 
 management.configureManagement = configureManagement;
