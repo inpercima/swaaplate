@@ -101,6 +101,9 @@ function php(srcMain, projectDir, title) {
 
   const environmentProd = path.join(projectDir, 'src/web/environments/environment.prod.ts');
   lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [environmentProd]);
+
+  const readmePath = path.join(projectDir, readme);
+  lightjs.replacement('`EMPTY` | staging: `EMPTY` | production: `EMPTY`', '`EMPTY` | staging: `.php` | production: `.php`', [readmePath]);
 }
 
 endpoint.configureEndpoint = configureEndpoint;

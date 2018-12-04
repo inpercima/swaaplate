@@ -139,18 +139,18 @@ A shortcut of the project, used in components like `hw-home` or `hw-app`.
 
 ### `generalConfig/theme`
 
-Name of a build-in theme from angular-material. This option ca be changed in the environement files.
+Name of a build-in theme from angular-material. This option ca be changed in the environment files.
 
-* config-name: `theme`
+* environment: `theme`
 * default: `indigo-pink`
 * type: `string`
 * values: `deeppurple-amber`/`indigo-pink`/`pink-bluegrey`/`purple-green`
 
 ### `generalConfig/title`
 
-Applicationwide title of the app, displayed in title and toolbar. This option ca be changed in the environement files.
+Applicationwide title of the app, displayed in title and toolbar. This option ca be changed in the environment files.
 
-* config-name: `appname`
+* environment: `appname`
 * default: `Hello world`
 * type: `string`
 
@@ -206,26 +206,26 @@ The repository. If `generalConfig/github/use` is activated, the repository will 
 
 ### `routeConfig/default`
 
-The main route and the redirect route after login if no route is stored. This option ca be changed in the environement files.
+The main route and the redirect route after login if no route is stored. This option ca be changed in the environment files.
 
-* config-name: `routes/default`
+* environment: `defaultRoute`
 * default: `dashboard`
 * type: `string`
 
 ### `routeConfig/features/show`
 
-Defines whether feature routes will be displayed or not. This option ca be changed in the environement files.
+Defines whether feature routes will be displayed or not. This option ca be changed in the environment files.
 
-* config-name: `routes/features/show`
+* environment: `showFeatures`
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
 
 ### `routeConfig/login/activate`
 
-Defines whether a login will be used or not. This option ca be changed in the environement files.
+Defines whether a login will be used or not. This option ca be changed in the environment files.
 
-* config-name: `routes/login/activate`
+* environment: `activateLogin`
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
@@ -239,9 +239,9 @@ Defines the name of the login route.
 
 ### `routeConfig/login/show`
 
-Defines whether login route will be displayed or not. This option ca be changed in the environement files.
+Defines whether login route will be displayed or not. This option ca be changed in the environment files.
 
-* config-name: `routes/login/show`
+* environment: `showLogin`
 * default: `false`
 * type: `boolean`
 * values: `true`/`false`
@@ -255,9 +255,9 @@ The main route and the redirect route after login if no route is stored.
 
 ### `routeConfig/notFound/redirect`
 
-Defines whether the 404 route will redirect to the default route or not. This option ca be changed in the environement files.
+Defines whether the 404 route will redirect to the default route or not. This option ca be changed in the environment files.
 
-* config-name: `routes/notFound/redirect`
+* environment: `redirectNotFound`
 * default: `false`
 * type: `boolean`
 * values: `true`/`false`
