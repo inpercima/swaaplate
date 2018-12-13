@@ -69,14 +69,14 @@ function updateComponent(appPath, projectDir, oldName, newName) {
 
   const oldUpper = uppercamelcase(oldName);
   const newUpper = uppercamelcase(newName);
-  lightjs.replacement(`${oldUpper}Component`, `${newUpper}Component`, [srcDir]);
-  lightjs.replacement(`${oldUpper}Module`, `${newUpper}Module`, [srcDir]);
-  lightjs.replacement( `${oldUpper}RoutingModule`, `${newUpper}RoutingModule`, [srcDir]);
-  lightjs.replacement(`(\\'|\\/|\\s)(${oldName})(\\'|\\.|-)`, `$1${newName}$3`, [srcDir]);
-  lightjs.replacement(`(\\./)(${oldName})(/${newName})`, `$1${newName}$3`, [srcDir]);
+  lightjs.replacement(`${oldUpper}Component`, `${newUpper}Component`, [srcDir], true, true);
+  lightjs.replacement(`${oldUpper}Module`, `${newUpper}Module`, [srcDir], true, true);
+  lightjs.replacement( `${oldUpper}RoutingModule`, `${newUpper}RoutingModule`, [srcDir], true, true);
+  lightjs.replacement(`(\\'|\\/|\\s)(${oldName})(\\'|\\.|-)`, `$1${newName}$3`, [srcDir], true, true);
+  lightjs.replacement(`(\\./)(${oldName})(/${newName})`, `$1${newName}$3`, [srcDir], true, true);
 
-  lightjs.replacement(`${oldName}Module`, `${newName}Module`, [srcDir]);
-  lightjs.replacement(`${oldName}RoutingModule`, `${newName}RoutingModule`, [srcDir]);
+  lightjs.replacement(`${oldName}Module`, `${newName}Module`, [srcDir], true, true);
+  lightjs.replacement(`${oldName}RoutingModule`, `${newName}RoutingModule`, [srcDir], true, true);
 
   // changes needed for login only after movement
   if (oldName === 'login') {

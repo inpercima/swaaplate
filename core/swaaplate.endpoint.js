@@ -15,6 +15,10 @@ let endpoint = {};
  */
 function configureEndpoint(swaaplateJsonData, projectDir) {
   const serverConfig = swaaplateJsonData.serverConfig;
+  lightjs.info(`prepare data for endpoint '${serverConfig.endpoint}'`);
+
+  updateGitignore(swaaplateJsonData, projectDir);
+
   // java, kotlin and php
   const srcMain = 'src/main/';
   if (serverConfig.endpoint !== 'js') {
@@ -31,6 +35,10 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
 
     const tsLintJson = path.join(projectDir, 'src/web/tslint.json');
     lightjs.replacement('(tslint.json)', '../$1', [tsLintJson]);
+
+    const angularJson = path.join(projectDir, 'angular.json');
+    lightjs.replacement('(src/)', `$1web/`, [angularJson]);
+    lightjs.replacement('"(src)"', `"$1/web"`, [angularJson]);
   }
   // java or kotlin
   if (serverConfig.endpoint === 'java' || serverConfig.endpoint === 'kotlin') {
@@ -40,6 +48,7 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
   if (serverConfig.endpoint === 'php') {
     php(srcMain, projectDir, swaaplateJsonData.generalConfig.title);
   }
+  // js
   if (serverConfig.endpoint === 'js') {
     lightjs.info(`use endpoint 'js', nothing special todo`);
   }
@@ -77,10 +86,23 @@ function javaKotlin(srcMain, projectDir, serverConfig, author) {
   if (author !== authorMj) {
     lightjs.replacement(authorMj, author, [path.join(srcMainEndpointPath, `Application.${endpointExt}`)]);
   }
+
+  const readmeMdName = 'README.md';
+  const readmeMd = path.join(projectDir, readmeMdName);
+  lightjs.replacement('(## Usage\\s)', `$1${os.EOL}TODO: Update usage for ${endpoint}${os.EOL}`, [readmeMd]);
+
+  updateEnvironmentData(projectDir, 'http://localhost:8080');
 }
 
 function php(srcMain, projectDir, title) {
-  lightjs.info(`use endpoint 'php', update webpack config and api-endpoint`);
+  lightjs.info(`-> update webpack config and api-endpoint`);
+
+  const packageJsonName = 'package.json';
+  const packageJson = path.join(projectDir, packageJsonName);
+  lightjs.info(`-> update '${packageJsonName}'`);
+  const packageJsonData = lightjs.readJson(packageJson);
+  packageJsonData.devDependencies['copy-webpack-plugin'] = '4.5.4';
+  lightjs.writeJson(packageJson, packageJsonData);
 
   const srcMainPath = path.join(projectDir, srcMain);
   shjs.mkdir('-p', srcMainPath);
@@ -102,8 +124,39 @@ function php(srcMain, projectDir, title) {
   const environmentProd = path.join(projectDir, 'src/web/environments/environment.prod.ts');
   lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [environmentProd]);
 
-  const readmePath = path.join(projectDir, readme);
-  lightjs.replacement('`EMPTY` | staging: `EMPTY` | production: `EMPTY`', '`EMPTY` | staging: `.php` | production: `.php`', [readmePath]);
+  const readmeMdName = 'README.md';
+  const readmeMd = path.join(projectDir, readmeMdName);
+  lightjs.replacement('`EMPTY` | staging: `EMPTY` | production: `EMPTY`', '`EMPTY` | staging: `.php` | production: `.php`', [readmeMd]);
+
+  updateEnvironmentData(projectDir, './');
+}
+
+function updateGitignore(swaaplateJsonData, projectDir) {
+  const gitignoreName = '.gitignore';
+  lightjs.info(`-> update '${gitignoreName}' with new endpoint and manangement data`);
+
+  const endpoint = swaaplateJsonData.serverConfig.endpoint;
+  if (endpoint === 'java' || endpoint === 'kotlin') {
+    const management = swaaplateJsonData.serverConfig.management;
+    const managementApi = management === 'maven' || management === 'gradle' ? `${management},` : '';
+    const gitignore = path.join(projectDir, gitignoreName);
+    const api = `https://www.gitignore.io/api/angular,node,${endpoint},${managementApi}eclipse,intellij+all,visualstudiocode`;
+    request(api, function (error, response, body) {
+      lightjs.replacement('\\s# Created by https:.*((.|\\n)*)# End of https:.*\\s*', body, [gitignore]);
+    });
+  }
+}
+
+function updateEnvironmentData(projectDir, api) {
+  replaceInEnvironmentFile(projectDir, 'src/web/environments/environment.staging.ts', api);
+  replaceInEnvironmentFile(projectDir, 'src/web/environments/environment.prod.ts', api);
+}
+
+function replaceInEnvironmentFile(projectDir, environmentTsName, api) {
+  const environmentTs = path.join(projectDir, environmentTsName);
+  lightjs.info(`-> update '${environmentTsName}'`);
+
+  lightjs.replacement('\\.\\/', `${api}`, [environmentTs]);
 }
 
 endpoint.configureEndpoint = configureEndpoint;
