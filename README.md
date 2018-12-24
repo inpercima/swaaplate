@@ -102,7 +102,8 @@ Hint: This folder will be created in the root of the project.
 
 ### `generalConfig/github/use`
 
-Defines whether the project is shared on github or not. With `true` dependencies will be displayed with by [david-dm.org](https://david-dm.org).
+Defines whether the project is shared on github or not.
+With `true` dependencies will be displayed with by [david-dm.org](https://david-dm.org).
 
 * default: `false`
 * type: `boolean`
@@ -139,7 +140,8 @@ A shortcut of the project, used in components like `hw-home` or `hw-app`.
 
 ### `generalConfig/theme`
 
-Name of a build-in theme from angular-material. This option ca be changed in the environment files.
+Name of a build-in theme from angular-material.
+This option ca be changed in the environment files.
 
 * environment: `theme`
 * default: `indigo-pink`
@@ -148,7 +150,8 @@ Name of a build-in theme from angular-material. This option ca be changed in the
 
 ### `generalConfig/title`
 
-Applicationwide title of the app, displayed in title and toolbar. This option ca be changed in the environment files.
+Applicationwide title of the app, displayed in title and toolbar.
+This option ca be changed in the environment files.
 
 * environment: `appname`
 * default: `Hello world`
@@ -156,7 +159,8 @@ Applicationwide title of the app, displayed in title and toolbar. This option ca
 
 ### `generalConfig/useYarn`
 
-Defines whatever yarn should be used or not. If this option is set to `false` npm will be used.
+Defines whatever yarn should be used or not.
+If this option is set to `false` npm will be used.
 
 * default: `true`
 * type: `boolean`
@@ -206,7 +210,8 @@ The repository. If `generalConfig/github/use` is activated, the repository will 
 
 ### `routeConfig/default`
 
-The main route and the redirect route after login if no route is stored. This option ca be changed in the environment files.
+The main route and the redirect route after login if no route is stored.
+This option ca be changed in the environment files.
 
 * environment: `defaultRoute`
 * default: `dashboard`
@@ -214,7 +219,8 @@ The main route and the redirect route after login if no route is stored. This op
 
 ### `routeConfig/features/show`
 
-Defines whether feature routes will be displayed or not. This option ca be changed in the environment files.
+Defines whether feature routes will be displayed or not.
+This option ca be changed in the environment files.
 
 * environment: `showFeatures`
 * default: `true`
@@ -223,7 +229,8 @@ Defines whether feature routes will be displayed or not. This option ca be chang
 
 ### `routeConfig/login/activate`
 
-Defines whether a login will be used or not. This option ca be changed in the environment files.
+Defines whether a login will be used or not.
+This option ca be changed in the environment files.
 
 * environment: `activateLogin`
 * default: `true`
@@ -239,7 +246,8 @@ Defines the name of the login route.
 
 ### `routeConfig/login/show`
 
-Defines whether login route will be displayed or not. This option ca be changed in the environment files.
+Defines whether login route will be displayed or not.
+This option ca be changed in the environment files.
 
 * environment: `showLogin`
 * default: `false`
@@ -255,7 +263,8 @@ The main route and the redirect route after login if no route is stored.
 
 ### `routeConfig/notFound/redirect`
 
-Defines whether the 404 route will redirect to the default route or not. This option ca be changed in the environment files.
+Defines whether the 404 route will redirect to the default route or not.
+This option ca be changed in the environment files.
 
 * environment: `redirectNotFound`
 * default: `false`
