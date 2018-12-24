@@ -113,9 +113,9 @@ ajv@^5.3.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-angular-cli-for-swaaplate@inpercima/angular-cli-for-swaaplate#v0.1.1:
-  version "0.1.1"
-  resolved "https://codeload.github.com/inpercima/angular-cli-for-swaaplate/tar.gz/c7470b589e6402d6ff40c14e94db8e9e78aac64f"
+angular-cli-for-swaaplate@inpercima/angular-cli-for-swaaplate#v0.1.2:
+  version "0.1.2"
+  resolved "https://codeload.github.com/inpercima/angular-cli-for-swaaplate/tar.gz/6575044ae7b1a0eb369d523c166817ccd79092bc"
   dependencies:
     "@angular/animations" "7.0.4"
     "@angular/cdk" "7.0.4"
@@ -1034,9 +1034,9 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
-light-js@inpercima/light-js#v0.2.1:
-  version "0.2.1"
-  resolved "https://codeload.github.com/inpercima/light-js/tar.gz/1a0895a3390ecdc0a1db0e831b048f6adcb12c5a"
+light-js@inpercima/light-js#v0.2.2:
+  version "0.2.2"
+  resolved "https://codeload.github.com/inpercima/light-js/tar.gz/d2dd6c19d56985ef1e5a26b2ce07bf9074c180df"
   dependencies:
     replace "1.0.0"
     shelljs "0.8.2"
