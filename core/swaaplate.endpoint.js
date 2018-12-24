@@ -14,6 +14,7 @@ let endpoint = {};
  * @param {object} swaaplateJsonData
  */
 function configureEndpoint(swaaplateJsonData, projectDir) {
+  let clientPath = '';
   const serverConfig = swaaplateJsonData.serverConfig;
   lightjs.info(`prepare data for endpoint '${serverConfig.endpoint}'`);
 
@@ -22,23 +23,16 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
   // java, kotlin and php
   const srcMain = 'src/main/';
   if (serverConfig.endpoint !== 'js') {
-    shjs.mv(path.join(projectDir, 'src'), path.join(projectDir, 'web'));
-    shjs.mkdir('-p', path.join(projectDir, 'src'));
-    shjs.mv(path.join(projectDir, 'web'), path.join(projectDir, 'src/'));
-
-    const tsConfigAppJson = path.join(projectDir, 'src/web/tsconfig.app.json');
-    lightjs.replacement('(tsconfig.json)', '../$1', [tsConfigAppJson]);
-    lightjs.replacement('(out-tsc)', '../$1', [tsConfigAppJson]);
-    const tsConfigSpecJson = path.join(projectDir, 'src/web/tsconfig.spec.json');
-    lightjs.replacement('(tsconfig.json)', '../$1', [tsConfigSpecJson]);
-    lightjs.replacement('(out-tsc)', '../$1', [tsConfigSpecJson]);
-
-    const tsLintJson = path.join(projectDir, 'src/web/tslint.json');
-    lightjs.replacement('(tslint.json)', '../$1', [tsLintJson]);
-
-    const angularJson = path.join(projectDir, 'angular.json');
-    lightjs.replacement('(src/)', `$1web/`, [angularJson]);
-    lightjs.replacement('"(src)"', `"$1/web"`, [angularJson]);
+    clientPath = 'client';
+    shjs.mkdir('-p', path.join(projectDir, clientPath));
+    shjs.mv(path.join(projectDir, 'e2e'), path.join(projectDir, clientPath));
+    shjs.mv(path.join(projectDir, 'mock'), path.join(projectDir, clientPath));
+    shjs.mv(path.join(projectDir, 'angular.json'), path.join(projectDir, clientPath));
+    shjs.mv(path.join(projectDir, 'package.json'), path.join(projectDir, clientPath));
+    shjs.mv(path.join(projectDir, 'tsconfig.json'), path.join(projectDir, clientPath));
+    shjs.mv(path.join(projectDir, 'tslint.json'), path.join(projectDir, clientPath));
+    shjs.mv(path.join(projectDir, 'webpack.config.js'), path.join(projectDir, clientPath));
+    shjs.mv(path.join(projectDir, 'src'), path.join(projectDir, clientPath, 'src'));
   }
   // java or kotlin
   if (serverConfig.endpoint === 'java' || serverConfig.endpoint === 'kotlin') {
@@ -46,12 +40,13 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
   }
   // php
   if (serverConfig.endpoint === 'php') {
-    php(srcMain, projectDir, swaaplateJsonData.generalConfig.title);
+    php(srcMain, projectDir, swaaplateJsonData);
   }
   // js
   if (serverConfig.endpoint === 'js') {
     lightjs.info(`use endpoint 'js', nothing special todo`);
   }
+  return clientPath;
 }
 
 function javaKotlin(srcMain, projectDir, serverConfig, author) {
@@ -94,41 +89,59 @@ function javaKotlin(srcMain, projectDir, serverConfig, author) {
   updateEnvironmentData(projectDir, 'http://localhost:8080');
 }
 
-function php(srcMain, projectDir, title) {
+function php(srcMain, projectDir, swaaplateJsonData) {
+  const projectName = swaaplateJsonData.packageJsonConfig.name;
   lightjs.info(`-> update webpack config and api-endpoint`);
 
+  const serverAsApi = swaaplateJsonData.serverConfig.serverAsApi;
+  const serverPath = serverAsApi ? 'api' : 'server';
   const packageJsonName = 'package.json';
-  const packageJson = path.join(projectDir, packageJsonName);
+  const packageJson = path.join(projectDir, 'client', packageJsonName);
   lightjs.info(`-> update '${packageJsonName}'`);
   const packageJsonData = lightjs.readJson(packageJson);
   packageJsonData.devDependencies['copy-webpack-plugin'] = '4.5.4';
   lightjs.writeJson(packageJson, packageJsonData);
 
-  const srcMainPath = path.join(projectDir, srcMain);
+  const srcMainPath = path.join(projectDir, serverPath, srcMain);
   shjs.mkdir('-p', srcMainPath);
   shjs.cp('endpoint/php/*', srcMainPath);
+  shjs.cp('endpoint/php/.htaccess', srcMainPath);
 
   const copyWebpackPlugin = `$1${os.EOL}const CopyWebpackPlugin = require('copy-webpack-plugin');`;
-  const webpackConfigJs = path.join(projectDir, 'webpack.config.js');
+  const webpackConfigJs = path.join(projectDir, 'client/webpack.config.js');
   lightjs.replacement('(webpack.*=.*)', copyWebpackPlugin, [webpackConfigJs]);
 
-  const copyWebpackPluginSection = `$1${os.EOL}  plugins: [${os.EOL}    new CopyWebpackPlugin([{${os.EOL}      from: './src/main',${os.EOL}    }]),${os.EOL}  ],`;
+  const copyFrom = `      from: '../${serverPath}/src/main',${os.EOL}`;
+  const copyToApi = serverAsApi ? `      to: './api',${os.EOL}` : '';
+  const copyWebpackPluginSection = `$1${os.EOL}  plugins: [ process.env.NODE_ENV !== 'dev' ?${os.EOL}    new CopyWebpackPlugin([{${os.EOL}${copyFrom}${copyToApi}    }]) : {},${os.EOL}  ],`;
   lightjs.replacement('(},)', copyWebpackPluginSection, [webpackConfigJs]);
 
-  const authServicePath = path.join(projectDir, 'src/main/auth.service.php');
-  lightjs.replacement('inpercima', title, [authServicePath]);
+  const authServicePath = path.join(projectDir, serverPath, 'src/main/auth.service.php');
+  lightjs.replacement('inpercima', projectName, [authServicePath]);
 
-  const environmentStaging = path.join(projectDir, 'src/web/environments/environment.staging.ts');
-  lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [environmentStaging]);
-
-  const environmentProd = path.join(projectDir, 'src/web/environments/environment.prod.ts');
-  lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [environmentProd]);
-
+  const htaccess = swaaplateJsonData.serverConfig.htaccess;
   const readmeMdName = 'README.md';
   const readmeMd = path.join(projectDir, readmeMdName);
-  lightjs.replacement('`EMPTY` | staging: `EMPTY` | production: `EMPTY`', '`EMPTY` | staging: `.php` | production: `.php`', [readmeMd]);
+  if (!htaccess) {
+    shjs.rm(path.join(srcMainPath, '.htaccess'));
+    const environmentStaging = path.join(projectDir, 'client/src/environments/environment.staging.ts');
+    lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [environmentStaging]);
 
-  updateEnvironmentData(projectDir, './');
+    const environmentProd = path.join(projectDir, 'client/src/environments/environment.prod.ts');
+    lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [environmentProd]);
+
+    lightjs.replacement('staging: `EMPTY`', 'staging: `.php`', [readmeMd]);
+    lightjs.replacement('production: `EMPTY`', 'production: `.php`', [readmeMd]);
+  }
+
+  if (serverAsApi) {
+    lightjs.replacement('staging: `./`', 'staging: `./api/`', [readmeMd]);
+    lightjs.replacement('production: `./`', 'production: `./api/`', [readmeMd]);
+  }
+
+  lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
+
+  updateEnvironmentData(projectDir, serverAsApi ? './api/' : './');
 }
 
 function updateGitignore(swaaplateJsonData, projectDir) {
@@ -148,8 +161,8 @@ function updateGitignore(swaaplateJsonData, projectDir) {
 }
 
 function updateEnvironmentData(projectDir, api) {
-  replaceInEnvironmentFile(projectDir, 'src/web/environments/environment.staging.ts', api);
-  replaceInEnvironmentFile(projectDir, 'src/web/environments/environment.prod.ts', api);
+  replaceInEnvironmentFile(projectDir, 'client/src/environments/environment.staging.ts', api);
+  replaceInEnvironmentFile(projectDir, 'client/src/environments/environment.prod.ts', api);
 }
 
 function replaceInEnvironmentFile(projectDir, environmentTsName, api) {

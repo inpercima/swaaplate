@@ -4,7 +4,6 @@
 const lightjs = require('light-js');
 const os = require('os');
 const path = require('path');
-const request = require('request');
 const shjs = require('shelljs');
 
 const swcomponent = require('./swaaplate.component.js');
@@ -31,6 +30,7 @@ function createProject(swaaplateJsonData) {
   shjs.cp('-r', 'node_modules/angular-cli-for-swaaplate/.gitignore', projectDir);
   shjs.cp('swaaplate.json', path.join(projectDir, 'swaaplate-backup.json'));
   shjs.rm(path.join(projectDir, 'yarn.lock'));
+  shjs.rm('-rf', path.join(projectDir, 'node_modules'));
 
   updatePackageJsonData(swaaplateJsonData, projectDir);
   updateEnvironmentData(swaaplateJsonData, projectDir);
@@ -39,11 +39,11 @@ function createProject(swaaplateJsonData) {
   replaceInReadmeFile(swaaplateJsonData, projectDir);
   replaceInAngularJsonFile(swaaplateJsonData, projectDir);
 
-  swendpoint.configureEndpoint(swaaplateJsonData, projectDir);
+  const clientPath = swendpoint.configureEndpoint(swaaplateJsonData, projectDir);
   swmanagement.configureManagement(swaaplateJsonData, projectDir);
   swcomponent.configureComponents(swaaplateJsonData, projectDir);
 
-  installDependencies(swaaplateJsonData, projectDir);
+  installDependencies(swaaplateJsonData, path.join(projectDir, clientPath));
 }
 
 function updatePackageJsonData(swaaplateJsonData, projectDir) {
@@ -66,6 +66,9 @@ function updatePackageJsonData(swaaplateJsonData, projectDir) {
   } else {
     packageJsonData.homepage = config.homepage;
   }
+
+  const buildDev = packageJsonData.scripts["build:dev"];
+  packageJsonData.scripts["build:dev"] = `export NODE_ENV='dev' && ${buildDev}`;
 
   packageJsonData.version = '0.0.1-SNAPSHOT';
   lightjs.writeJson(packageJson, packageJsonData);
@@ -210,7 +213,7 @@ function installDependencies(swaaplateJsonData, projectDir) {
     lightjs.info(`install dependencies via ${yarnOrNpm}`);
 
     lightjs.setNpmDefault(!generalConfig.useYarn);
-    shjs.cd(path.join(projectDir));
+    shjs.cd(projectDir);
     lightjs.yarnpm('install');
   } else {
     lightjs.info('no dependencies will be installed');

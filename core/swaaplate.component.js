@@ -17,16 +17,15 @@ function configureComponents(swaaplateJsonData, projectDir) {
   const routes = ['dashboard', 'login', 'not-found'];
   const routeConfig = swaaplateJsonData.routeConfig;
   const configRoutes = [swaaplateJsonData.routeConfig.default, routeConfig.login.name, routeConfig.notFound.name];
-  const srcDir = path.join(projectDir, 'src');
   const selectorPrefix = swaaplateJsonData.generalConfig.selectorPrefix;
+  const appPath = path.join(projectDir, swaaplateJsonData.serverConfig.endpoint === 'js' ? 'src' : 'client/src');
 
-  const appPath = swaaplateJsonData.serverConfig.endpoint !== 'js' ? 'web/' : '';
   if (selectorPrefix !== 'app') {
     lightjs.replacement('app-root', `${selectorPrefix}-root`, [
-      path.join(srcDir, appPath, 'app/app.component.ts'),
-      path.join(srcDir, appPath, 'index.html')
+      path.join(appPath, 'app/app.component.ts'),
+      path.join(appPath, 'index.html')
     ]);
-    const tslintJson = path.join(srcDir, appPath, 'tslint.json');
+    const tslintJson = path.join(appPath, 'tslint.json');
     const tslintJsonData = lightjs.readJson(tslintJson);
     tslintJsonData.rules["directive-selector"] = [true, "attribute", selectorPrefix, "camelCase"];
     tslintJsonData.rules["component-selector"] = [true, "element", selectorPrefix, "kebab-case"];
@@ -34,17 +33,17 @@ function configureComponents(swaaplateJsonData, projectDir) {
   }
   for (let i = 0; i < routes.length; i++) {
     const template = `'${selectorPrefix}-${configRoutes[i]}'`;
-    lightjs.replacement(`'app-${routes[i]}'`, template, [path.join(srcDir, appPath, 'app')]);
+    lightjs.replacement(`'app-${routes[i]}'`, template, [path.join(appPath, 'app')], true, true);
     if (configRoutes[i] !== routes[i]) {
-      updateComponent(appPath, projectDir, routes[i], configRoutes[i]);
+      updateComponent(appPath, routes[i], configRoutes[i]);
     }
   }
 }
 
-function updateComponent(appPath, projectDir, oldName, newName) {
+function updateComponent(appPath, oldName, newName) {
   lightjs.info(`update component '${oldName}' to '${newName}'`);
 
-  const srcDir = path.join(projectDir, 'src', appPath, 'app', oldName === 'dashboard' ? 'features' : '');
+  const srcDir = path.join(appPath, 'app', oldName === 'dashboard' ? 'features' : '');
   shjs.mv(path.join(srcDir, oldName), path.join(srcDir, newName));
 
   shjs.mv(path.join(srcDir, newName, `${oldName}.component.html`), path.join(srcDir, newName, `${newName}.component.html`));

@@ -89,8 +89,10 @@ Some of this options will be copied in the environment files of the new project 
 * [routeConfig/notFound/name](#routeconfignotfoundname)
 * [routeConfig/notFound/redirect](#routeconfignotfoundredirect)
 * [serverConfig/endpoint](#serverconfigendpoint)
+* [serverConfig/htaccess](#serverconfightaccess)
 * [serverConfig/management](#serverconfigmanagement)
 * [serverConfig/packagePath](#serverconfigpackagepath)
+* [serverConfig/serverAsApi](#serverconfigserverasapi)
 
 ### `generalConfig/buildWebDir`
 
@@ -279,6 +281,15 @@ Defines the endpoint of the app.
 * type: `string`
 * values: `java`/`kotlin`/`js`/`php`
 
+### `serverConfig/htaccess`
+
+Defines whether a .htaccess file should used or not.
+This predefines no ending for php.
+
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
+
 ### `serverConfig/management`
 
 Defines the management tool of the app.
@@ -293,3 +304,12 @@ The package structure for java or kotlin.
 
 * default: EMPTY
 * type: `string`
+
+### `serverConfig/serverAsApi`
+
+Defines that the server is used as a api reference or not.
+The api URL in the environment files for staging and prod will be set to `./api/`.
+
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
