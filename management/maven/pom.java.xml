@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.4.RELEASE</version>
+        <version>2.1.1.RELEASE</version>
     </parent>
 
     <groupId>net.inpercima.swaaplate</groupId>
@@ -16,7 +16,7 @@
     <packaging>jar</packaging>
 
     <name>swaaplate</name>
-    <description>[s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple own template for webapps.</description>
+    <description>[s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple template generator for angular webapps with different endpoints.</description>
 
     <dependencies>
         <dependency>
@@ -48,10 +48,6 @@
             </plugin>
         </plugins>
         <resources>
-            <resource>
-                <directory>dist</directory>
-                <targetPath>../classes/public</targetPath>
-            </resource>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>

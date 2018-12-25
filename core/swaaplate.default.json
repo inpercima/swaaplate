@@ -37,7 +37,9 @@
   },
   "serverConfig": {
     "endpoint": "js",
+    "htaccess": true,
     "management": "",
-    "packagePath": ""
+    "packagePath": "",
+    "serverAsApi": true
   }
 }

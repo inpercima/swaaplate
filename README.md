@@ -89,20 +89,22 @@ Some of this options will be copied in the environment files of the new project 
 * [routeConfig/notFound/name](#routeconfignotfoundname)
 * [routeConfig/notFound/redirect](#routeconfignotfoundredirect)
 * [serverConfig/endpoint](#serverconfigendpoint)
+* [serverConfig/htaccess](#serverconfightaccess)
 * [serverConfig/management](#serverconfigmanagement)
 * [serverConfig/packagePath](#serverconfigpackagepath)
+* [serverConfig/serverAsApi](#serverconfigserverasapi)
 
 ### `generalConfig/buildWebDir`
 
 Path to the target from the angular webapp for buildtime.
-Hint: This folder will be created in the root of the project.
 
 * default: `dist`
 * type: `string`
 
 ### `generalConfig/github/use`
 
-Defines whether the project is shared on github or not. With `true` dependencies will be displayed with by [david-dm.org](https://david-dm.org).
+Defines whether the project is shared on github or not.
+With `true` dependencies will be displayed with by [david-dm.org](https://david-dm.org).
 
 * default: `false`
 * type: `boolean`
@@ -119,7 +121,7 @@ If `generalConfig/github/use` is set to `true` you need to define a github usern
 
 Defines whether swaaplate should install tools and frontend dependencies or not.
 
-* default: true
+* default: `true`
 * type: `boolean`
 * values: `true`/`false`
 
@@ -139,24 +141,27 @@ A shortcut of the project, used in components like `hw-home` or `hw-app`.
 
 ### `generalConfig/theme`
 
-Name of a build-in theme from angular-material. This option ca be changed in the environement files.
+Name of a build-in theme from angular-material.
+This option ca be changed in the environment files.
 
-* config-name: `theme`
+* environment name: `theme`
 * default: `indigo-pink`
 * type: `string`
 * values: `deeppurple-amber`/`indigo-pink`/`pink-bluegrey`/`purple-green`
 
 ### `generalConfig/title`
 
-Applicationwide title of the app, displayed in title and toolbar. This option ca be changed in the environement files.
+Applicationwide title of the app, displayed in title and toolbar.
+This option ca be changed in the environment files.
 
-* config-name: `appname`
+* environment name: `appname`
 * default: `Hello world`
 * type: `string`
 
 ### `generalConfig/useYarn`
 
-Defines whatever yarn should be used or not. If this option is set to `false` npm will be used.
+Defines whatever yarn should be used or not.
+If this option is set to `false` npm will be used.
 
 * default: `true`
 * type: `boolean`
@@ -206,26 +211,29 @@ The repository. If `generalConfig/github/use` is activated, the repository will 
 
 ### `routeConfig/default`
 
-The main route and the redirect route after login if no route is stored. This option ca be changed in the environement files.
+The main route and the redirect route after login if no route is stored.
+This option ca be changed in the environment files.
 
-* config-name: `routes/default`
+* environment name: `defaultRoute`
 * default: `dashboard`
 * type: `string`
 
 ### `routeConfig/features/show`
 
-Defines whether feature routes will be displayed or not. This option ca be changed in the environement files.
+Defines whether feature routes will be displayed or not.
+This option ca be changed in the environment files.
 
-* config-name: `routes/features/show`
+* environment name: `showFeatures`
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
 
 ### `routeConfig/login/activate`
 
-Defines whether a login will be used or not. This option ca be changed in the environement files.
+Defines whether a login will be used or not.
+This option ca be changed in the environment files.
 
-* config-name: `routes/login/activate`
+* environment name: `activateLogin`
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
@@ -239,9 +247,10 @@ Defines the name of the login route.
 
 ### `routeConfig/login/show`
 
-Defines whether login route will be displayed or not. This option ca be changed in the environement files.
+Defines whether login route will be displayed or not.
+This option ca be changed in the environment files.
 
-* config-name: `routes/login/show`
+* environment name: `showLogin`
 * default: `false`
 * type: `boolean`
 * values: `true`/`false`
@@ -255,9 +264,10 @@ The main route and the redirect route after login if no route is stored.
 
 ### `routeConfig/notFound/redirect`
 
-Defines whether the 404 route will redirect to the default route or not. This option ca be changed in the environement files.
+Defines whether the 404 route will redirect to the default route or not.
+This option ca be changed in the environment files.
 
-* config-name: `routes/notFound/redirect`
+* environment name: `redirectNotFound`
 * default: `false`
 * type: `boolean`
 * values: `true`/`false`
@@ -270,9 +280,20 @@ Defines the endpoint of the app.
 * type: `string`
 * values: `java`/`kotlin`/`js`/`php`
 
+### `serverConfig/htaccess`
+
+Defines whether a .htaccess file should used or not.
+This predefines no ending for php files.
+This will work for php only.
+
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
+
 ### `serverConfig/management`
 
 Defines the management tool of the app.
+This will work for java or kotlin only.
 
 * default: EMPTY
 * type: `string`
@@ -280,7 +301,18 @@ Defines the management tool of the app.
 
 ### `serverConfig/packagePath`
 
-The package structure for java or kotlin.
+The package structure.
+This will work for java or kotlin only.
 
 * default: EMPTY
 * type: `string`
+
+### `serverConfig/serverAsApi`
+
+Defines that the server is used as a api reference or not.
+The api URL in environment.ts and environment.prod.ts will be set to `./api/`.
+This will work for php only.
+
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
