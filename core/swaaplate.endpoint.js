@@ -93,6 +93,8 @@ function javaKotlin(srcMain, projectDir, serverConfig, author) {
   lightjs.replacement('(## Usage\\s)', `$1${os.EOL}TODO: Update usage for ${endpoint}${os.EOL}`, [readmeMd]);
 
   lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
+  lightjs.replacement('default: `./`', 'default: `http://localhost:8080/`', [readmeMd]);
+  lightjs.replacement('production: `./`', 'production: `http://localhost:8080/`', [readmeMd]);
 
   updateEnvironmentData(projectDir, 'http://localhost:8080/');
 }
