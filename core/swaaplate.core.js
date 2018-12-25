@@ -51,7 +51,7 @@ function updatePackageJsonData(swaaplateJsonData, projectDir) {
   const packageJson = path.join(projectDir, packageJsonName);
   lightjs.info(`update '${packageJsonName}'`);
 
-  const packageJsonData = lightjs.readJson(packageJson);
+  let packageJsonData = lightjs.readJson(packageJson);
   const config = swaaplateJsonData.packageJsonConfig;
   packageJsonData.author = config.author;
   packageJsonData.contributors = config.contributors;
@@ -67,16 +67,23 @@ function updatePackageJsonData(swaaplateJsonData, projectDir) {
     packageJsonData.homepage = config.homepage;
   }
 
-  const buildDev = packageJsonData.scripts["build:dev"];
-  packageJsonData.scripts["build:dev"] = `export NODE_ENV='dev' && ${buildDev}`;
+  packageJsonData = updateTask(packageJsonData, 'build:mock');
+  packageJsonData = updateTask(packageJsonData, 'watch:mock');
 
   packageJsonData.version = '0.0.1-SNAPSHOT';
   lightjs.writeJson(packageJson, packageJsonData);
 }
 
+function updateTask(packageJsonData, mockTask) {
+  const nodeEnv = `export NODE_ENV='mock'`;
+  const task = packageJsonData.scripts[mockTask];
+  packageJsonData.scripts[mockTask] = `${nodeEnv} && ${task}`;
+  return packageJsonData;
+}
+
 function updateEnvironmentData(swaaplateJsonData, projectDir) {
   replaceInEnvironmentFile(swaaplateJsonData, projectDir, 'src/environments/environment.ts');
-  replaceInEnvironmentFile(swaaplateJsonData, projectDir, 'src/environments/environment.staging.ts');
+  replaceInEnvironmentFile(swaaplateJsonData, projectDir, 'src/environments/environment.mock.ts');
   replaceInEnvironmentFile(swaaplateJsonData, projectDir, 'src/environments/environment.prod.ts');
 }
 
@@ -139,7 +146,7 @@ function updateMockData(title, projectDir) {
   dbJsonData.users[0].password = title;
   lightjs.writeJson(dbJson, dbJsonData);
 
-  lightjs.replacement('inpercima', title, [path.join(projectDir, mockMiddlewareName)]);
+  lightjs.replacement('angular-cli-for-swaaplate', title, [path.join(projectDir, mockMiddlewareName)]);
 }
 
 function replaceInReadmeFile(swaaplateJsonData, projectDir) {

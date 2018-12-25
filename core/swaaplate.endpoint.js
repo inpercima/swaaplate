@@ -121,7 +121,7 @@ function php(srcMain, projectDir, swaaplateJsonData) {
 
   const copyFrom = `      from: '../${serverPath}/src/main',${os.EOL}`;
   const copyToApi = serverAsApi ? `      to: './api',${os.EOL}` : '';
-  const copyWebpackPluginSection = `$1${os.EOL}  plugins: [ process.env.NODE_ENV !== 'dev' ?${os.EOL}    new CopyWebpackPlugin([{${os.EOL}${copyFrom}${copyToApi}    }]) : {},${os.EOL}  ],`;
+  const copyWebpackPluginSection = `$1${os.EOL}  plugins: [ process.env.NODE_ENV !== 'mock' ?${os.EOL}    new CopyWebpackPlugin([{${os.EOL}${copyFrom}${copyToApi}    }]) : {},${os.EOL}  ],`;
   lightjs.replacement('(},)', copyWebpackPluginSection, [webpackConfigJs]);
 
   const authServicePath = path.join(projectDir, serverPath, 'src/main/auth.service.php');
@@ -132,18 +132,17 @@ function php(srcMain, projectDir, swaaplateJsonData) {
   const readmeMd = path.join(projectDir, readmeMdName);
   if (!htaccess) {
     shjs.rm(path.join(srcMainPath, '.htaccess'));
-    const environmentStaging = path.join(projectDir, 'client/src/environments/environment.staging.ts');
-    lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [environmentStaging]);
+    const environment = path.join(projectDir, 'client/src/environments/environment.ts');
+    lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [environment]);
 
     const environmentProd = path.join(projectDir, 'client/src/environments/environment.prod.ts');
     lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [environmentProd]);
 
-    lightjs.replacement('staging: `EMPTY`', 'staging: `.php`', [readmeMd]);
-    lightjs.replacement('production: `EMPTY`', 'production: `.php`', [readmeMd]);
+    lightjs.replacement('default: EMPTY', 'default: `.php` | mock: EMPTY | production: `.php`', [readmeMd]);
   }
 
   if (serverAsApi) {
-    lightjs.replacement('staging: `./`', 'staging: `./api/`', [readmeMd]);
+    lightjs.replacement('default: `./`', 'default: `./api/`', [readmeMd]);
     lightjs.replacement('production: `./`', 'production: `./api/`', [readmeMd]);
   }
 
@@ -169,7 +168,7 @@ function updateGitignore(swaaplateJsonData, projectDir) {
 }
 
 function updateEnvironmentData(projectDir, api) {
-  replaceInEnvironmentFile(projectDir, 'client/src/environments/environment.staging.ts', api);
+  replaceInEnvironmentFile(projectDir, 'client/src/environments/environment.ts', api);
   replaceInEnvironmentFile(projectDir, 'client/src/environments/environment.prod.ts', api);
 }
 
