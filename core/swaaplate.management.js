@@ -12,7 +12,7 @@ let management = {};
  *
  * @param {object} swaaplateJsonData
  */
-function configureManagement(swaaplateJsonData, projectDir) {
+function configureManagement(swaaplateJsonData, serverDir) {
   const serverConfig = swaaplateJsonData.serverConfig;
   const management = serverConfig.management;
   const endpoint = serverConfig.endpoint;
@@ -21,13 +21,13 @@ function configureManagement(swaaplateJsonData, projectDir) {
     if (management === 'maven') {
       lightjs.info(`-> use management 'maven', copy wrapper and pom-file for ${endpoint}`);
 
-      shjs.cp('-r', `management/${management}/*`, projectDir);
-      shjs.cp('-r', `management/${management}/.mvn`, projectDir);
+      shjs.cp('-r', `management/${management}/*`, serverDir);
+      shjs.cp('-r', `management/${management}/.mvn`, serverDir);
 
       const dismatch = endpoint === 'java' ? 'kotlin' : 'java';
-      const pomXml = path.join(projectDir, 'pom.xml');
-      shjs.mv(path.join(projectDir, `pom.${endpoint}.xml`), pomXml);
-      shjs.rm(path.join(projectDir, `pom.${dismatch}.xml`));
+      const pomXml = path.join(serverDir, 'pom.xml');
+      shjs.mv(path.join(serverDir, `pom.${endpoint}.xml`), pomXml);
+      shjs.rm(path.join(serverDir, `pom.${dismatch}.xml`));
 
       replaceInPomFile(swaaplateJsonData, pomXml);
     } else if (serverConfig.management === 'gradle') {
@@ -42,11 +42,6 @@ function configureManagement(swaaplateJsonData, projectDir) {
 }
 
 function replaceInPomFile(swaaplateJsonData, pomXml) {
-  const buildWebDir = swaaplateJsonData.generalConfig.buildWebDir;
-  const distDir = 'dist';
-  if (buildWebDir !== distDir) {
-    lightjs.replacement(distDir, buildWebDir, [pomXml]);
-  }
   lightjs.replacement('net.inpercima.swaaplate', swaaplateJsonData.serverConfig.packagePath, [pomXml]);
   lightjs.replacement('swaaplate', swaaplateJsonData.packageJsonConfig.name, [pomXml]);
 

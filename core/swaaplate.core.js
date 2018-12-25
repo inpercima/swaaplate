@@ -40,7 +40,7 @@ function createProject(swaaplateJsonData) {
   replaceInAngularJsonFile(swaaplateJsonData, projectDir);
 
   const clientPath = swendpoint.configureEndpoint(swaaplateJsonData, projectDir);
-  swmanagement.configureManagement(swaaplateJsonData, projectDir);
+  swmanagement.configureManagement(swaaplateJsonData, path.join(projectDir, 'server'));
   swcomponent.configureComponents(swaaplateJsonData, projectDir);
 
   installDependencies(swaaplateJsonData, path.join(projectDir, clientPath));

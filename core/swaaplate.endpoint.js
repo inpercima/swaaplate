@@ -4,6 +4,7 @@
 const lightjs = require('light-js');
 const os = require('os');
 const path = require('path');
+const request = require('request');
 const shjs = require('shelljs');
 
 let endpoint = {};
@@ -51,26 +52,31 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
 
 function javaKotlin(srcMain, projectDir, serverConfig, author) {
   const endpoint = serverConfig.endpoint;
-  lightjs.info(`use endpoint '${endpoint}', create 'src/main/..' and 'src/test/..'`);
+  const srcTest = 'src/test/';
+  const serverSrcMain = path.join('server', srcMain);
+  const serverSrcTest = path.join('server', srcTest);
+  lightjs.info(`use endpoint '${endpoint}', create '${serverSrcMain}..' and '${serverSrcTest}..'`);
 
   const endpointPath = path.join(endpoint, serverConfig.packagePath.replace(/\./g, '/'));
-  const srcMainEndpointPath = path.join(projectDir, srcMain, endpointPath);
-  const srcMainResources = path.join(projectDir, srcMain, 'resources');
-  shjs.mkdir('-p', srcMainEndpointPath);
+  const serverSrcMainEndpointPath = path.join(projectDir, serverSrcMain, endpointPath);
+  shjs.mkdir('-p', serverSrcMainEndpointPath);
 
+  const serverSrcMainResources = path.join(projectDir, serverSrcMain, 'resources');
   const endpointExt = endpoint === 'kotlin' ? 'kt' : endpoint;
-  shjs.cp(`endpoint/${endpoint}/Application.${endpointExt}`, srcMainEndpointPath);
-  shjs.mkdir('-p', srcMainResources);
-  shjs.cp('endpoint/java-kotlin/logback.xml', srcMainResources);
-  shjs.cp('endpoint/java-kotlin/application.yml', srcMainResources);
+  shjs.cp(`endpoint/${endpoint}/Application.${endpointExt}`, serverSrcMainEndpointPath);
+  shjs.cp(`endpoint/${endpoint}/CorsConfig.${endpointExt}`, serverSrcMainEndpointPath);
 
-  const srcTest = 'src/test/';
-  shjs.mkdir('-p', path.join(projectDir, srcTest, endpointPath));
-  shjs.mkdir('-p', path.join(projectDir, srcTest, 'resources'));
-  lightjs.replacement('net.inpercima.swaaplate', serverConfig.packagePath, [
-    path.join(projectDir, srcMain, endpointPath, `Application.${endpointExt}`),
-    path.join(srcMainResources, 'logback.xml'),
-  ]);
+  const webDir = path.join(serverSrcMainEndpointPath, 'web');
+  shjs.mkdir('-p', webDir);
+  shjs.cp(`endpoint/${endpoint}/AuthController.${endpointExt}`, webDir);
+  shjs.mkdir('-p', serverSrcMainResources);
+  shjs.cp('endpoint/java-kotlin/logback.xml', serverSrcMainResources);
+  shjs.cp('endpoint/java-kotlin/application.yml', serverSrcMainResources);
+
+  shjs.mkdir('-p', path.join(projectDir, serverSrcTest, endpointPath));
+  shjs.mkdir('-p', path.join(projectDir, serverSrcTest, 'resources'));
+
+  lightjs.replacement('net.inpercima.swaaplate', serverConfig.packagePath, [serverSrcMainEndpointPath, serverSrcMainResources], true, true);
 
   const indentSizeEndpoint = endpoint === 'kotlin' ? 2 : 4;
   const config = `${os.EOL}${os.EOL}[logback.xml]${os.EOL}indent_size = 4${os.EOL}${os.EOL}[*.${endpointExt}]${os.EOL}indent_size = ${indentSizeEndpoint}`;
@@ -79,14 +85,16 @@ function javaKotlin(srcMain, projectDir, serverConfig, author) {
 
   const authorMj = 'Marcel Jänicke';
   if (author !== authorMj) {
-    lightjs.replacement(authorMj, author, [path.join(srcMainEndpointPath, `Application.${endpointExt}`)]);
+    lightjs.replacement(authorMj, author, [serverSrcMainEndpointPath], true, true);
   }
 
   const readmeMdName = 'README.md';
   const readmeMd = path.join(projectDir, readmeMdName);
   lightjs.replacement('(## Usage\\s)', `$1${os.EOL}TODO: Update usage for ${endpoint}${os.EOL}`, [readmeMd]);
 
-  updateEnvironmentData(projectDir, 'http://localhost:8080');
+  lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
+
+  updateEnvironmentData(projectDir, 'http://localhost:8080/');
 }
 
 function php(srcMain, projectDir, swaaplateJsonData) {
