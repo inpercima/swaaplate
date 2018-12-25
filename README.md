@@ -97,7 +97,6 @@ Some of this options will be copied in the environment files of the new project 
 ### `generalConfig/buildWebDir`
 
 Path to the target from the angular webapp for buildtime.
-Hint: This folder will be created in the root of the project.
 
 * default: `dist`
 * type: `string`
@@ -284,7 +283,8 @@ Defines the endpoint of the app.
 ### `serverConfig/htaccess`
 
 Defines whether a .htaccess file should used or not.
-This predefines no ending for php.
+This predefines no ending for php files.
+This will work for php only.
 
 * default: `true`
 * type: `boolean`
@@ -293,6 +293,7 @@ This predefines no ending for php.
 ### `serverConfig/management`
 
 Defines the management tool of the app.
+This will work for java or kotlin only.
 
 * default: EMPTY
 * type: `string`
@@ -300,7 +301,8 @@ Defines the management tool of the app.
 
 ### `serverConfig/packagePath`
 
-The package structure for java or kotlin.
+The package structure.
+This will work for java or kotlin only.
 
 * default: EMPTY
 * type: `string`
@@ -308,7 +310,8 @@ The package structure for java or kotlin.
 ### `serverConfig/serverAsApi`
 
 Defines that the server is used as a api reference or not.
-The api URL in the environment files for staging and prod will be set to `./api/`.
+The api URL in the environment files for php in staging and prod will be set to `./api/`.
+This will work for php only.
 
 * default: `true`
 * type: `boolean`
