@@ -159,7 +159,9 @@ function replaceInReadmeFile(swaaplateJsonData, projectDir) {
   lightjs.replacement('angular-cli-for-swaaplate', name, [readmeMd]);
   lightjs.replacement('(git clone )(.+)', `$1${packageJsonConfig.repository}`, [readmeMd]);
 
-  const generated = 'This project was generated with [swaaplate](https://github.com/inpercima/swaaplate).';
+  const packageJsonData = lightjs.readJson('package.json');
+
+  const generated = `This project was generated with [swaaplate](https://github.com/inpercima/swaaplate) version ${packageJsonData.version}.`;
   const description = `${packageJsonConfig.description}${os.EOL}${os.EOL}${generated}`;
   lightjs.replacement('This.+projects.\\s*', '', [readmeMd]);
   lightjs.replacement('This project.+', description, [readmeMd]);
