@@ -121,7 +121,7 @@ If `generalConfig/github/use` is set to `true` you need to define a github usern
 
 Defines whether swaaplate should install tools and frontend dependencies or not.
 
-* default: true
+* default: `true`
 * type: `boolean`
 * values: `true`/`false`
 
@@ -144,7 +144,7 @@ A shortcut of the project, used in components like `hw-home` or `hw-app`.
 Name of a build-in theme from angular-material.
 This option ca be changed in the environment files.
 
-* environment: `theme`
+* environment name: `theme`
 * default: `indigo-pink`
 * type: `string`
 * values: `deeppurple-amber`/`indigo-pink`/`pink-bluegrey`/`purple-green`
@@ -154,7 +154,7 @@ This option ca be changed in the environment files.
 Applicationwide title of the app, displayed in title and toolbar.
 This option ca be changed in the environment files.
 
-* environment: `appname`
+* environment name: `appname`
 * default: `Hello world`
 * type: `string`
 
@@ -214,7 +214,7 @@ The repository. If `generalConfig/github/use` is activated, the repository will 
 The main route and the redirect route after login if no route is stored.
 This option ca be changed in the environment files.
 
-* environment: `defaultRoute`
+* environment name: `defaultRoute`
 * default: `dashboard`
 * type: `string`
 
@@ -223,7 +223,7 @@ This option ca be changed in the environment files.
 Defines whether feature routes will be displayed or not.
 This option ca be changed in the environment files.
 
-* environment: `showFeatures`
+* environment name: `showFeatures`
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
@@ -233,7 +233,7 @@ This option ca be changed in the environment files.
 Defines whether a login will be used or not.
 This option ca be changed in the environment files.
 
-* environment: `activateLogin`
+* environment name: `activateLogin`
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
@@ -250,7 +250,7 @@ Defines the name of the login route.
 Defines whether login route will be displayed or not.
 This option ca be changed in the environment files.
 
-* environment: `showLogin`
+* environment name: `showLogin`
 * default: `false`
 * type: `boolean`
 * values: `true`/`false`
@@ -267,7 +267,7 @@ The main route and the redirect route after login if no route is stored.
 Defines whether the 404 route will redirect to the default route or not.
 This option ca be changed in the environment files.
 
-* environment: `redirectNotFound`
+* environment name: `redirectNotFound`
 * default: `false`
 * type: `boolean`
 * values: `true`/`false`
@@ -310,7 +310,7 @@ This will work for java or kotlin only.
 ### `serverConfig/serverAsApi`
 
 Defines that the server is used as a api reference or not.
-The api URL in the environment files for php in staging and prod will be set to `./api/`.
+The api URL in environment.ts and environment.prod.ts will be set to `./api/`.
 This will work for php only.
 
 * default: `true`
