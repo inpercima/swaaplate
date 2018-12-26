@@ -18,23 +18,25 @@ function configureManagement(swaaplateJsonData, serverDir) {
   const endpoint = serverConfig.endpoint;
 
   if (endpoint === 'java' || endpoint === 'kotlin') {
+    const dismatch = endpoint === 'java' ? 'kotlin' : 'java';
+    const pomXml = path.join(serverDir, 'pom.xml');
+
+    shjs.cp('-r', `management/${management}/*`, serverDir);
     if (management === 'maven') {
       lightjs.info(`-> use management 'maven', copy wrapper and pom-file for ${endpoint}`);
 
-      shjs.cp('-r', `management/${management}/*`, serverDir);
       shjs.cp('-r', `management/${management}/.mvn`, serverDir);
-
-      const dismatch = endpoint === 'java' ? 'kotlin' : 'java';
-      const pomXml = path.join(serverDir, 'pom.xml');
-      shjs.mv(path.join(serverDir, `pom.${endpoint}.xml`), pomXml);
-      shjs.rm(path.join(serverDir, `pom.${dismatch}.xml`));
-
-      replaceInPomFile(swaaplateJsonData, pomXml);
     } else if (serverConfig.management === 'gradle') {
       lightjs.info(`-> use management 'gradle', copy wrapper and build-file for ${endpoint}`);
-      // TODO comming soon
+
+      shjs.cp('-r', `management/${management}/.gradle`, serverDir);
     } else {
       lightjs.info('-> no management should be used');
+    }
+    if (management === 'maven' || management === 'gradle') {
+      shjs.mv(path.join(serverDir, `pom.${endpoint}.xml`), pomXml);
+      shjs.rm(path.join(serverDir, `pom.${dismatch}.xml`));
+      replaceInPomFile(swaaplateJsonData, pomXml);
     }
   } else {
     lightjs.info('-> an endpoint unlike java or kotlin is used, no management is needed');
