@@ -108,8 +108,10 @@ function php(srcMain, projectDir, swaaplateJsonData) {
   const packageJsonName = 'package.json';
   const packageJson = path.join(projectDir, 'client', packageJsonName);
   lightjs.info(`-> update '${packageJsonName}'`);
-  const packageJsonData = lightjs.readJson(packageJson);
+  let packageJsonData = lightjs.readJson(packageJson);
   packageJsonData.devDependencies['copy-webpack-plugin'] = '4.5.4';
+  packageJsonData = updateTask(packageJsonData, 'build:mock');
+  packageJsonData = updateTask(packageJsonData, 'watch:mock');
   lightjs.writeJson(packageJson, packageJsonData);
 
   const srcMainPath = path.join(projectDir, serverPath, srcMain);
@@ -153,6 +155,13 @@ function php(srcMain, projectDir, swaaplateJsonData) {
   lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
 
   updateEnvironmentData(projectDir, serverAsApi ? './api/' : './');
+}
+
+function updateTask(packageJsonData, mockTask) {
+  const nodeEnv = `export NODE_ENV='mock'`;
+  const task = packageJsonData.scripts[mockTask];
+  packageJsonData.scripts[mockTask] = `${nodeEnv} && ${task}`;
+  return packageJsonData;
 }
 
 function updateGitignore(swaaplateJsonData, projectDir) {

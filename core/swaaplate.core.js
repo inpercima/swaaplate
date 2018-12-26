@@ -67,18 +67,8 @@ function updatePackageJsonData(swaaplateJsonData, projectDir) {
     packageJsonData.homepage = config.homepage;
   }
 
-  packageJsonData = updateTask(packageJsonData, 'build:mock');
-  packageJsonData = updateTask(packageJsonData, 'watch:mock');
-
   packageJsonData.version = '0.0.1-SNAPSHOT';
   lightjs.writeJson(packageJson, packageJsonData);
-}
-
-function updateTask(packageJsonData, mockTask) {
-  const nodeEnv = `export NODE_ENV='mock'`;
-  const task = packageJsonData.scripts[mockTask];
-  packageJsonData.scripts[mockTask] = `${nodeEnv} && ${task}`;
-  return packageJsonData;
 }
 
 function updateEnvironmentData(swaaplateJsonData, projectDir) {
