@@ -78,8 +78,9 @@ function javaKotlin(srcMain, projectDir, serverConfig, author) {
 
   lightjs.replacement('net.inpercima.swaaplate', serverConfig.packagePath, [serverSrcMainEndpointPath, serverSrcMainResources], true, true);
 
+  const twoEol = `${os.EOL}${os.EOL}`;
   const indentSizeEndpoint = endpoint === 'kotlin' ? 2 : 4;
-  const config = `${os.EOL}${os.EOL}[logback.xml]${os.EOL}indent_size = 4${os.EOL}${os.EOL}[*.${endpointExt}]${os.EOL}indent_size = ${indentSizeEndpoint}`;
+  const config = `${twoEol}[logback.xml]${os.EOL}indent_size = 4${twoEol}[*.${endpointExt}]${os.EOL}indent_size = ${indentSizeEndpoint}`;
   const editorconfig = path.join(projectDir, '.editorconfig');
   lightjs.replacement('(trim_trailing_whitespace = true)', `$1${config}`, [editorconfig]);
 
@@ -90,7 +91,12 @@ function javaKotlin(srcMain, projectDir, serverConfig, author) {
 
   const readmeMdName = 'README.md';
   const readmeMd = path.join(projectDir, readmeMdName);
-  lightjs.replacement('(## Usage\\s)', `$1${os.EOL}TODO: Update usage for ${endpoint}${os.EOL}`, [readmeMd]);
+  lightjs.replacement('(## Usage)', `$1 client`, [readmeMd]);
+
+  const serverStart = '# build and starts a server, rebuild after changes, reachable on http://localhost:4200/';
+  lightjs.replacement('(yarn build:dev)', `$1${twoEol}${serverStart}${os.EOL}yarn serve:dev`, [readmeMd]);
+
+  lightjs.replacement('(### Tests)', `## Usage server${twoEol}### DevMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run${os.EOL}\`\`\`${twoEol}$1`, [readmeMd]);
 
   lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
   lightjs.replacement('default: `./`', 'default: `http://localhost:8080/`', [readmeMd]);
