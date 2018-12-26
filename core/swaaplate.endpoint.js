@@ -97,6 +97,12 @@ function javaKotlin(srcMain, projectDir, serverConfig, author) {
   lightjs.replacement('production: `./`', 'production: `http://localhost:8080/`', [readmeMd]);
 
   updateEnvironmentData(projectDir, 'http://localhost:8080/');
+
+  const packageJsonName = 'package.json';
+  const packageJson = path.join(projectDir, 'client', packageJsonName);
+  const packageJsonData = lightjs.readJson(packageJson);
+  packageJsonData.scripts['serve:dev'] = 'ng serve -o';
+  lightjs.writeJson(packageJson, packageJsonData);
 }
 
 function php(srcMain, projectDir, swaaplateJsonData) {
