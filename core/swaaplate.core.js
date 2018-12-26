@@ -103,10 +103,7 @@ function updateGeneralProjectData(swaaplateJsonData, projectDir) {
   const replacement = `# project specific${os.EOL}${os.EOL}swaaplate-backup.json${os.EOL}${os.EOL}# end of project specific${os.EOL}${os.EOL}$1`;
   lightjs.replacement('(# Created by https)', replacement, [gitignore]);
   const buildWebDir = swaaplateJsonData.generalConfig.buildWebDir;
-  const distDir = 'dist';
-  if (buildWebDir !== distDir) {
-    lightjs.replacement('(backup.json)', `$1${os.EOL}/${buildWebDir}`, [gitignore]);
-  }
+  lightjs.replacement('(backup.json)', `$1${os.EOL}${buildWebDir}/`, [gitignore]);
 
   const author = swaaplateJsonData.packageJsonConfig.author;
   const authorMj = 'Marcel Jänicke';
