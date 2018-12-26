@@ -53,13 +53,6 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/http@7.1.4":
-  version "7.1.4"
-  resolved "https://registry.yarnpkg.com/@angular/http/-/http-7.1.4.tgz#03568b174cf8caaa6fa84a4f0e5ced5f68dfb6c3"
-  integrity sha512-Lrjb99sHu0Cv7MBbVLev1I1Fe+DJcwG4v7juZB/5nE5opKmbQo3Lfqvt2dVrMOxHeju9ReFznEnuGNMK6+m6pQ==
-  dependencies:
-    tslib "^1.9.0"
-
 "@angular/material@7.2.0":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@angular/material/-/material-7.2.0.tgz#35088eacf27645c9f01f054caf4011318db6e0f4"
@@ -113,9 +106,9 @@ ajv@^5.3.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-angular-cli-for-swaaplate@inpercima/angular-cli-for-swaaplate#v0.1.4:
-  version "0.1.4"
-  resolved "https://codeload.github.com/inpercima/angular-cli-for-swaaplate/tar.gz/13177bd0118818254a4b00c17ca581a28669aa96"
+angular-cli-for-swaaplate@inpercima/angular-cli-for-swaaplate#v0.1.5:
+  version "0.1.5"
+  resolved "https://codeload.github.com/inpercima/angular-cli-for-swaaplate/tar.gz/9097df98f3d8a61f55f7a1fc2be5c52d7d8dd5c7"
   dependencies:
     "@angular/animations" "7.1.4"
     "@angular/cdk" "7.2.0"
@@ -124,7 +117,6 @@ angular-cli-for-swaaplate@inpercima/angular-cli-for-swaaplate#v0.1.4:
     "@angular/core" "7.1.4"
     "@angular/flex-layout" "7.0.0-beta.22"
     "@angular/forms" "7.1.4"
-    "@angular/http" "7.1.4"
     "@angular/material" "7.2.0"
     "@angular/platform-browser" "7.1.4"
     "@angular/platform-browser-dynamic" "7.1.4"

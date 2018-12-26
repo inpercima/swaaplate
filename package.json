@@ -8,7 +8,7 @@
   ],
   "description": "[s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple template generator for angular webapps with different endpoints.",
   "devDependencies": {
-    "angular-cli-for-swaaplate": "inpercima/angular-cli-for-swaaplate#v0.1.4",
+    "angular-cli-for-swaaplate": "inpercima/angular-cli-for-swaaplate#v0.1.5",
     "light-js": "inpercima/light-js#v0.2.2",
     "request": "2.88.0",
     "shelljs": "0.8.3",
