@@ -137,9 +137,8 @@ function php(srcMain, projectDir, swaaplateJsonData) {
 
   const copyFrom = `      from: '../${serverPath}/src/main',${os.EOL}`;
   const copyToApi = serverAsApi ? `      to: './api',${os.EOL}` : '';
-  const copyApi = `    new CopyWebpackPlugin([{${os.EOL}${copyFrom}${copyToApi}    }]) : {},${os.EOL}`;
-  const copyFavicon = `    new CopyWebpackPlugin([{${os.EOL}      from: 'src/favicon.ico',${os.EOL}    }]),${os.EOL}`;
-  const copyWebpackPluginSection = `$1${os.EOL}  plugins: [ process.env.NODE_ENV !== 'mock' ?${os.EOL}${copyApi}${copyFavicon}  ],`;
+  const copyApi = `    new CopyWebpackPlugin([{${os.EOL}${copyFrom}${copyToApi}    }, {${os.EOL}      from: 'src/favicon.ico',${os.EOL}    }]) : {},${os.EOL}`;
+  const copyWebpackPluginSection = `$1${os.EOL}  plugins: [ process.env.NODE_ENV !== 'mock' ?${os.EOL}${copyApi}  ],`;
   lightjs.replacement('(},)', copyWebpackPluginSection, [webpackConfigJs]);
 
   const authServicePath = path.join(projectDir, serverPath, 'src/main/auth.service.php');
