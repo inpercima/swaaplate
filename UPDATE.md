@@ -7,7 +7,7 @@ Before using swaaplate to update a project, you have to do following steps:
 * if you use an endpoint unlike js and your server part is api
   * move project/src/main to project/api/src/main
 * if you use an endpoint unlike js and your server part is server
-  * copy project/src/main to project/server/src/main
+  * move project/src/main to project/server/src/main
 * rename project/src to project/client
 * move following files from project/ to project/client
   * e2e/
@@ -19,6 +19,8 @@ Before using swaaplate to update a project, you have to do following steps:
   * webpack.config.js
   * yarn.lock
 * rename project/client/web to project/client/src
-* delete everything except for .git-folder
+* remove project/node_modules
+* save changes as new commit to git
+* remove everything except for the folder .git in project
 * run swaaplate with you backup data
 * manage your changes via git
