@@ -92,6 +92,7 @@ Some of this options will be copied in the environment files of the new project 
 * [serverConfig/htaccess](#serverconfightaccess)
 * [serverConfig/management](#serverconfigmanagement)
 * [serverConfig/packagePath](#serverconfigpackagepath)
+* [serverConfig/separateReadme](#serverconfigseparatereadme)
 * [serverConfig/serverAsApi](#serverconfigserverasapi)
 
 ### `generalConfig/buildWebDir`
@@ -306,6 +307,15 @@ This will work for java or kotlin only.
 
 * default: EMPTY
 * type: `string`
+
+### `serverConfig/separateReadme`
+
+Defines whether a separate readme for client and server/api folders should created or not.
+This will work for java and kotlin only.
+
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
 
 ### `serverConfig/serverAsApi`
 

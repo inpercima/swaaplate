@@ -143,39 +143,68 @@ function replaceInReadmeFile(swaaplateJsonData, projectDir) {
   const packageJsonConfig = swaaplateJsonData.packageJsonConfig;
   const name = packageJsonConfig.name;
   const readmeMd = path.join(projectDir, readmeMdName);
+  const packageJsonData = lightjs.readJson('package.json');
+  const generated = `This project was generated with [swaaplate](https://github.com/inpercima/swaaplate) version ${packageJsonData.version}.`;
+  const description = `${packageJsonConfig.description}${os.EOL}${os.EOL}${generated}`;
+
+  // replace the first sentence
+  lightjs.replacement('This.+projects.\\s*', '', [readmeMd]);
+  // replace the second sentence
+  lightjs.replacement('This project.+', description, [readmeMd]);
+
   lightjs.replacement('angular-cli-for-swaaplate', name, [readmeMd]);
   lightjs.replacement('(git clone )(.+)', `$1${packageJsonConfig.repository}`, [readmeMd]);
 
-  const packageJsonData = lightjs.readJson('package.json');
+  checkSeparateReadme(swaaplateJsonData, projectDir, name, readmeMd);
+}
 
-  const generated = `This project was generated with [swaaplate](https://github.com/inpercima/swaaplate) version ${packageJsonData.version}.`;
-  const description = `${packageJsonConfig.description}${os.EOL}${os.EOL}${generated}`;
-  lightjs.replacement('This.+projects.\\s*', '', [readmeMd]);
-  lightjs.replacement('This project.+', description, [readmeMd]);
-
+function checkSeparateReadme(swaaplateJsonData, projectDir, name, readmeMd) {
+  const serverConfig = swaaplateJsonData.serverConfig;
   const generalConfig = swaaplateJsonData.generalConfig;
   const github = generalConfig.github;
-  if (github.use) {
-    lightjs.replacement('(org\\/)(inpercima)', `$1${github.username}`, [readmeMd]);
-    lightjs.replacement('(\\/)(angular-cli-for-swaaplate)(\\/|\\?|\\))', `$1${name}$3`, [readmeMd]);
-  } else {
+  const separateReadme = serverConfig.separateReadme;
+  const readmeMdClient = path.join(projectDir, 'client/README.md');
+  if (separateReadme) {
+    lightjs.info(`update '${readmeMdClient}'`);
+    shjs.mkdir('-p', path.join(projectDir, 'client'));
+    shjs.cp('readme/README.client.md', readmeMdClient);
+    lightjs.replacement('swaaplate', name, [readmeMdClient]);
     lightjs.replacement('\\[!\\[dependencies.*\\s\\[.*\\s', '', [readmeMd]);
+
+    const url = github.use ? `https://github.com/${github.username}/` : '';
+    const usageClient = `${os.EOL}${os.EOL}For the client check [${name} - client](${url}${name}/tree/master/client).`;
+    const isJavaKotlin = serverConfig.endpoint === 'java' || serverConfig.endpoint === 'kotlin';
+    const usageServer = isJavaKotlin ? `${os.EOL}${os.EOL}For the server check [${name} - server](${url}${name}/tree/master/server).` : '';
+
+    lightjs.replacement('Usage[\\s\\S]*?change it.', `Usage${usageClient}${usageServer}`, [readmeMd]);
+    lightjs.replacement(`cd ${name}[\\s\\S]*?yarn\\s*`, '', [readmeMd]);
+  }
+
+  const usedReadmeMd = separateReadme ? readmeMdClient : readmeMd;
+  if (github.use) {
+    lightjs.replacement('(org\\/)(inpercima)', `$1${github.username}`, [usedReadmeMd]);
+    lightjs.replacement('(\\/)(angular-cli-for-swaaplate)(\\/|\\?|\\))', `$1${name}$3`, [usedReadmeMd]);
+    lightjs.replacement('(\\/)(swaaplate)(\\/|\\?|\\))', `$1${name}$3`, [usedReadmeMd]);
+  } else {
+    lightjs.replacement('\\[!\\[dependencies.*\\s\\[.*\\s', '', [usedReadmeMd]);
   }
 
   if (!generalConfig.useYarn) {
-    lightjs.replacement('or higher,.*', 'or higher', [readmeMd]);
-    lightjs.replacement('or higher or', 'or higher, used in this repository, or', [readmeMd]);
-    lightjs.replacement('yarn run', 'npm run', [readmeMd]);
-    lightjs.replacement('(dependencies\\s)(yarn)', `$1npm install`, [readmeMd]);
+    lightjs.replacement('or higher,.*', 'or higher', [usedReadmeMd]);
+    lightjs.replacement('or higher or', 'or higher, used in this repository, or', [usedReadmeMd]);
+    lightjs.replacement('yarn (.*:)', `npm run $1`, [usedReadmeMd]);
+
+    // replace 'install tools and frontend dependencies'
+    lightjs.replacement('(dependencies\\s)(yarn)', `$1npm install`, [usedReadmeMd]);
   }
 
   if (generalConfig.theme !== 'indigo-pink') {
-    lightjs.replacement('(default: )`indigo-pink`', `$1\`${generalConfig.theme}\``, [readmeMd]);
+    lightjs.replacement('(default: )`indigo-pink`', `$1\`${generalConfig.theme}\``, [usedReadmeMd]);
   }
 
   const defaultRoute = swaaplateJsonData.routeConfig.default;
   if (defaultRoute !== 'dashboard') {
-    lightjs.replacement('`dashboard`', `\`${defaultRoute}\``, [readmeMd]);
+    lightjs.replacement('`dashboard`', `\`${defaultRoute}\``, [usedReadmeMd]);
   }
 }
 

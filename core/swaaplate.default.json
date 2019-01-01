@@ -40,6 +40,7 @@
     "htaccess": true,
     "management": "",
     "packagePath": "",
+    "separateReadme": true,
     "serverAsApi": true
   }
 }

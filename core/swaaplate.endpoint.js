@@ -37,7 +37,7 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
   }
   // java or kotlin
   if (serverConfig.endpoint === 'java' || serverConfig.endpoint === 'kotlin') {
-    javaKotlin(srcMain, projectDir, serverConfig, swaaplateJsonData.packageJsonConfig.author);
+    javaKotlin(srcMain, projectDir, swaaplateJsonData);
   }
   // php
   if (serverConfig.endpoint === 'php') {
@@ -50,7 +50,9 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
   return clientPath;
 }
 
-function javaKotlin(srcMain, projectDir, serverConfig, author) {
+function javaKotlin(srcMain, projectDir, swaaplateJsonData) {
+  const serverConfig = swaaplateJsonData.serverConfig;
+  const author = swaaplateJsonData.packageJsonConfig.author;
   const endpoint = serverConfig.endpoint;
   const srcTest = 'src/test/';
   const serverSrcMain = path.join('server', srcMain);
@@ -91,16 +93,25 @@ function javaKotlin(srcMain, projectDir, serverConfig, author) {
 
   const readmeMdName = 'README.md';
   const readmeMd = path.join(projectDir, readmeMdName);
-  lightjs.replacement('(## Usage)', `$1 client`, [readmeMd]);
+  const readmeMdClient = path.join(projectDir, 'client/README.md');
+  const separateReadme = serverConfig.separateReadme;
+  const usedReadmeMd = separateReadme ? readmeMdClient : readmeMd;
+  if (!separateReadme) {
+    lightjs.replacement('(## Usage)', `$1 client`, [readmeMd]);
+    lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [usedReadmeMd]);
+  }
 
   const serverStart = '# build and starts a server, rebuild after changes, reachable on http://localhost:4200/';
-  lightjs.replacement('(yarn build:dev)', `$1${twoEol}${serverStart}${os.EOL}yarn serve:dev`, [readmeMd]);
+  const yarnOrNpm = swaaplateJsonData.generalConfig.useYarn ? 'yarn' : 'npm run';
+  lightjs.replacement(`(${yarnOrNpm} build:dev)`, `$1${twoEol}${serverStart}${os.EOL}${yarnOrNpm} serve:dev`, [usedReadmeMd]);
+  lightjs.replacement('(### Tests)', `## Usage server${twoEol}### DevMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run${os.EOL}\`\`\`${twoEol}$1`, [usedReadmeMd]);
+  lightjs.replacement('default: `./`', 'default: `http://localhost:8080/`', [usedReadmeMd]);
+  lightjs.replacement('production: `./`', 'production: `http://localhost:8080/`', [usedReadmeMd]);
 
-  lightjs.replacement('(### Tests)', `## Usage server${twoEol}### DevMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run${os.EOL}\`\`\`${twoEol}$1`, [readmeMd]);
-
-  lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
-  lightjs.replacement('default: `./`', 'default: `http://localhost:8080/`', [readmeMd]);
-  lightjs.replacement('production: `./`', 'production: `http://localhost:8080/`', [readmeMd]);
+  const readmeMdServer = path.join(projectDir, 'server/README.md');
+  shjs.cp('readme/README.server.md', readmeMdServer);
+  lightjs.replacement('swaaplate', swaaplateJsonData.packageJsonConfig.name, [readmeMdServer]);
+  lightjs.replacement('(spring)', serverConfig.management === 'maven' ? './mvnw $1' : '', [readmeMdServer]);
 
   updateEnvironmentData(projectDir, 'http://localhost:8080/');
 
@@ -116,6 +127,7 @@ function php(srcMain, projectDir, swaaplateJsonData) {
   lightjs.info(`-> update webpack config and api-endpoint`);
 
   const serverAsApi = swaaplateJsonData.serverConfig.serverAsApi;
+  const separateReadme = swaaplateJsonData.serverConfig.separateReadme;
   const serverPath = serverAsApi ? 'api' : 'server';
   const packageJsonName = 'package.json';
   const packageJson = path.join(projectDir, 'client', packageJsonName);
@@ -147,6 +159,8 @@ function php(srcMain, projectDir, swaaplateJsonData) {
   const htaccess = swaaplateJsonData.serverConfig.htaccess;
   const readmeMdName = 'README.md';
   const readmeMd = path.join(projectDir, readmeMdName);
+  const readmeMdClient = path.join(projectDir, 'client/README.md');
+  const usedReadmeMd = separateReadme ? readmeMdClient : readmeMd;
   if (!htaccess) {
     shjs.rm(path.join(srcMainPath, '.htaccess'));
     const environment = path.join(projectDir, 'client/src/environments/environment.ts');
@@ -155,15 +169,17 @@ function php(srcMain, projectDir, swaaplateJsonData) {
     const environmentProd = path.join(projectDir, 'client/src/environments/environment.prod.ts');
     lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [environmentProd]);
 
-    lightjs.replacement('default: EMPTY', 'default: `.php` | mock: EMPTY | production: `.php`', [readmeMd]);
+    lightjs.replacement('default: EMPTY', 'default: `.php` | mock: EMPTY | production: `.php`', [usedReadmeMd]);
   }
 
   if (serverAsApi) {
-    lightjs.replacement('default: `./`', 'default: `./api/`', [readmeMd]);
-    lightjs.replacement('production: `./`', 'production: `./api/`', [readmeMd]);
+    lightjs.replacement('default: `./`', 'default: `./api/`', [usedReadmeMd]);
+    lightjs.replacement('production: `./`', 'production: `./api/`', [usedReadmeMd]);
   }
 
-  lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
+  if (!separateReadme) {
+    lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
+  }
 
   updateEnvironmentData(projectDir, serverAsApi ? './api/' : './');
 }
