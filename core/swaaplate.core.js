@@ -177,7 +177,7 @@ function checkSeparateReadme(swaaplateJsonData, projectDir, name, readmeMd) {
     const usageServer = isJavaKotlin ? `${os.EOL}${os.EOL}For the server check [${name} - server](${url}${name}/tree/master/server).` : '';
 
     lightjs.replacement('Usage[\\s\\S]*?change it.', `Usage${usageClient}${usageServer}`, [readmeMd]);
-    lightjs.replacement(`cd ${name}[\\s\\S]*?yarn\\s*`, '', [readmeMd]);
+    lightjs.replacement(`(cd ${name})[\\s\\S]*?yarn\\s*`, `$1${os.EOL}`, [readmeMd]);
   }
 
   const usedReadmeMd = separateReadme ? readmeMdClient : readmeMd;

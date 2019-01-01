@@ -98,13 +98,13 @@ function javaKotlin(srcMain, projectDir, swaaplateJsonData) {
   const usedReadmeMd = separateReadme ? readmeMdClient : readmeMd;
   if (!separateReadme) {
     lightjs.replacement('(## Usage)', `$1 client`, [readmeMd]);
-    lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [usedReadmeMd]);
+    lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
+    lightjs.replacement('(### Tests)', `## Usage server${twoEol}### DevMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run${os.EOL}\`\`\`${twoEol}$1`, [readmeMd]);
   }
 
   const serverStart = '# build and starts a server, rebuild after changes, reachable on http://localhost:4200/';
   const yarnOrNpm = swaaplateJsonData.generalConfig.useYarn ? 'yarn' : 'npm run';
   lightjs.replacement(`(${yarnOrNpm} build:dev)`, `$1${twoEol}${serverStart}${os.EOL}${yarnOrNpm} serve:dev`, [usedReadmeMd]);
-  lightjs.replacement('(### Tests)', `## Usage server${twoEol}### DevMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run${os.EOL}\`\`\`${twoEol}$1`, [usedReadmeMd]);
   lightjs.replacement('default: `./`', 'default: `http://localhost:8080/`', [usedReadmeMd]);
   lightjs.replacement('production: `./`', 'production: `http://localhost:8080/`', [usedReadmeMd]);
 
