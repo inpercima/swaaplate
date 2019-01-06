@@ -72,8 +72,7 @@ function javaKotlin(srcMain, projectDir, swaaplateJsonData) {
   shjs.mkdir('-p', webDir);
   shjs.cp(`endpoint/${endpoint}/AuthController.${endpointExt}`, webDir);
   shjs.mkdir('-p', serverSrcMainResources);
-  shjs.cp('endpoint/java-kotlin/logback.xml', serverSrcMainResources);
-  shjs.cp('endpoint/java-kotlin/application.yml', serverSrcMainResources);
+  shjs.cp('endpoint/java-kotlin/*', serverSrcMainResources);
 
   shjs.mkdir('-p', path.join(projectDir, serverSrcTest, endpointPath));
   shjs.mkdir('-p', path.join(projectDir, serverSrcTest, 'resources'));
@@ -99,7 +98,9 @@ function javaKotlin(srcMain, projectDir, swaaplateJsonData) {
   if (!separateReadme) {
     lightjs.replacement('(## Usage)', `$1 client`, [readmeMd]);
     lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
-    lightjs.replacement('(### Tests)', `## Usage server${twoEol}### DevMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run${os.EOL}\`\`\`${twoEol}$1`, [readmeMd]);
+    const devMode = `### DevMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run${os.EOL}\`\`\`${twoEol}`;
+    const prodMode = `### ProdMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run -Dspring-boot.run.profiles=prod${os.EOL}\`\`\`${twoEol}`;
+    lightjs.replacement('(### Tests)', `## Usage server${twoEol}${devMode}${prodMode}$1`, [readmeMd]);
   }
 
   const serverStart = '# build and starts a server, rebuild after changes, reachable on http://localhost:4200/';
@@ -203,6 +204,7 @@ function updateGitignore(swaaplateJsonData, projectDir) {
     const api = `https://www.gitignore.io/api/angular,node,${endpoint},${managementApi}eclipse,intellij+all,visualstudiocode`;
     request(api, function (error, response, body) {
       lightjs.replacement('\\s# Created by https:.*((.|\\n)*)# End of https:.*\\s*', body, [gitignore]);
+      lightjs.replacement('(swaaplate-backup.json)', `$1${os.EOL}application-dev.yml${os.EOL}application-prod.yml`, [gitignore]);
     });
   }
 }

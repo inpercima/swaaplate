@@ -1,0 +1,10 @@
+#
+# APPLICATION DEV CONFIG
+#
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/database
+    username: root
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver

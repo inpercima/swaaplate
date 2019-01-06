@@ -14,3 +14,9 @@ cd server
 ```bash
 spring-boot:run
 ```
+
+### ProdMode with real data
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=prod
+```
