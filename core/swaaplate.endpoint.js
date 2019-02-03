@@ -95,6 +95,9 @@ function javaKotlin(srcMain, projectDir, swaaplateJsonData) {
   const readmeMdClient = path.join(projectDir, 'client/README.md');
   const separateReadme = serverConfig.separateReadme;
   const usedReadmeMd = separateReadme ? readmeMdClient : readmeMd;
+
+  lightjs.replacement('(### Node, npm or yarn)', `### Java${os.EOL}${os.EOL}* \`jdk 8\` or higher${os.EOL}${os.EOL}$1`, [readmeMd]);
+
   if (!separateReadme) {
     lightjs.replacement('(## Usage)', `$1 client`, [readmeMd]);
     lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
