@@ -145,7 +145,7 @@ function replaceInReadmeFile(swaaplateJsonData, projectDir) {
   const readmeMd = path.join(projectDir, readmeMdName);
   const packageJsonData = lightjs.readJson('package.json');
   const generated = `This project was generated with [swaaplate](https://github.com/inpercima/swaaplate) version ${packageJsonData.version}.`;
-  const description = `${packageJsonConfig.description}${os.EOL}${os.EOL}${generated}`;
+  const description = `${generated}${os.EOL}${os.EOL}${packageJsonConfig.description}`;
 
   // replace the first sentence
   lightjs.replacement('This.+projects.\\s*', '', [readmeMd]);
