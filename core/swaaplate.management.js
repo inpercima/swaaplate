@@ -46,6 +46,7 @@ function configureManagement(swaaplateJsonData, serverDir) {
 function replaceInPomFile(swaaplateJsonData, pomXml) {
   lightjs.replacement('net.inpercima.swaaplate', swaaplateJsonData.serverConfig.packagePath, [pomXml]);
   lightjs.replacement('swaaplate', swaaplateJsonData.packageJsonConfig.name, [pomXml]);
+  lightjs.replacement('dist', swaaplateJsonData.generalConfig.buildWebDir, [pomXml]);
 
   const description = '\\[s\\]imple \\[w\\]eb \\[a\\]pp \\[a\\]ngular tem\\[plate\\]. A very simple template generator for angular webapps with different endpoints.';
   const newDescription = swaaplateJsonData.packageJsonConfig.description;
