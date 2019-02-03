@@ -98,9 +98,11 @@ function javaKotlin(srcMain, projectDir, swaaplateJsonData) {
   if (!separateReadme) {
     lightjs.replacement('(## Usage)', `$1 client`, [readmeMd]);
     lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
-    const devMode = `### DevMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run${os.EOL}\`\`\`${twoEol}`;
-    const prodMode = `### ProdMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run -Dspring-boot.run.profiles=prod${os.EOL}\`\`\`${twoEol}`;
-    lightjs.replacement('(### Tests)', `## Usage server${twoEol}${devMode}${prodMode}$1`, [readmeMd]);
+    const devMode = `### Run in devMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run${os.EOL}\`\`\`${twoEol}`;
+    const prodMode = `### Run in prodMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run -Pprod${os.EOL}\`\`\`${twoEol}`;
+    const packageModeA = `### Package in prodMode with real data${twoEol}\`\`\`${os.EOL}cd server${os.EOL}./mvnw clean package -Pprod${twoEol}`;
+    const packageModeB = `# without tests${os.EOL}./mvnw clean package -Pprod -DskipTests${os.EOL}\`\`\`${twoEol}`;
+    lightjs.replacement('(### Tests)', `## Usage server${twoEol}${devMode}${prodMode}${packageModeA}${packageModeB}$1`, [readmeMd]);
   }
 
   const serverStart = '# build and starts a server, rebuild after changes, reachable on http://localhost:4200/';

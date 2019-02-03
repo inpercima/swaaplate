@@ -9,14 +9,23 @@ cd server
 
 ## Usage
 
-### DevMode with real data
+### Run in devMode with real data
 
 ```bash
 spring-boot:run
 ```
 
-### ProdMode with real data
+### Run in prodMode with real data
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.profiles=prod
+./mvnw spring-boot:run -Pprod
+```
+
+### Package in prodMode with real data
+
+```bash
+./mvnw clean package -Pprod
+
+# without tests
+./mvnw clean package -Pprod -DskipTests
 ```
