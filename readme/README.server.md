@@ -7,6 +7,16 @@
 cd server
 ```
 
+Create property files for `devMode` and `prodMode`.
+
+```bash
+cp src/main/resources/application-default.yml src/main/resources/application-dev.yml
+cp src/main/resources/application-default.yml src/main/resources/application-prod.yml
+```
+
+Update these files for your environment.
+Note: These files will not be under version control and listed in .gitignore.
+
 ## Usage
 
 ### Run in devMode with real data
