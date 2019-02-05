@@ -10,8 +10,8 @@ cd server
 Create property files for `devMode` and `prodMode`.
 
 ```bash
-cp src/main/resources/application-default.yml src/main/resources/application-dev.yml
-cp src/main/resources/application-default.yml src/main/resources/application-prod.yml
+cp src/main/resources/application.yml src/main/resources/application-dev.yml
+cp src/main/resources/application.yml src/main/resources/application-prod.yml
 ```
 
 Update these files for your environment.
