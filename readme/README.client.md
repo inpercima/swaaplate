@@ -13,6 +13,18 @@ cd client
 yarn
 ```
 
+Create environment files for `devMode`, `mockMode` and `prodMode`.
+
+```bash
+cp src/environments/environment.ts src/environments/environment.dev.ts
+cp src/environments/environment.ts src/environments/environment.mock.ts
+cp src/environments/environment.ts src/environments/environment.prod.ts
+```
+
+Update these files for your environment.
+Change for prodMode the option `production` to `true` and for mockMode the option `api` to `http://localhost:3000/`.
+Note: These files will not be under version control and listed in .gitignore.
+
 ## Usage
 
 ### Recommendation

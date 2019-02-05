@@ -32,6 +32,8 @@ function createProject(swaaplateJsonData) {
   shjs.rm(path.join(projectDir, 'yarn.lock'));
   shjs.rm('-rf', path.join(projectDir, 'node_modules'));
 
+  shjs.cp('environments/*', path.join(projectDir, 'src/environments/'));
+
   updatePackageJsonData(swaaplateJsonData, projectDir);
   updateEnvironmentData(swaaplateJsonData, projectDir);
   updateGeneralProjectData(swaaplateJsonData, projectDir);
@@ -73,6 +75,7 @@ function updatePackageJsonData(swaaplateJsonData, projectDir) {
 
 function updateEnvironmentData(swaaplateJsonData, projectDir) {
   replaceInEnvironmentFile(swaaplateJsonData, projectDir, 'src/environments/environment.ts');
+  replaceInEnvironmentFile(swaaplateJsonData, projectDir, 'src/environments/environment.dev.ts');
   replaceInEnvironmentFile(swaaplateJsonData, projectDir, 'src/environments/environment.mock.ts');
   replaceInEnvironmentFile(swaaplateJsonData, projectDir, 'src/environments/environment.prod.ts');
 }
@@ -100,8 +103,7 @@ function updateGeneralProjectData(swaaplateJsonData, projectDir) {
   const gitignore = path.join(projectDir, gitignoreName);
   lightjs.info(`update '${gitignoreName}', '${licenseMdName}', '${appComponentSpecName}', '${appE2eSpecName}' and '${appPoName}'`);
 
-  const replacement = `# project specific${os.EOL}${os.EOL}swaaplate-backup.json${os.EOL}${os.EOL}# end of project specific${os.EOL}${os.EOL}$1`;
-  lightjs.replacement('(# Created by https)', replacement, [gitignore]);
+  lightjs.replacement('(environment.prod.ts)', `$1${os.EOL}swaaplate-backup.json`, [gitignore]);
   const buildWebDir = swaaplateJsonData.generalConfig.buildWebDir;
   lightjs.replacement('(backup.json)', `$1${os.EOL}${buildWebDir}/`, [gitignore]);
 

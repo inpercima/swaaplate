@@ -172,6 +172,9 @@ function php(srcMain, projectDir, swaaplateJsonData) {
     const environment = path.join(projectDir, 'client/src/environments/environment.ts');
     lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [environment]);
 
+    const environmentDev = path.join(projectDir, 'client/src/environments/environment.dev.ts');
+    lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [environmentDev]);
+
     const environmentProd = path.join(projectDir, 'client/src/environments/environment.prod.ts');
     lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [environmentProd]);
 
@@ -216,6 +219,7 @@ function updateGitignore(swaaplateJsonData, projectDir) {
 
 function updateEnvironmentData(projectDir, api) {
   replaceInEnvironmentFile(projectDir, 'client/src/environments/environment.ts', api);
+  replaceInEnvironmentFile(projectDir, 'client/src/environments/environment.dev.ts', api);
   replaceInEnvironmentFile(projectDir, 'client/src/environments/environment.prod.ts', api);
 }
 
