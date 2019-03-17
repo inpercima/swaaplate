@@ -32,7 +32,6 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
     shjs.mv(path.join(projectDir, 'package.json'), path.join(projectDir, clientPath));
     shjs.mv(path.join(projectDir, 'tsconfig.json'), path.join(projectDir, clientPath));
     shjs.mv(path.join(projectDir, 'tslint.json'), path.join(projectDir, clientPath));
-    shjs.mv(path.join(projectDir, 'webpack.config.js'), path.join(projectDir, clientPath));
     shjs.mv(path.join(projectDir, 'src'), path.join(projectDir, clientPath, 'src'));
   }
   // java or kotlin
@@ -103,14 +102,11 @@ function javaKotlin(srcMain, projectDir, swaaplateJsonData) {
     lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
     const devMode = `### Run in devMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run${os.EOL}\`\`\`${twoEol}`;
     const prodMode = `### Run in prodMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw spring-boot:run -Pprod${os.EOL}\`\`\`${twoEol}`;
-    const packageModeA = `### Package in prodMode with real data${twoEol}\`\`\`${os.EOL}cd server${os.EOL}./mvnw clean package -Pprod${twoEol}`;
+    const packageModeA = `### Package in prodMode with real data${twoEol}\`\`\`bash${os.EOL}cd server${os.EOL}./mvnw clean package -Pprod${twoEol}`;
     const packageModeB = `# without tests${os.EOL}./mvnw clean package -Pprod -DskipTests${os.EOL}\`\`\`${twoEol}`;
     lightjs.replacement('(### Tests)', `## Usage server${twoEol}${devMode}${prodMode}${packageModeA}${packageModeB}$1`, [readmeMd]);
   }
 
-  const serverStart = '# build and starts a server, rebuild after changes, reachable on http://localhost:4200/';
-  const yarnOrNpm = swaaplateJsonData.generalConfig.useYarn ? 'yarn' : 'npm run';
-  lightjs.replacement(`(${yarnOrNpm} build:dev)`, `$1${twoEol}${serverStart}${os.EOL}${yarnOrNpm} serve:dev`, [usedReadmeMd]);
   lightjs.replacement('default: `./`', 'default: `http://localhost:8080/`', [usedReadmeMd]);
   lightjs.replacement('production: `./`', 'production: `http://localhost:8080/`', [usedReadmeMd]);
 
@@ -139,25 +135,20 @@ function php(srcMain, projectDir, swaaplateJsonData) {
   const packageJson = path.join(projectDir, 'client', packageJsonName);
   lightjs.info(`-> update '${packageJsonName}'`);
   let packageJsonData = lightjs.readJson(packageJson);
-  packageJsonData.devDependencies['copy-webpack-plugin'] = '4.5.4';
+  packageJsonData.devDependencies['copy-webpack-plugin'] = '4.6.0';
+  packageJsonData.devDependencies['@angular-builders/custom-webpack'] = '7.4.3';
+  packageJsonData.devDependencies['@angular-builders/dev-server'] = '7.3.1';
   packageJsonData = updateTask(packageJsonData, 'build:mock');
   packageJsonData = updateTask(packageJsonData, 'watch:mock');
   lightjs.writeJson(packageJson, packageJsonData);
 
   const srcMainPath = path.join(projectDir, serverPath, srcMain);
   shjs.mkdir('-p', srcMainPath);
-  shjs.cp('endpoint/php/*', srcMainPath);
+  shjs.cp('endpoint/php/auth.php', srcMainPath);
+  shjs.cp('endpoint/php/auth.service.php', srcMainPath);
   shjs.cp('endpoint/php/.htaccess', srcMainPath);
 
-  const copyWebpackPlugin = `$1${os.EOL}const CopyWebpackPlugin = require('copy-webpack-plugin');`;
-  const webpackConfigJs = path.join(projectDir, 'client/webpack.config.js');
-  lightjs.replacement('(webpack.*=.*)', copyWebpackPlugin, [webpackConfigJs]);
-
-  const copyFrom = `      from: '../${serverPath}/src/main',${os.EOL}`;
-  const copyToApi = serverAsApi ? `      to: './api',${os.EOL}` : '';
-  const copyApi = `    new CopyWebpackPlugin([{${os.EOL}${copyFrom}${copyToApi}    }, {${os.EOL}      from: 'src/favicon.ico',${os.EOL}    }]) : {},${os.EOL}`;
-  const copyWebpackPluginSection = `$1${os.EOL}  plugins: [ process.env.NODE_ENV !== 'mock' ?${os.EOL}${copyApi}  ],`;
-  lightjs.replacement('(},)', copyWebpackPluginSection, [webpackConfigJs]);
+  shjs.cp('endpoint/php/webpack.config.js', path.join(projectDir, 'client/webpack.config.js'));
 
   const authServicePath = path.join(projectDir, serverPath, 'src/main/auth.service.php');
   lightjs.replacement('inpercima', projectName, [authServicePath]);
@@ -209,7 +200,7 @@ function updateGitignore(swaaplateJsonData, projectDir) {
     const management = swaaplateJsonData.serverConfig.management;
     const managementApi = management === 'maven' || management === 'gradle' ? `${management},` : '';
     const gitignore = path.join(projectDir, gitignoreName);
-    const api = `https://www.gitignore.io/api/angular,node,${endpoint},${managementApi}eclipse,intellij+all,visualstudiocode`;
+    const api = `https://www.gitignore.io/api/node,angular,${endpoint},${managementApi}eclipse,intellij+all,visualstudiocode`;
     request(api, function (error, response, body) {
       lightjs.replacement('\\s# Created by https:.*((.|\\n)*)# End of https:.*\\s*', body, [gitignore]);
       lightjs.replacement('(swaaplate-backup.json)', `$1${os.EOL}application-dev.yml${os.EOL}application-prod.yml`, [gitignore]);

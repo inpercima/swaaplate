@@ -22,5 +22,5 @@ Before using swaaplate to update a project, you have to do following steps:
 * remove project/node_modules
 * save changes as new commit to git
 * remove everything except for the folder .git in project
-* run swaaplate with you backup data
+* run swaaplate with your backup data
 * manage your changes via git

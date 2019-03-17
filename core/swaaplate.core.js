@@ -231,6 +231,11 @@ function replaceInAngularJsonFile(swaaplateJsonData, projectDir) {
   if (generalConfig.selectorPrefix !== 'app') {
     lightjs.replacement('"app"', `"${generalConfig.selectorPrefix}"`, [angularJson]);
   }
+
+  if (swaaplateJsonData.serverConfig.endpoint === 'php') {
+    lightjs.replacement('@angular-devkit/build-angular:browser', '@angular-builders/custom-webpack:browser', [angularJson]);
+    lightjs.replacement('@angular-devkit/build-angular:dev-server', '@angular-builders/dev-server:generic', [angularJson]);
+  }
 }
 
 function installDependencies(swaaplateJsonData, projectDir) {

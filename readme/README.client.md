@@ -60,6 +60,9 @@ yarn watch:mock
 # build, reachable on http://localhost/app/path/to/dist/
 yarn build:dev
 
+# build and starts a server, rebuild after changes, reachable on http://localhost:4200/
+yarn serve:dev
+
 # build, rebuild after changes, reachable on http://localhost/app/path/to/dist/
 yarn watch:dev
 ```
@@ -178,4 +181,4 @@ Name of a build-in theme from angular-material.
 * type: `string`
 * values: `deeppurple-amber`/`indigo-pink`/`pink-bluegrey`/`purple-green`
 
-Note: This option must also be changed in the angular.json if you want to change it.
+Note: This option must also be changed in the styles.css if you want to change it.
