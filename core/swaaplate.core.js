@@ -235,6 +235,8 @@ function replaceInAngularJsonFile(swaaplateJsonData, projectDir) {
   if (swaaplateJsonData.serverConfig.endpoint === 'php') {
     lightjs.replacement('@angular-devkit/build-angular:browser', '@angular-builders/custom-webpack:browser', [angularJson]);
     lightjs.replacement('@angular-devkit/build-angular:dev-server', '@angular-builders/dev-server:generic', [angularJson]);
+    const webpackConfig = `$1,${os.EOL}            "customWebpackConfig": {${os.EOL}              "path": "./webpack.config.js"${os.EOL}            }`;
+    lightjs.replacement('("es5BrowserSupport": true)', webpackConfig, [angularJson]);
   }
 }
 

@@ -148,7 +148,9 @@ function php(srcMain, projectDir, swaaplateJsonData) {
   shjs.cp('endpoint/php/auth.service.php', srcMainPath);
   shjs.cp('endpoint/php/.htaccess', srcMainPath);
 
-  shjs.cp('endpoint/php/webpack.config.js', path.join(projectDir, 'client/webpack.config.js'));
+  const webpackConfigPath = path.join(projectDir, 'client/webpack.config.js');
+  shjs.cp('endpoint/php/webpack.config.js', webpackConfigPath);
+  lightjs.replacement('api', serverPath, [webpackConfigPath]);
 
   const authServicePath = path.join(projectDir, serverPath, 'src/main/auth.service.php');
   lightjs.replacement('inpercima', projectName, [authServicePath]);
