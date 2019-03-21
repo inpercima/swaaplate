@@ -111,7 +111,7 @@ function javaKotlin(srcMain, projectDir, swaaplateJsonData) {
   lightjs.replacement('production: `./`', 'production: `http://localhost:8080/`', [usedReadmeMd]);
 
   const readmeMdServer = path.join(projectDir, 'server/README.md');
-  shjs.cp('readme/README.server.md', readmeMdServer);
+  shjs.cp('readme/README.java-kotlin.server.md', readmeMdServer);
   lightjs.replacement('swaaplate', swaaplateJsonData.packageJsonConfig.name, [readmeMdServer]);
   lightjs.replacement('(spring)', serverConfig.management === 'maven' ? './mvnw $1' : '', [readmeMdServer]);
 
@@ -182,6 +182,9 @@ function php(srcMain, projectDir, swaaplateJsonData) {
   if (!separateReadme) {
     lightjs.replacement('(# install tools and frontend dependencies)', `$1${os.EOL}cd client`, [readmeMd]);
   }
+
+  const readmeMdServer = path.join(projectDir, serverPath, readmeMdName);
+  shjs.cp('readme/README.php.server.md', readmeMdServer);
 
   updateEnvironmentData(projectDir, serverAsApi ? './api/' : './');
 }
