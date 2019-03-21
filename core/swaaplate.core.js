@@ -180,6 +180,8 @@ function checkSeparateReadme(swaaplateJsonData, projectDir, name, readmeMd) {
 
     lightjs.replacement('Usage[\\s\\S]*?change it.', `Usage${usageClient}${usageServer}`, [readmeMd]);
     lightjs.replacement(`(cd ${name})[\\s\\S]*?yarn\\s*`, `$1${os.EOL}`, [readmeMd]);
+
+    lightjs.replacement(`## Getting started[\\s\\S]*?## Usage`, '## Usage', [readmeMd]);
   }
 
   const usedReadmeMd = separateReadme ? readmeMdClient : readmeMd;
