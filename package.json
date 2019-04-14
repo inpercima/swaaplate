@@ -15,7 +15,7 @@
     "uppercamelcase": "3.0.0"
   },
   "engines": {
-    "node": ">=8.11.3"
+    "node": ">=10.15.3"
   },
   "license": "MIT",
   "name": "swaaplate",
