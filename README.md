@@ -8,6 +8,11 @@
 
 Projects like [publicmedia](https://github.com/inpercima/publicmedia), [mittagstisch](https://github.com/inpercima/mittagstisch) or [run-and-fun-2](https://github.com/inpercima/run-and-fun-2) are build on it.
 
+## Motivation
+
+Creating a web application is a great thing but collecting everything you need is very annoying.
+Therefore, I decided to write a small tool, which puts together all the necessary resources for the desired app from the given fundamentals and technologies.
+
 ## Benefits of swaaplate
 
 With swaaplate, the goal should be to create an angular web app with one of four backends, one of two management tools and one of two js dependency manager.
