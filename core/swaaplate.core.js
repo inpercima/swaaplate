@@ -99,6 +99,7 @@ function updateGeneralProjectData(swaaplateJsonData, projectDir) {
   const licenseMdName = 'LICENSE.md';
   const appComponentSpecName = 'app.component.spec.ts';
   const appE2eSpecName = 'app.e2e-spec.ts';
+  const karmaConfJs = 'karma.conf.js';
   const appPoName = 'app.po.ts';
   const gitignore = path.join(projectDir, gitignoreName);
   lightjs.info(`update '${gitignoreName}', '${licenseMdName}', '${appComponentSpecName}', '${appE2eSpecName}' and '${appPoName}'`);
@@ -116,6 +117,7 @@ function updateGeneralProjectData(swaaplateJsonData, projectDir) {
   const newTitle = swaaplateJsonData.generalConfig.title;
   const oldTitle = 'angular-cli-for-swaaplate';
   if (swaaplateJsonData.generalConfig.title !== oldTitle) {
+    lightjs.replacement(oldTitle, newTitle, [path.join(projectDir, 'src/', karmaConfJs)]);
     lightjs.replacement(oldTitle, newTitle, [path.join(projectDir, 'src/app/', appComponentSpecName)]);
     lightjs.replacement(oldTitle, newTitle, [path.join(projectDir, 'e2e/src/', appE2eSpecName)]);
   }
@@ -175,8 +177,8 @@ function checkSeparateReadme(swaaplateJsonData, projectDir, name, readmeMd) {
 
     const url = github.use ? `https://github.com/${github.username}/` : '';
     const usageClient = `${os.EOL}${os.EOL}For the client check [${name} - client](${url}${name}/tree/master/client).`;
-    const isJavaKotlin = serverConfig.endpoint === 'java' || serverConfig.endpoint === 'kotlin';
-    const usageServer = isJavaKotlin ? `${os.EOL}${os.EOL}For the server check [${name} - server](${url}${name}/tree/master/server).` : '';
+    const serverOrApi = serverConfig.serverAsApi ? 'api' : 'server';
+    const usageServer = `${os.EOL}${os.EOL}For the ${serverOrApi} check [${name} - ${serverOrApi}](${url}${name}/tree/master/${serverOrApi}).`;
 
     lightjs.replacement('Usage[\\s\\S]*?change it.', `Usage${usageClient}${usageServer}`, [readmeMd]);
     lightjs.replacement(`(cd ${name})[\\s\\S]*?.gitignore.`, `$1${os.EOL}\`\`\``, [readmeMd]);
@@ -232,6 +234,7 @@ function replaceInAngularJsonFile(swaaplateJsonData, projectDir) {
     lightjs.replacement('"app"', `"${generalConfig.selectorPrefix}"`, [angularJson]);
   }
 
+  // extend webpack behaviour on php to copy php code
   if (swaaplateJsonData.serverConfig.endpoint === 'php') {
     lightjs.replacement('@angular-devkit/build-angular:browser', '@angular-builders/custom-webpack:browser', [angularJson]);
     lightjs.replacement('@angular-devkit/build-angular:dev-server', '@angular-builders/dev-server:generic', [angularJson]);

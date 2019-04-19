@@ -185,6 +185,9 @@ function php(srcMain, projectDir, swaaplateJsonData) {
 
   const readmeMdServer = path.join(projectDir, serverPath, readmeMdName);
   shjs.cp('readme/README.php.server.md', readmeMdServer);
+  if (serverAsApi) {
+    lightjs.replacement('server', 'api', [readmeMdServer]);
+  }
 
   updateEnvironmentData(projectDir, serverAsApi ? './api/' : './');
 }

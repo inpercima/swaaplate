@@ -1,7 +1,7 @@
 # swaaplate - client
 
-[![dependencies Status](https://david-dm.org/inpercima/swaaplate/status.svg)](https://david-dm.org/inpercima/swaaplate?path=client)
-[![devDependencies Status](https://david-dm.org/inpercima/swaaplate/dev-status.svg)](https://david-dm.org/inpercima/swaaplate?type=dev&path=client)
+[![dependencies Status](https://david-dm.org/inpercima/swaaplate/status.svg?path=client)](https://david-dm.org/inpercima/swaaplate?path=client)
+[![devDependencies Status](https://david-dm.org/inpercima/swaaplate/dev-status.svg?path=client)](https://david-dm.org/inpercima/swaaplate?path=client&type=dev)
 
 ## Getting started
 
