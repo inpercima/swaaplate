@@ -114,12 +114,12 @@ function updateGeneralProjectData(swaaplateJsonData, projectDir) {
     lightjs.replacement(authorMj, author, [path.join(projectDir, licenseMdName)]);
   }
 
-  const newTitle = swaaplateJsonData.generalConfig.title;
-  const oldTitle = 'angular-cli-for-swaaplate';
-  if (swaaplateJsonData.generalConfig.title !== oldTitle) {
-    lightjs.replacement(oldTitle, newTitle, [path.join(projectDir, 'src/', karmaConfJs)]);
-    lightjs.replacement(oldTitle, newTitle, [path.join(projectDir, 'src/app/', appComponentSpecName)]);
-    lightjs.replacement(oldTitle, newTitle, [path.join(projectDir, 'e2e/src/', appE2eSpecName)]);
+  const newName = swaaplateJsonData.generalConfig.name;
+  const oldName = 'angular-cli-for-swaaplate';
+  if (swaaplateJsonData.generalConfig.name !== oldName) {
+    lightjs.replacement(oldName, newName, [path.join(projectDir, 'src/', karmaConfJs)]);
+    lightjs.replacement(oldName, newName, [path.join(projectDir, 'src/app/', appComponentSpecName)]);
+    lightjs.replacement(oldName, newName, [path.join(projectDir, 'e2e/src/', appE2eSpecName)]);
   }
 
   const appPoTs = path.join(projectDir, 'e2e/src/', appPoName);
