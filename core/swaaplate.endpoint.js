@@ -120,7 +120,7 @@ function javaKotlin(srcMain, projectDir, swaaplateJsonData) {
   const packageJsonName = 'package.json';
   const packageJson = path.join(projectDir, 'client', packageJsonName);
   const packageJsonData = lightjs.readJson(packageJson);
-  packageJsonData.scripts['serve:dev'] = 'ng serve -o';
+  packageJsonData.scripts['serve:dev'] = 'ng serve -o --configuration=dev';
   lightjs.writeJson(packageJson, packageJsonData);
 }
 
