@@ -114,16 +114,16 @@ function updateGeneralProjectData(swaaplateJsonData, projectDir) {
     lightjs.replacement(authorMj, author, [path.join(projectDir, licenseMdName)]);
   }
 
-  const newName = swaaplateJsonData.generalConfig.name;
+  const newName = swaaplateJsonData.packageJsonConfig.name;
+  const newTitle = swaaplateJsonData.generalConfig.title;
   const oldName = 'angular-cli-for-swaaplate';
   if (swaaplateJsonData.generalConfig.name !== oldName) {
-    lightjs.replacement(oldName, newName, [path.join(projectDir, 'src/', karmaConfJs)]);
-    lightjs.replacement(oldName, newName, [path.join(projectDir, 'src/app/', appComponentSpecName)]);
-    lightjs.replacement(oldName, newName, [path.join(projectDir, 'e2e/src/', appE2eSpecName)]);
+    lightjs.replacement(oldName, newName, [path.join(projectDir, karmaConfJs)]);
+    lightjs.replacement(oldName, newTitle, [path.join(projectDir, 'src/app/', appComponentSpecName)]);
+    lightjs.replacement(oldName, newTitle, [path.join(projectDir, 'e2e/src/', appE2eSpecName)]);
   }
 
-  const appPoTs = path.join(projectDir, 'e2e/src/', appPoName);
-  lightjs.replacement('app(-root)', `${swaaplateJsonData.generalConfig.selectorPrefix}$1`, [appPoTs]);
+  lightjs.replacement('app(-root)', `${swaaplateJsonData.generalConfig.selectorPrefix}$1`, [path.join(projectDir, 'e2e/src/', appPoName)]);
 }
 
 function updateMockData(title, projectDir) {
@@ -149,7 +149,7 @@ function replaceInReadmeFile(swaaplateJsonData, projectDir) {
   const readmeMd = path.join(projectDir, readmeMdName);
   const packageJsonData = lightjs.readJson('package.json');
   const generated = `This project was generated with [swaaplate](https://github.com/inpercima/swaaplate) version ${packageJsonData.version}.`;
-  const description = `${generated}${os.EOL}${os.EOL}${packageJsonConfig.description}`;
+  const description = `${packageJsonConfig.description}${os.EOL}${os.EOL}${generated}`;
 
   // replace the first sentence
   lightjs.replacement('This.+projects.\\s*', '', [readmeMd]);
@@ -158,6 +158,10 @@ function replaceInReadmeFile(swaaplateJsonData, projectDir) {
 
   lightjs.replacement('angular-cli-for-swaaplate', name, [readmeMd]);
   lightjs.replacement('(git clone )(.+)', `$1${packageJsonConfig.repository}`, [readmeMd]);
+
+  // apend line in dependency table for copy-webpack-plugin
+  const lineWebpackPlugin = '| copy-webpack-plugin | 4.6.0 | copy-webpack-plugin@5.0.3" has unmet peer dependency "webpack@^4.0.0" |';
+  lightjs.replacement('(3.4 < 3.5 \\|)', `$1${os.EOL}${lineWebpackPlugin}`, [readmeMd]);
 
   checkSeparateReadme(swaaplateJsonData, projectDir, name, readmeMd);
 }
@@ -237,9 +241,9 @@ function replaceInAngularJsonFile(swaaplateJsonData, projectDir) {
   // extend webpack behaviour on php to copy php code
   if (swaaplateJsonData.serverConfig.endpoint === 'php') {
     lightjs.replacement('@angular-devkit/build-angular:browser', '@angular-builders/custom-webpack:browser', [angularJson]);
-    lightjs.replacement('@angular-devkit/build-angular:dev-server', '@angular-builders/dev-server:generic', [angularJson]);
-    const webpackConfig = `$1,${os.EOL}            "customWebpackConfig": {${os.EOL}              "path": "./webpack.config.js"${os.EOL}            }`;
-    lightjs.replacement('("es5BrowserSupport": true)', webpackConfig, [angularJson]);
+    lightjs.replacement('@angular-devkit/build-angular:dev-server', '@angular-builders/custom-webpack:dev-server', [angularJson]);
+    const webpackConfig = `$1${os.EOL}            "customWebpackConfig": {${os.EOL}              "path": "./webpack.config.js"${os.EOL}            },`;
+    lightjs.replacement('("outputPath": "dist",)', webpackConfig, [angularJson]);
   }
 }
 
