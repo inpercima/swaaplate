@@ -18,12 +18,13 @@ function configureComponents(swaaplateJsonData, projectDir) {
   const routeConfig = swaaplateJsonData.routeConfig;
   const configRoutes = [swaaplateJsonData.routeConfig.default, routeConfig.login.name, routeConfig.notFound.name];
   const selectorPrefix = swaaplateJsonData.generalConfig.selectorPrefix;
-  const appPath = path.join(projectDir, swaaplateJsonData.serverConfig.endpoint === 'js' ? 'src' : 'client/src');
+  const appPath = path.join(projectDir, swaaplateJsonData.serverConfig.endpoint === 'js' ? '' : 'client');
+  const appSrcPath = path.join(appPath, 'src');
 
   if (selectorPrefix !== 'app') {
     lightjs.replacement('app-root', `${selectorPrefix}-root`, [
-      path.join(appPath, 'app/app.component.ts'),
-      path.join(appPath, 'index.html')
+      path.join(appSrcPath, 'app/app.component.ts'),
+      path.join(appSrcPath, 'index.html')
     ]);
     const tslintJson = path.join(appPath, 'tslint.json');
     const tslintJsonData = lightjs.readJson(tslintJson);
@@ -33,9 +34,9 @@ function configureComponents(swaaplateJsonData, projectDir) {
   }
   for (let i = 0; i < routes.length; i++) {
     const template = `'${selectorPrefix}-${configRoutes[i]}'`;
-    lightjs.replacement(`'app-${routes[i]}'`, template, [path.join(appPath, 'app')], true, true);
+    lightjs.replacement(`'app-${routes[i]}'`, template, [path.join(appSrcPath, 'app')], true, true);
     if (configRoutes[i] !== routes[i]) {
-      updateComponent(appPath, routes[i], configRoutes[i]);
+      updateComponent(appSrcPath, routes[i], configRoutes[i]);
     }
   }
 }

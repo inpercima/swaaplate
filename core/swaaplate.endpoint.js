@@ -32,6 +32,10 @@ function configureEndpoint(swaaplateJsonData, projectDir) {
     shjs.mv(path.join(projectDir, 'package.json'), path.join(projectDir, clientPath));
     shjs.mv(path.join(projectDir, 'tsconfig.json'), path.join(projectDir, clientPath));
     shjs.mv(path.join(projectDir, 'tslint.json'), path.join(projectDir, clientPath));
+    shjs.mv(path.join(projectDir, 'browserslist'), path.join(projectDir, clientPath));
+    shjs.mv(path.join(projectDir, 'karma.conf.js'), path.join(projectDir, clientPath));
+    shjs.mv(path.join(projectDir, 'tsconfig.app.json'), path.join(projectDir, clientPath));
+    shjs.mv(path.join(projectDir, 'tsconfig.spec.json'), path.join(projectDir, clientPath));
     shjs.mv(path.join(projectDir, 'src'), path.join(projectDir, clientPath, 'src'));
   }
   // java or kotlin
@@ -136,8 +140,7 @@ function php(srcMain, projectDir, swaaplateJsonData) {
   lightjs.info(`-> update '${packageJsonName}'`);
   let packageJsonData = lightjs.readJson(packageJson);
   packageJsonData.devDependencies['copy-webpack-plugin'] = '4.6.0';
-  packageJsonData.devDependencies['@angular-builders/custom-webpack'] = '7.4.3';
-  packageJsonData.devDependencies['@angular-builders/dev-server'] = '7.3.1';
+  packageJsonData.devDependencies['@angular-builders/custom-webpack'] = '8.0.2';
   packageJsonData = updateTask(packageJsonData, 'build:mock');
   packageJsonData = updateTask(packageJsonData, 'watch:mock');
   lightjs.writeJson(packageJson, packageJsonData);
@@ -201,7 +204,7 @@ function updateTask(packageJsonData, mockTask) {
 
 function updateGitignore(swaaplateJsonData, projectDir) {
   const gitignoreName = '.gitignore';
-  lightjs.info(`-> update '${gitignoreName}' with new endpoint and manangement data`);
+  lightjs.info(`-> update '${gitignoreName}' with new endpoint and management data`);
 
   const endpoint = swaaplateJsonData.serverConfig.endpoint;
   if (endpoint === 'java' || endpoint === 'kotlin') {

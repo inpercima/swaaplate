@@ -1,7 +1,6 @@
 # swaaplate
 
 [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
-[![dependencies Status](https://david-dm.org/inpercima/swaaplate/status.svg)](https://david-dm.org/inpercima/swaaplate)
 [![devDependencies Status](https://david-dm.org/inpercima/swaaplate/dev-status.svg)](https://david-dm.org/inpercima/swaaplate?type=dev)
 
 [s]imple [w]eb [a]pp [a]ngular tem[plate] generator. A simple generator of a web app based on angular.
@@ -41,9 +40,9 @@ Currently the following combinations are possible.
 
 ### Node, npm or yarn
 
-* `node 10.15.3` or higher in combination with
-  * `npm 6.4.1` or higher or
-  * `yarn 1.13.0` or higher, used in this repository
+* `node 12.3.1` or higher in combination with
+  * `npm 6.9.0` or higher or
+  * `yarn 1.16.0` or higher, used in this repository
 
 ## Getting started
 
