@@ -231,7 +231,7 @@ function replaceInAngularJsonFile(swaaplateJsonData, projectDir) {
   }
 
   if (generalConfig.theme !== 'indigo-pink') {
-    lightjs.replacement('indigo-pink', generalConfig.theme, [angularJson]);
+    lightjs.replacement('indigo-pink', generalConfig.theme, [path.join(projectDir, 'src', 'styles.css')]);
   }
 
   if (generalConfig.selectorPrefix !== 'app') {
