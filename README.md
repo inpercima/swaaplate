@@ -58,7 +58,7 @@ cp core/swaaplate.default.json swaaplate.json
 yarn
 
 # change data in swaaplate.json (more info see in configuration) and run swaaplate
-node swaaplate.js
+./swaaplate.js
 ```
 
 ## Configuration
