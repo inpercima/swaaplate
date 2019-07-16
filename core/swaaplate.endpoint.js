@@ -140,7 +140,7 @@ function php(srcMain, projectDir, swaaplateJsonData) {
   lightjs.info(`-> update '${packageJsonName}'`);
   let packageJsonData = lightjs.readJson(packageJson);
   packageJsonData.devDependencies['copy-webpack-plugin'] = '4.6.0';
-  packageJsonData.devDependencies['@angular-builders/custom-webpack'] = '8.0.2';
+  packageJsonData.devDependencies['@angular-builders/custom-webpack'] = '8.1.0';
   packageJsonData = updateTask(packageJsonData, 'build:mock');
   packageJsonData = updateTask(packageJsonData, 'watch:mock');
   lightjs.writeJson(packageJson, packageJsonData);
