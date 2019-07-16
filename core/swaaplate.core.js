@@ -159,9 +159,9 @@ function replaceInReadmeFile(swaaplateJsonData, projectDir) {
   lightjs.replacement('angular-cli-for-swaaplate', name, [readmeMd]);
   lightjs.replacement('(git clone )(.+)', `$1${packageJsonConfig.repository}`, [readmeMd]);
 
-  // apend line in dependency table for copy-webpack-plugin
+  // append line in dependency table for copy-webpack-plugin
   const lineWebpackPlugin = '| copy-webpack-plugin | 4.6.0 | copy-webpack-plugin@5.0.3" has unmet peer dependency "webpack@^4.0.0" |';
-  lightjs.replacement('(3.4 < 3.5 \\|)', `$1${os.EOL}${lineWebpackPlugin}`, [readmeMd]);
+  lightjs.replacement('(3.4 <3.5 \\|)', `$1${os.EOL}${lineWebpackPlugin}`, [readmeMd]);
 
   checkSeparateReadme(swaaplateJsonData, projectDir, name, readmeMd);
 }
