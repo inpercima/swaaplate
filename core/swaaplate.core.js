@@ -17,9 +17,8 @@ let core = {};
  *
  * @param {object} swaaplateJsonData
  */
-function createProject(swaaplateJsonData) {
+function createProject(swaaplateJsonData, outputDir) {
   const projectName = swaaplateJsonData.packageJsonConfig.name;
-  const outputDir = swaaplateJsonData.generalConfig.outputDir;
   const projectDir = outputDir + projectName;
   lightjs.info(`create project '${projectName}' in '${outputDir}'`);
 
@@ -28,7 +27,7 @@ function createProject(swaaplateJsonData) {
   shjs.cp('-r', 'node_modules/angular-cli-for-swaaplate/.editorconfig', projectDir);
   shjs.cp('-r', 'node_modules/angular-cli-for-swaaplate/.gitattributes', projectDir);
   shjs.cp('-r', 'node_modules/angular-cli-for-swaaplate/.gitignore', projectDir);
-  shjs.cp('swaaplate.json', path.join(projectDir, 'swaaplate-backup.json'));
+  shjs.cp('swaaplate.json', projectDir);
   shjs.rm(path.join(projectDir, 'yarn.lock'));
   shjs.rm('-rf', path.join(projectDir, 'node_modules'));
 
@@ -104,7 +103,6 @@ function updateGeneralProjectData(swaaplateJsonData, projectDir) {
   const gitignore = path.join(projectDir, gitignoreName);
   lightjs.info(`update '${gitignoreName}', '${licenseMdName}', '${appComponentSpecName}', '${appE2eSpecName}' and '${appPoName}'`);
 
-  lightjs.replacement('(environment.prod.ts)', `$1${os.EOL}swaaplate-backup.json`, [gitignore]);
   const buildWebDir = swaaplateJsonData.generalConfig.buildWebDir;
   lightjs.replacement('(backup.json)', `$1${os.EOL}${buildWebDir}/`, [gitignore]);
 

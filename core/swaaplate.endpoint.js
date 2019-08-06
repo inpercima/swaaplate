@@ -214,7 +214,7 @@ function updateGitignore(swaaplateJsonData, projectDir) {
     const api = `https://www.gitignore.io/api/node,angular,${endpoint},${managementApi}eclipse,intellij+all,visualstudiocode`;
     request(api, function (error, response, body) {
       lightjs.replacement('\\s# Created by https:.*((.|\\n)*)# End of https:.*\\s*', body, [gitignore]);
-      lightjs.replacement('(swaaplate-backup.json)', `$1${os.EOL}application-dev.yml${os.EOL}application-prod.yml`, [gitignore]);
+      lightjs.replacement('(environment.prod.ts)', `$1${os.EOL}application-dev.yml${os.EOL}application-prod.yml`, [gitignore]);
     });
   }
 }
