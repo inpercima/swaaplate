@@ -57,8 +57,8 @@ cp core/swaaplate.default.json swaaplate.json
 # install tools
 yarn
 
-# change data in swaaplate.json (more info see in configuration) and run swaaplate
-./swaaplate.js
+# change data in swaaplate.json (more info in configuration) and run swaaplate with one argument for the workspace path
+./swaaplate.js /absolute/path/to/workspace
 ```
 
 ## Configuration
@@ -74,7 +74,6 @@ Some of this options will be copied in the environment files of the new project 
 * [generalConfig/github/use](#generalconfiggithubuse)
 * [generalConfig/github/username](#generalconfiggithubusername)
 * [generalConfig/installDependencies](#generalconfiginstallDependencies)
-* [generalConfig/outputDir](#generalconfigoutputdir)
 * [generalConfig/selectorPrefix](#generalconfigselectorprefix)
 * [generalConfig/theme](#generalconfigtheme)
 * [generalConfig/title](#generalconfigtitle)
@@ -129,13 +128,6 @@ Defines whether swaaplate should install tools and frontend dependencies or not.
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
-
-### `generalConfig/outputDir`
-
-Path to the main directory without the name of the project itself.
-
-* default: `/path/to/workspace/`
-* type: `string`
 
 ### `generalConfig/selectorPrefix`
 
@@ -202,7 +194,7 @@ The website. If this option is empty and `packageJsonConfig/repository` is set, 
 
 ### `packageJsonConfig/name`
 
-The name (foldername) of the project in the workspace. See `generalConfig/outputDir` to combinate.
+The name and foldername of the project in the workspace. See `Getting Started run section`.
 
 * default: `helloWorld`
 * type: `string`
