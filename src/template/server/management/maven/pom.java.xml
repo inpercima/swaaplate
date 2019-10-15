@@ -11,11 +11,11 @@
   </parent>
 
   <groupId>{{GROUP.ID}}</groupId>
-  <artifactId>{{ARTIFACT.ID}}</artifactId>
+  <artifactId>{{PROJECT.NAME}}</artifactId>
   <version>{{PROJECT.VERSION}}</version>
   <packaging>jar</packaging>
 
-  <name>{{PROJECT.NAME}}</name>
+  <name>{{PROJECT.TITLE}}</name>
   <description>{{PROJECT.DESCRIPTION}}</description>
 
   <dependencies>
