@@ -1,4 +1,4 @@
-# swaaplate - server
+# {{PROJECT.NAME}} - server
 
 ## Getting started
 
