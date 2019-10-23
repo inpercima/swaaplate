@@ -70,42 +70,41 @@ Some of this options will be copied in the environment files of the new project 
 
 ### Table of contents
 
-* [generalConfig/buildWebDir](#generalconfigbuildwebdir)
-* [generalConfig/github/use](#generalconfiggithubuse)
-* [generalConfig/github/username](#generalconfiggithubusername)
-* [generalConfig/installDependencies](#generalconfiginstallDependencies)
-* [generalConfig/selectorPrefix](#generalconfigselectorprefix)
-* [generalConfig/theme](#generalconfigtheme)
-* [generalConfig/title](#generalconfigtitle)
-* [generalConfig/useYarn](#generalconfiguseyarn)
-* [packageJsonConfig/author](#packagejsonconfigauthor)
-* [packageJsonConfig/contributors](#packagejsonconfigcontributors)
-* [packageJsonConfig/description](#packagejsonconfigdescription)
-* [packageJsonConfig/homepage](#packagejsonconfighomepage)
-* [packageJsonConfig/name](#packagejsonconfigname)
-* [packageJsonConfig/repository](#packagejsonconfigrepository)
-* [routeConfig/default](#routeconfigdefault)
-* [routeConfig/features/show](#routeconfigfeaturesshow)
-* [routeConfig/login/activate](#routeconfigloginactivate)
-* [routeConfig/login/name](#routeconfigloginname)
-* [routeConfig/login/show](#routeconfigloginshow)
-* [routeConfig/notFound/name](#routeconfignotfoundname)
-* [routeConfig/notFound/redirect](#routeconfignotfoundredirect)
-* [serverConfig/endpoint](#serverconfigendpoint)
-* [serverConfig/htaccess](#serverconfightaccess)
-* [serverConfig/management](#serverconfigmanagement)
-* [serverConfig/packagePath](#serverconfigpackagepath)
-* [serverConfig/separateReadme](#serverconfigseparatereadme)
-* [serverConfig/serverAsApi](#serverconfigserverasapi)
+* [general/buildWebDir](#generalbuildwebdir)
+* [general/github/use](#generalgithubuse)
+* [general/github/username](#generalgithubusername)
+* [general/installDependencies](#generalinstallDependencies)
+* [general/selectorPrefix](#generalselectorprefix)
+* [general/theme](#generaltheme)
+* [general/title](#generaltitle)
+* [general/useYarn](#generaluseyarn)
+* [packageJson/author](#packageJsonauthor)
+* [packageJson/contributors](#packageJsoncontributors)
+* [packageJson/description](#packageJsondescription)
+* [packageJson/homepage](#packageJsonhomepage)
+* [packageJson/name](#packageJsonname)
+* [packageJson/repository](#packageJsonrepository)
+* [route/default](#routedefault)
+* [route/features/show](#routefeaturesshow)
+* [route/login/activate](#routeloginactivate)
+* [route/login/name](#routeloginname)
+* [route/login/show](#routeloginshow)
+* [route/notFound/name](#routenotfoundname)
+* [route/notFound/redirect](#routenotfoundredirect)
+* [server/backend](#serverbackend)
+* [server/htaccess](#serverhtaccess)
+* [server/management](#servermanagement)
+* [server/packagePath](#serverpackagepath)
+* [server/serverAsApi](#serverserverasapi)
 
-### `generalConfig/buildWebDir`
+### `general/buildWebDir`
 
 Path to the target from the angular webapp for buildtime.
 
 * default: `dist`
 * type: `string`
 
-### `generalConfig/github/use`
+### `general/github/use`
 
 Defines whether the project is shared on github or not.
 With `true` dependencies will be displayed with by [david-dm.org](https://david-dm.org).
@@ -114,14 +113,14 @@ With `true` dependencies will be displayed with by [david-dm.org](https://david-
 * type: `boolean`
 * values: `true`/`false`
 
-### `generalConfig/github/username`
+### `general/github/username`
 
-If `generalConfig/github/use` is set to `true` you need to define a github username.
+If `general/github/use` is set to `true` you need to define a github username.
 
 * default: EMPTY
 * type: `string`
 
-### `generalConfig/installDependencies`
+### `general/installDependencies`
 
 Defines whether swaaplate should install tools and frontend dependencies or not.
 
@@ -129,14 +128,14 @@ Defines whether swaaplate should install tools and frontend dependencies or not.
 * type: `boolean`
 * values: `true`/`false`
 
-### `generalConfig/selectorPrefix`
+### `general/selectorPrefix`
 
 A shortcut of the project, used in components like `hw-home` or `hw-app`.
 
 * default: `hw`
 * type: `string`
 
-### `generalConfig/theme`
+### `general/theme`
 
 Name of a build-in theme from angular-material.
 This option ca be changed in the environment files.
@@ -146,7 +145,7 @@ This option ca be changed in the environment files.
 * type: `string`
 * values: `deeppurple-amber`/`indigo-pink`/`pink-bluegrey`/`purple-green`
 
-### `generalConfig/title`
+### `general/title`
 
 Applicationwide title of the app, displayed in title and toolbar.
 This option ca be changed in the environment files.
@@ -155,7 +154,7 @@ This option ca be changed in the environment files.
 * default: `Hello world`
 * type: `string`
 
-### `generalConfig/useYarn`
+### `general/useYarn`
 
 Defines whatever yarn should be used or not.
 If this option is set to `false` npm will be used.
@@ -164,49 +163,49 @@ If this option is set to `false` npm will be used.
 * type: `boolean`
 * values: `true`/`false`
 
-### `packageJsonConfig/author`
+### `packageJson/author`
 
 The name of the creator.
 
 * default: `true`
 * type: `string`
 
-### `packageJsonConfig/contributors`
+### `packageJson/contributors`
 
 An array of contributers.
 
 * default: EMPTY
 * type: `array`
 
-### `packageJsonConfig/description`
+### `packageJson/description`
 
 A description.
 
 * default: EMPTY
 * type: `string`
 
-### `packageJsonConfig/homepage`
+### `packageJson/homepage`
 
-The website. If this option is empty and `packageJsonConfig/repository` is set, this will be the same.
+The website. If this option is empty and `packageJson/repository` is set, this will be the same.
 
 * default: EMPTY
 * type: `string`
 
-### `packageJsonConfig/name`
+### `packageJson/name`
 
 The name and foldername of the project in the workspace. See `Getting Started run section`.
 
 * default: `helloWorld`
 * type: `string`
 
-### `packageJsonConfig/repository`
+### `packageJson/repository`
 
-The repository. If `generalConfig/github/use` is activated, the repository will be generated automatically.
+The repository. If `general/github/use` is activated, the repository will be generated automatically.
 
 * default: EMPTY
 * type: `string`
 
-### `routeConfig/default`
+### `route/default`
 
 The main route and the redirect route after login if no route is stored.
 This option ca be changed in the environment files.
@@ -215,7 +214,7 @@ This option ca be changed in the environment files.
 * default: `dashboard`
 * type: `string`
 
-### `routeConfig/features/show`
+### `route/features/show`
 
 Defines whether feature routes will be displayed or not.
 This option ca be changed in the environment files.
@@ -225,7 +224,7 @@ This option ca be changed in the environment files.
 * type: `boolean`
 * values: `true`/`false`
 
-### `routeConfig/login/activate`
+### `route/login/activate`
 
 Defines whether a login will be used or not.
 This option ca be changed in the environment files.
@@ -235,14 +234,14 @@ This option ca be changed in the environment files.
 * type: `boolean`
 * values: `true`/`false`
 
-### `routeConfig/login/name`
+### `route/login/name`
 
 Defines the name of the login route.
 
 * default: `login`
 * type: `string`
 
-### `routeConfig/login/show`
+### `route/login/show`
 
 Defines whether login route will be displayed or not.
 This option ca be changed in the environment files.
@@ -252,14 +251,14 @@ This option ca be changed in the environment files.
 * type: `boolean`
 * values: `true`/`false`
 
-### `routeConfig/notFound/name`
+### `route/notFound/name`
 
 The main route and the redirect route after login if no route is stored.
 
 * default: `not-found`
 * type: `string`
 
-### `routeConfig/notFound/redirect`
+### `route/notFound/redirect`
 
 Defines whether the 404 route will redirect to the default route or not.
 This option ca be changed in the environment files.
@@ -269,15 +268,15 @@ This option ca be changed in the environment files.
 * type: `boolean`
 * values: `true`/`false`
 
-### `serverConfig/endpoint`
+### `server/backend`
 
-Defines the endpoint of the app.
+Defines the backend of the app.
 
 * default: `js`
 * type: `string`
 * values: `java`/`kotlin`/`js`/`php`
 
-### `serverConfig/htaccess`
+### `server/htaccess`
 
 Defines whether a .htaccess file should used or not.
 This predefines no ending for php files.
@@ -287,7 +286,7 @@ This will work for php only.
 * type: `boolean`
 * values: `true`/`false`
 
-### `serverConfig/management`
+### `server/management`
 
 Defines the management tool of the app.
 This will work for java or kotlin only.
@@ -296,7 +295,7 @@ This will work for java or kotlin only.
 * type: `string`
 * values: EMPTY/`maven`/`gradle`/
 
-### `serverConfig/packagePath`
+### `server/packagePath`
 
 The package structure.
 This will work for java or kotlin only.
@@ -304,16 +303,7 @@ This will work for java or kotlin only.
 * default: EMPTY
 * type: `string`
 
-### `serverConfig/separateReadme`
-
-Defines whether a separate readme for client and server/api folders should created or not.
-This will work for java and kotlin only.
-
-* default: `true`
-* type: `boolean`
-* values: `true`/`false`
-
-### `serverConfig/serverAsApi`
+### `server/serverAsApi`
 
 Defines that the server is used as a api reference or not.
 The api URL in environment.ts and environment.prod.ts will be set to `./api/`.

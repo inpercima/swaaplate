@@ -1,5 +1,5 @@
 {
-  "generalConfig": {
+  "general": {
     "buildWebDir": "dist",
     "github": {
       "use": false,
@@ -11,7 +11,7 @@
     "title": "Hello world",
     "useYarn": true
   },
-  "packageJsonConfig": {
+  "packageJson": {
     "author": "",
     "contributors": [],
     "description": "",
@@ -19,7 +19,7 @@
     "name": "helloWorld",
     "repository": ""
   },
-  "routeConfig": {
+  "route": {
     "default": "dashboard",
     "features": {
       "show": true
@@ -34,12 +34,11 @@
       "redirect": false
     }
   },
-  "serverConfig": {
-    "endpoint": "js",
+  "server": {
+    "backend": "js",
     "htaccess": true,
     "management": "",
     "packagePath": "",
-    "separateReadme": true,
     "serverAsApi": true
   }
 }

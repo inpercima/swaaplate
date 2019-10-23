@@ -3,7 +3,7 @@
 
 /* requirements */
 const lightjs = require('light-js');
-const swcore = require('./core/swaaplate.core.js');
+const swProject = require('./src/js/project.js');
 
 /* init */
 init();
@@ -15,11 +15,11 @@ function init() {
   lightjs.info('initialize swaaplate');
   var args = process.argv.slice(2);
   if (args.length === 1) {
-    const swaaplateJsonData = lightjs.readJson('swaaplate.json');
-    swcore.createProject(swaaplateJsonData, args[0]);
+    lightjs.info('one parameter was found, use as absolute workspace path');
+    swProject.create(args[0]);
   } else if (args.length === 0) {
-    lightjs.error('Es wurde kein absoluter Pfad für das Projekt angegeben!');
+    lightjs.error('No absolute path was specified for the project!');
   } else {
-    lightjs.error('Zu viele Parameter wurden angegeben. Nur ein Parameter für den Pfad des Projekts ist zulässig!');
+    lightjs.error('Too many parameters were specified. Only one parameter for the workspace path of the project is allowed!');
   }
 }

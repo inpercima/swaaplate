@@ -1,4 +1,4 @@
-# swaaplate - server
+# {{PROJECT.NAME}} - server
 
 ## Getting started
 
@@ -22,7 +22,7 @@ Note: These files will not be under version control and listed in .gitignore.
 ### Run in devMode with real data
 
 ```bash
-spring-boot:run
+./mvnw spring-boot:run
 ```
 
 ### Run in prodMode with real data
