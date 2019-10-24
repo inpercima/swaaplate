@@ -110,7 +110,7 @@ module.exports = Object.freeze({
   THIS_PROJECTS: 'This.+projects.\\s*',
   THIS_PROJECT: 'This project.+',
   README_MAIN: '\\s# install.*(.|\\n)*To create.*\\s*',
-  REASON: '(\\| reason \\|)',
+  REASON: '(\\| ------ \\|)',
   WHITESPACES: '(trim_trailing_whitespace = true)',
 
   // by module

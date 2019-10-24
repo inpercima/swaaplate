@@ -41,6 +41,7 @@ function configure(config, projectPath) {
   shjs.cp(path.join(swConst.TEMPLATE_README, 'README.php.md'), readmeMd);
   if (configServer.serverAsApi) {
     lightjs.replacement(swConst.SERVER, swConst.API, [readmeMd]);
+    lightjs.replacement(swConst.SERVER, swConst.API, [webpackConfigPath]);
   }
 }
 

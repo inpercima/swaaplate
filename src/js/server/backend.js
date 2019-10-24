@@ -59,7 +59,9 @@ function configure(config, projectPath) {
  * @param {object} projectPath
  */
 function updateReadmeFile(config, projectPath) {
-  const readmeMd = path.join(projectPath, swConst.SERVER, swConst.README_MD);
+  const serverConfig = config.server;
+  const serverOrApi = serverConfig.serverAsApi && serverConfig.backend === swConst.PHP ? swConst.API : swConst.SERVER;
+  const readmeMd = path.join(projectPath, serverOrApi, swConst.README_MD);
   lightjs.info(`update '${readmeMd}'`);
 
   const packageJsonConfig = config.packageJson;

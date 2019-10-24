@@ -22,7 +22,7 @@ let project = {};
 function create(workspacePath) {
   const config = lightjs.readJson(swConst.SWAAPLATE_JSON);
   const projectName = config.packageJson.name;
-  const projectPath = workspacePath + projectName;
+  const projectPath = path.join(workspacePath, projectName);
   lightjs.info(`create project '${projectName}' in '${workspacePath}'`);
 
   swComponent.copyFiles(projectPath);
@@ -130,7 +130,8 @@ function updateReadmeFile(config, projectPath) {
 
   // append line in dependency table for copy-webpack-plugin if backend php
   if (serverConfig.backend === swConst.PHP) {
-    lightjs.replacement(swConst.REASON, `$1${os.EOL}${swConst.COPY_WEBPACK_PLUGIN}`, [readmeMd]);
+    const row = `| copy-webpack-plugin | ${swConst.COPY_WEBPACK_PLUGIN} | 5.0.3 | copy-webpack-plugin@5.0.3" has unmet peer dependency "webpack@^4.0.0" |`;
+    lightjs.replacement(swConst.REASON, `$1${os.EOL}${row}`, [readmeMd]);
     const apache = `* \`${swConst.APACHE} 2.4\` ${swConst.OR_HIGHER}`;
     const php = `* \`${swConst.PHP} 7.3\` ${swConst.OR_HIGHER}`;
     lightjs.replacement(swConst.REQUIREMENT, `### ${swConst.APACHE} and ${swConst.PHP}${twoEol}${apache}${os.EOL}${php}${twoEol}$1`, [readmeMd]);
