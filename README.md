@@ -22,7 +22,13 @@ Currently the following combinations are possible.
 * `angular` - `js` - `npm`
 * `angular` - `js` - `yarn`
 * `angular` - `php` - `npm`
+* `angular` - `php` - `npm` with api folder
+* `angular` - `php` - `npm` with htaccess file
+* `angular` - `php` - `npm` with api folder and htaccess file
 * `angular` - `php` - `yarn`
+* `angular` - `php` - `yarn` with api folder
+* `angular` - `php` - `yarn` with htaccess file
+* `angular` - `php` - `yarn` with api folder and htaccess file
 * `angular` - `java (Spring-Boot)` - `npm`
 * `angular` - `java (Spring-Boot)` - `yarn`
 * `angular` - `java (Spring-Boot)` - `maven` - `npm`
