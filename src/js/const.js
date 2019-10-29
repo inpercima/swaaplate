@@ -117,6 +117,8 @@ module.exports = Object.freeze({
   ANGULAR_BUILDERS: '8.2.0',
   // COPY_WEBPACK_PLUGIN version 5.x.x needs webpack 5.x.x but this is not released yet
   COPY_WEBPACK_PLUGIN: '4.6.0',
+  DOCKER_VERSION: '17.05.0-ce',
+  DOCKER_COMPOSE_VERSION: '1.9',
   MAVEN_VERSION: '3.6.2',
   MAVEN_WRAPPER: '0.5.5',
   PROJECT_VERSION: '0.0.1-SNAPSHOT',

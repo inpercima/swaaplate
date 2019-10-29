@@ -76,6 +76,12 @@ function updateGeneralProjectFiles(config, projectPath) {
   if (author !== swConst.SW_AUTHOR) {
     lightjs.replacement(swConst.SW_AUTHOR, author, [path.join(projectPath, swConst.LICENSE_MD)]);
   }
+
+  const docker = config.general.useDocker;
+  if (docker) {
+    shjs.touch(path.join(projectPath, "Dockerfile"));
+    shjs.touch(path.join(projectPath, "docker-compose.yml"));
+  }
 }
 
 /**
@@ -142,6 +148,11 @@ function updateReadmeFile(config, projectPath) {
     lightjs.replacement(`${swConst.OR_HIGHER} or`, `${swConst.OR_HIGHER}, used in this repository, or`, [readmeMd]);
   }
 
+  if (config.general.useDocker) {
+    const docker = `* \`docker ${swConst.DOCKER_VERSION}\` ${swConst.OR_HIGHER}${os.EOL}* \`docker-compose ${swConst.DOCKER_COMPOSE_VERSION}\``;
+    lightjs.replacement(swConst.REQUIREMENT, `### Docker${twoEol}${docker} ${swConst.OR_HIGHER}${twoEol}$1`, [readmeMd]);
+  }
+
   // replace dependency logos
   lightjs.replacement(swConst.DEPENDENCY_LOGOS, '', [readmeMd]);
 
@@ -160,7 +171,6 @@ function createUsageLink(packageJson, generalConfig, type) {
 }
 
 function updatePlaceholder(config, projectPath) {
-
   lightjs.replacement('{{SPRING.BOOT.VERSION}}', swConst.SPRING_BOOT, [projectPath], true, true);
   lightjs.replacement('{{GROUP.ID}}', config.server.packagePath, [projectPath], true, true);
   lightjs.replacement('{{PROJECT.TITLE}}', config.general.title, [projectPath], true, true);

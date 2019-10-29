@@ -9,6 +9,7 @@
     "selectorPrefix": "hw",
     "theme": "indigo-pink",
     "title": "Hello world",
+    "useDocker": false,
     "useYarn": true
   },
   "packageJson": {
