@@ -374,17 +374,15 @@ function updateReadmeFile(config, projectPath) {
   const backend = config.server.backend;
   if (backend === swConst.JAVA || backend === swConst.KOTLIN) {
     lightjs.replacement(`(${swConst.DEFAULT}: )\`./\``, `$1\`http://localhost:8080/\``, [readmeMd]);
-    lightjs.replacement(`(${swConst.PRODUCTION}: )\`./\``, `$1\`http://localhost:8080/\``, [readmeMd]);
   }
 
   if (backend === swConst.PHP) {
     if (!config.server.htaccess) {
-      lightjs.replacement(`(${swConst.DEFAULT}: )EMPTY`, `$1\`.php\` | mock: EMPTY | ${swConst.PRODUCTION}: \`.php\``, [readmeMd]);
+      lightjs.replacement(`(${swConst.DEFAULT}: )EMPTY`, `$1\`.php\``, [readmeMd]);
     }
 
     if (config.server.serverAsApi) {
       lightjs.replacement(`(${swConst.DEFAULT}: )\`./\``, `$1\`./api/\``, [readmeMd]);
-      lightjs.replacement(`(${swConst.PRODUCTION}: )\`./\``, `$1\`./api/\``, [readmeMd]);
     }
   }
 }
