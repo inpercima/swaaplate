@@ -5,7 +5,7 @@
 
 [s]imple [w]eb [a]pp [a]ngular tem[plate] generator. A simple generator of a web app based on angular.
 
-Projects like [publicmedia](https://github.com/inpercima/publicmedia), [mittagstisch](https://github.com/inpercima/mittagstisch) or [run-and-fun-2](https://github.com/inpercima/run-and-fun-2) are build on it.
+Projects like [publicmedia](https://github.com/inpercima/publicmedia), [mittagstisch](https://github.com/inpercima/mittagstisch) or [run-and-fun](https://github.com/inpercima/run-and-fun) are build on it.
 
 ## Motivation
 
