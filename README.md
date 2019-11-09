@@ -47,8 +47,8 @@ Currently the following combinations are possible.
 ### Node, npm or yarn
 
 * `node 12.3.1` or higher in combination with
-  * `npm 6.9.0` or higher or
-  * `yarn 1.16.0` or higher, used in this repository
+  * `npm 6.12.1` or higher or
+  * `yarn 1.19.1` or higher, used in this repository
 
 ## Getting started
 
