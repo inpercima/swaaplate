@@ -15,16 +15,15 @@ let component = {};
  * Copies the files for the Angular client.
  *
  * @param {string} projectPath
- *
  */
 function copyFiles(projectPath) {
   shjs.mkdir('-p', projectPath);
   shjs.cp('-r', path.join(swConst.SW_MODULE, '*'), projectPath);
-  shjs.cp(path.join(swConst.SW_MODULE, '.editorconfig'), projectPath);
-  shjs.cp(path.join(swConst.SW_MODULE, '.gitattributes'), projectPath);
-  shjs.cp(path.join(swConst.SW_MODULE, '.gitignore'), projectPath);
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.DOT_EDITORCONFIG), projectPath);
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.DOT_GITATTRIBUTES), projectPath);
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.DOT_GITIGNORE), projectPath);
   shjs.cp(swConst.SWAAPLATE_JSON, projectPath);
-  shjs.rm(path.join(projectPath, 'yarn.lock'));
+  shjs.rm(path.join(projectPath, swConst.YARN_LOCK));
   shjs.rm('-rf', path.join(projectPath, 'node_modules'));
 }
 

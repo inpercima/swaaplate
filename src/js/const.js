@@ -42,6 +42,10 @@ module.exports = Object.freeze({
   APPLICATION_DEV_YML: 'application-dev.yml',
   APPLICATION_PROD_YML: 'application-prod.yml',
   DB_JSON: 'db.json',
+  DOCKERFILE: 'Dockerfile',
+  DOCKER_COMPOSE_YML: 'docker-compose.yml',
+  DOT_EDITORCONFIG: '.editorconfig',
+  DOT_GITATTRIBUTES: '.gitattributes',
   DOT_GITIGNORE: '.gitignore',
   DOT_GRADLE: '.gradle',
   DOT_MVN: '.mvn',
@@ -60,6 +64,7 @@ module.exports = Object.freeze({
   SWAAPLATE_JSON: 'swaaplate.json',
   TSLINT_JSON: 'tslint.json',
   WEBPACK_CONFIG_JS: 'webpack.config.js',
+  YARN_LOCK: 'yarn.lock',
 
   // by name
   APACHE: 'Apache',

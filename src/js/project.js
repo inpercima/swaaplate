@@ -7,9 +7,9 @@ const path = require('path');
 const request = require('request');
 const shjs = require('shelljs');
 
+const swBackend = require('./server/backend.js');
 const swComponent = require('./client/component.js');
 const swConst = require('./const.js');
-const swBackend = require('./server/backend.js');
 const swManagement = require('./server/management.js');
 
 let project = {};
@@ -27,7 +27,7 @@ function create(workspacePath) {
 
   swComponent.copyFiles(projectPath);
   updateGeneralProjectFiles(config, projectPath);
-  updateMockFiles(config.packageJson.name, projectPath);
+  updateMockFiles(projectName, projectPath);
   swComponent.updatePackageFile(config, projectPath);
   swComponent.updateEnvironmentFiles(config, projectPath);
   swComponent.updateTestFiles(config, projectPath);
@@ -55,7 +55,7 @@ function create(workspacePath) {
  * @param {string} projectPath
  */
 function updateGeneralProjectFiles(config, projectPath) {
-  lightjs.info(`update '${swConst.DOT_GITIGNORE}' and '${swConst.LICENSE_MD}'`);
+  lightjs.info(`${swConst.UPDATE} '${swConst.DOT_GITIGNORE}' and '${swConst.LICENSE_MD}'`);
 
   const gitignoreFile = path.join(projectPath, swConst.DOT_GITIGNORE);
 
@@ -79,8 +79,8 @@ function updateGeneralProjectFiles(config, projectPath) {
 
   const docker = config.general.useDocker;
   if (docker) {
-    shjs.touch(path.join(projectPath, "Dockerfile"));
-    shjs.touch(path.join(projectPath, "docker-compose.yml"));
+    shjs.touch(path.join(projectPath, swConst.DOCKERFILE));
+    shjs.touch(path.join(projectPath, swConst.DOCKER_COMPOSE_YML));
   }
 }
 
@@ -91,15 +91,15 @@ function updateGeneralProjectFiles(config, projectPath) {
  * @param {string} projectPath
  */
 function updateMockFiles(title, projectPath) {
-  const dbJsonFile = path.join(swConst.MOCK_DIR, swConst.DB_JSON);
+  const dbJsonFileTile = path.join(swConst.MOCK_DIR, swConst.DB_JSON);
   const middlewareJsFile = path.join(swConst.MOCK_DIR, swConst.MIDDLEWARE_JS);
-  lightjs.info(`update '${dbJsonFile}' and '${middlewareJsFile}'`);
+  lightjs.info(`${swConst.UPDATE} '${dbJsonFileTile}' and '${middlewareJsFile}'`);
 
-  const dbJson = path.join(projectPath, dbJsonFile);
-  const dbJsonData = lightjs.readJson(dbJson);
+  const dbJsonFile = path.join(projectPath, dbJsonFileTile);
+  const dbJsonData = lightjs.readJson(dbJsonFile);
   dbJsonData.users[0].username = title;
   dbJsonData.users[0].password = title;
-  lightjs.writeJson(dbJson, dbJsonData);
+  lightjs.writeJson(dbJsonFile, dbJsonData);
 
   lightjs.replacement(swConst.SW_TITLE, title, [path.join(projectPath, middlewareJsFile)]);
 }
@@ -111,27 +111,28 @@ function updateMockFiles(title, projectPath) {
  * @param {string} projectPath
  */
 function updateReadmeFile(config, projectPath) {
-  const twoEol = os.EOL + os.EOL;
+  const twoEol = `${os.EOL}${os.EOL}`;
   const serverConfig = config.server;
-  const packageJson = config.packageJson;
+  const packageJsonConfig = config.packageJson;
+  const generalConfig = config.general;
   const readmeMd = path.join(projectPath, swConst.README_MD);
   const packageJsonData = lightjs.readJson(swConst.PACKAGE_JSON);
-  const description = `${packageJson.description}${twoEol}${swConst.SW_GENERATED} ${packageJsonData.version}.`;
+  const description = `${packageJsonConfig.description}${twoEol}${swConst.SW_GENERATED} ${packageJsonData.version}.`;
   lightjs.info(`update '${readmeMd}'`);
 
   if (serverConfig.backend !== swConst.JS) {
     shjs.cp(readmeMd, path.join(projectPath, swConst.CLIENT, swConst.README_MD));
 
     const usage = `## Usage${twoEol}### Modules${twoEol}`;
-    const clientUsage = createUsageLink(config.packageJson, config.general, swConst.CLIENT);
+    const clientUsage = createUsageLink(packageJsonConfig, generalConfig, swConst.CLIENT);
     const serverOrApi = serverConfig.serverAsApi && serverConfig.backend === swConst.PHP ? swConst.API : swConst.SERVER;
-    const serverUsage = createUsageLink(config.packageJson, config.general, serverOrApi);
+    const serverUsage = createUsageLink(packageJsonConfig, generalConfig, serverOrApi);
     lightjs.replacement(swConst.README_MAIN, `\`\`\`${twoEol}${usage}${clientUsage}${twoEol}${serverUsage}${os.EOL}`, [readmeMd]);
   }
 
   if (serverConfig.backend === swConst.JAVA || serverConfig.backend === swConst.KOTLIN) {
     const javaCamelCase = swConst.JAVA.charAt(0).toUpperCase() + swConst.JAVA.slice(1);
-    lightjs.replacement(swConst.REQUIREMENT, `### ${javaCamelCase}${twoEol}* \`jdk 8\` ${swConst.OR_HIGHER}${twoEol}$1`, [readmeMd]);
+    lightjs.replacement(swConst.REQUIREMENT, `### ${javaCamelCase}${twoEol}* \`jdk 11\` ${swConst.OR_HIGHER}${twoEol}$1`, [readmeMd]);
   }
 
   // append line in dependency table for copy-webpack-plugin if backend php
@@ -143,12 +144,12 @@ function updateReadmeFile(config, projectPath) {
     lightjs.replacement(swConst.REQUIREMENT, `### ${swConst.APACHE} and ${swConst.PHP}${twoEol}${apache}${os.EOL}${php}${twoEol}$1`, [readmeMd]);
   }
 
-  if (!config.general.useYarn) {
+  if (!generalConfig.useYarn) {
     lightjs.replacement(`${swConst.OR_HIGHER},.*`, swConst.OR_HIGHER, [readmeMd]);
     lightjs.replacement(`${swConst.OR_HIGHER} or`, `${swConst.OR_HIGHER}, used in this repository, or`, [readmeMd]);
   }
 
-  if (config.general.useDocker) {
+  if (generalConfig.useDocker) {
     const docker = `* \`docker ${swConst.DOCKER_VERSION}\` ${swConst.OR_HIGHER}${os.EOL}* \`docker-compose ${swConst.DOCKER_COMPOSE_VERSION}\``;
     lightjs.replacement(swConst.REQUIREMENT, `### Docker${twoEol}${docker} ${swConst.OR_HIGHER}${twoEol}$1`, [readmeMd]);
   }
@@ -161,23 +162,38 @@ function updateReadmeFile(config, projectPath) {
   // replace the second sentence
   lightjs.replacement(swConst.THIS_PROJECT, description, [readmeMd]);
 
-  lightjs.replacement(swConst.SW_TITLE, packageJson.name, [readmeMd]);
-  lightjs.replacement(swConst.GIT_CLONE, `$1${packageJson.repository}`, [readmeMd]);
+  lightjs.replacement(swConst.SW_TITLE, packageJsonConfig.name, [readmeMd]);
+  lightjs.replacement(swConst.GIT_CLONE, `$1${packageJsonConfig.repository}`, [readmeMd]);
 }
 
-function createUsageLink(packageJson, generalConfig, type) {
-  const url = generalConfig.github.use ? `https://github.com/${generalConfig.github.username}/${packageJson.name}/tree/master` : '';
-  return `For the ${type} check [${packageJson.name} - ${type}](${url}/${type}).`;
+/**
+ * Creates links for usage.
+ *
+ * @param {object} packageJsonConfig
+ * @param {object} generalConfig
+ * @param {string} type
+ */
+function createUsageLink(packageJsonConfig, generalConfig, type) {
+  const url = generalConfig.github.use ? `https://github.com/${generalConfig.github.username}/${packageJsonConfig.name}/tree/master` : '';
+  return `For the ${type} check [${packageJsonConfig.name} - ${type}](${url}/${type}).`;
 }
 
+/**
+ * Replaces project specific values globally.
+ *
+ * @param {object} config
+ * @param {string} projectPath
+ */
 function updatePlaceholder(config, projectPath) {
+  const generalConfig = config.general;
+  const packageJsonConfig = config.packageJson;
   lightjs.replacement('{{SPRING.BOOT.VERSION}}', swConst.SPRING_BOOT, [projectPath], true, true);
   lightjs.replacement('{{GROUP.ID}}', config.server.packagePath, [projectPath], true, true);
-  lightjs.replacement('{{PROJECT.TITLE}}', config.general.title, [projectPath], true, true);
+  lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.title, [projectPath], true, true);
   lightjs.replacement('{{PROJECT.VERSION}}', '0.0.1-SNAPSHOT', [projectPath], true, true);
-  lightjs.replacement('{{PROJECT.NAME}}', config.packageJson.name, [projectPath], true, true);
-  lightjs.replacement('{{PROJECT.DESCRIPTION}}', config.packageJson.description, [projectPath], true, true);
-  lightjs.replacement('{{PROJECT.DIST}}', config.general.buildWebDir, [projectPath], true, true);
+  lightjs.replacement('{{PROJECT.NAME}}', packageJsonConfig.name, [projectPath], true, true);
+  lightjs.replacement('{{PROJECT.DESCRIPTION}}', packageJsonConfig.description, [projectPath], true, true);
+  lightjs.replacement('{{PROJECT.DIST}}', generalConfig.buildWebDir, [projectPath], true, true);
 }
 
 project.create = create;
