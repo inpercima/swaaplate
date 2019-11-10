@@ -22,12 +22,20 @@ Note: These files will not be under version control and listed in .gitignore.
 ### Run in devMode with real data
 
 ```bash
-./mvnw spring-boot:run
+# short
+./mvnw
+
+# long
+./mvnw spring-boot:run -Pdev
 ```
 
 ### Run in prodMode with real data
 
 ```bash
+# short
+./mvnw -Pprod
+
+# long
 ./mvnw spring-boot:run -Pprod
 ```
 
