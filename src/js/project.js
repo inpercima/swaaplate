@@ -64,7 +64,7 @@ function updateGeneralProjectFiles(config, projectPath) {
   if (backend === swConst.JAVA || backend === swConst.KOTLIN) {
     request(`${swConst.GITIGNORE_URL},${backend},${serverConfig.management}`, function (error, response, body) {
       lightjs.replacement(swConst.GITIGNORE_BODY, body, [gitignoreFile]);
-      lightjs.replacement(swConst.ENV_FILE, `$1${os.EOL}${swConst.APPLICATION_DEV_YML}${os.EOL}${swConst.APPLICATION_PROD_YML}`, [gitignoreFile]);
+      lightjs.replacement('(environment.prod.ts)', `$1${os.EOL}${swConst.APPLICATION_DEV_YML}${os.EOL}${swConst.APPLICATION_PROD_YML}`, [gitignoreFile]);
     });
   } else {
     request(`${swConst.GITIGNORE_URL}`, function (error, response, body) {
@@ -127,7 +127,7 @@ function updateReadmeFile(config, projectPath) {
     const clientUsage = createUsageLink(packageJsonConfig, generalConfig, swConst.CLIENT);
     const serverOrApi = serverConfig.serverAsApi && serverConfig.backend === swConst.PHP ? swConst.API : swConst.SERVER;
     const serverUsage = createUsageLink(packageJsonConfig, generalConfig, serverOrApi);
-    lightjs.replacement(swConst.README_MAIN, `\`\`\`${twoEol}${usage}${clientUsage}${twoEol}${serverUsage}${os.EOL}`, [readmeMd]);
+    lightjs.replacement('\\s# install.*(.|\\n)*To create.*\\s*', `\`\`\`${twoEol}${usage}${clientUsage}${twoEol}${serverUsage}${os.EOL}`, [readmeMd]);
   }
 
   if (serverConfig.backend === swConst.JAVA || serverConfig.backend === swConst.KOTLIN) {
@@ -138,7 +138,7 @@ function updateReadmeFile(config, projectPath) {
   // append line in dependency table for copy-webpack-plugin if backend php
   if (serverConfig.backend === swConst.PHP) {
     const row = `| copy-webpack-plugin | ${swConst.COPY_WEBPACK_PLUGIN} | 5.0.3 | copy-webpack-plugin@5.0.3" has unmet peer dependency "webpack@^4.0.0" |`;
-    lightjs.replacement(swConst.REASON, `$1${os.EOL}${row}`, [readmeMd]);
+    lightjs.replacement('(\\| ------ \\|)', `$1${os.EOL}${row}`, [readmeMd]);
     const apache = `* \`${swConst.APACHE} 2.4\` ${swConst.OR_HIGHER}`;
     const php = `* \`${swConst.PHP} 7.3\` ${swConst.OR_HIGHER}`;
     lightjs.replacement(swConst.REQUIREMENT, `### ${swConst.APACHE} and ${swConst.PHP}${twoEol}${apache}${os.EOL}${php}${twoEol}$1`, [readmeMd]);
@@ -158,7 +158,7 @@ function updateReadmeFile(config, projectPath) {
   lightjs.replacement(swConst.DEPENDENCY_LOGOS, '', [readmeMd]);
 
   // replace the first sentence
-  lightjs.replacement(swConst.THIS_PROJECTS, '', [readmeMd]);
+  lightjs.replacement('This.+projects.\\s*', '', [readmeMd]);
   // replace the second sentence
   lightjs.replacement(swConst.THIS_PROJECT, description, [readmeMd]);
 
