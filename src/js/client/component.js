@@ -15,16 +15,15 @@ let component = {};
  * Copies the files for the Angular client.
  *
  * @param {string} projectPath
- *
  */
 function copyFiles(projectPath) {
   shjs.mkdir('-p', projectPath);
   shjs.cp('-r', path.join(swConst.SW_MODULE, '*'), projectPath);
-  shjs.cp(path.join(swConst.SW_MODULE, '.editorconfig'), projectPath);
-  shjs.cp(path.join(swConst.SW_MODULE, '.gitattributes'), projectPath);
-  shjs.cp(path.join(swConst.SW_MODULE, '.gitignore'), projectPath);
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.DOT_EDITORCONFIG), projectPath);
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.DOT_GITATTRIBUTES), projectPath);
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.DOT_GITIGNORE), projectPath);
   shjs.cp(swConst.SWAAPLATE_JSON, projectPath);
-  shjs.rm(path.join(projectPath, 'yarn.lock'));
+  shjs.rm(path.join(projectPath, swConst.YARN_LOCK));
   shjs.rm('-rf', path.join(projectPath, 'node_modules'));
 }
 
@@ -69,7 +68,7 @@ function updatePackageFile(config, projectPath) {
   packageJsonData.name = name;
 
   const github = config.general.github;
-  packageJsonData.repository = github.use ? `${swConst.GITHUB_URL}${github.username}/${name}` : packageJsonConfig.repository;
+  packageJsonData.repository = github.use ? `https://github.com/${github.username}/${name}` : packageJsonConfig.repository;
   const homepage = packageJsonConfig.homepage;
 
   packageJsonData.homepage = homepage === '' && packageJsonData.repository !== '' ? packageJsonData.repository : homepage;
@@ -77,7 +76,7 @@ function updatePackageFile(config, projectPath) {
   const configServer = config.server;
   if (configServer.backend === swConst.PHP) {
     packageJsonData.devDependencies['copy-webpack-plugin'] = swConst.COPY_WEBPACK_PLUGIN;
-    packageJsonData.devDependencies[swConst.ANGULAR_BUILDERS_CUSTOM] = swConst.ANGULAR_BUILDERS;
+    packageJsonData.devDependencies['@angular-builders/custom-webpack'] = swConst.ANGULAR_BUILDERS;
     packageJsonData = updateTask(packageJsonData, 'build:mock');
     packageJsonData = updateTask(packageJsonData, 'watch:mock');
   }
@@ -98,7 +97,7 @@ function updatePackageFile(config, projectPath) {
  */
 function updateTask(packageJsonData, mockTask) {
   const task = packageJsonData.scripts[mockTask];
-  packageJsonData.scripts[mockTask] = `${swConst.EXPORT_MOCK} && ${task}`;
+  packageJsonData.scripts[mockTask] = `export NODE_ENV='mock' && ${task}`;
   return packageJsonData;
 }
 
@@ -109,7 +108,7 @@ function updateTask(packageJsonData, mockTask) {
  * @param {string} projectPath
  */
 function updateEnvironmentFiles(config, projectPath) {
-  const environmentPath = path.join(projectPath, swConst.SRC_ENVIRONMENTS);
+  const environmentPath = path.join(projectPath, 'src/environments');
 
   copyEnvironmentFiles(environmentPath);
 
@@ -144,23 +143,27 @@ function replaceInEnvironmentFile(config, environmentPath, environmentFile) {
 
   const generalConfig = config.general;
   const routeConfig = config.route;
-  lightjs.replacement(swConst.CONFIG_LOGIN, `$1${routeConfig.login.activate}`, [specifiedEnvironmentFile]);
+  lightjs.replacement('(activateLogin: )true', `$1${routeConfig.login.activate}`, [specifiedEnvironmentFile]);
   lightjs.replacement(swConst.SW_TITLE, generalConfig.title, [specifiedEnvironmentFile]);
   lightjs.replacement(swConst.DASHBOARD, routeConfig.default, [specifiedEnvironmentFile]);
-  lightjs.replacement(swConst.CONFIG_REDIRECT, `$1${routeConfig.notFound.redirect}`, [specifiedEnvironmentFile]);
-  lightjs.replacement(swConst.CONFIG_SHOW_FEATURES, `$1${routeConfig.features.show}`, [specifiedEnvironmentFile]);
-  lightjs.replacement(swConst.CONFIG_SHOW_LOGIN, `$1${routeConfig.login.show}`, [specifiedEnvironmentFile]);
+  lightjs.replacement('(redirectNotFound: )false', `$1${routeConfig.notFound.redirect}`, [specifiedEnvironmentFile]);
+  lightjs.replacement('(showFeatures: )true', `$1${routeConfig.features.show}`, [specifiedEnvironmentFile]);
+  lightjs.replacement('(showLogin: )false', `$1${routeConfig.login.show}`, [specifiedEnvironmentFile]);
   lightjs.replacement(swConst.THEME, generalConfig.theme, [specifiedEnvironmentFile]);
+
+  if (environmentFile === swConst.ENVIRONMENT_PROD_TS) {
+    lightjs.replacement('(production: )false', `$1true`, [specifiedEnvironmentFile]);
+  }
 
   // remove first lines in environment.x.ts files
   if (environmentFile !== swConst.ENVIRONMENT_TS) {
-    lightjs.replacement(swConst.ENV_TS_REMOVE_FIRST_LINES, '', [specifiedEnvironmentFile]);
-    lightjs.replacement(swConst.ENV_EXPORT, '$1', [specifiedEnvironmentFile]);
+    lightjs.replacement('\\/\\/\\sTh.*|\\/\\/\\s`n.*', '', [specifiedEnvironmentFile]);
+    lightjs.replacement('\\r?\\n\\s*\\n(export)', '$1', [specifiedEnvironmentFile]);
   }
   // remove last lines in environment.prod.ts files
   if (environmentFile === swConst.ENVIRONMENT_PROD_TS) {
-    lightjs.replacement(swConst.ENV_TS_REMOVE_LAST_LINES, '', [specifiedEnvironmentFile]);
-    lightjs.replacement(swConst.ENV_SPECIAL_CHARS, `$1${os.EOL}${os.EOL}`, [specifiedEnvironmentFile]);
+    lightjs.replacement('\\/\\*.*|\\s\\*.*|\\/\\/.*', '', [specifiedEnvironmentFile]);
+    lightjs.replacement('(};)\\r?\\n\\s*\\n', `$1${os.EOL}`, [specifiedEnvironmentFile]);
   }
   // replace api in all none mock files
   if (environmentFile !== swConst.ENVIRONMENT_MOCK_TS) {
@@ -168,11 +171,11 @@ function replaceInEnvironmentFile(config, environmentPath, environmentFile) {
     const backend = serverConfig.backend;
     if (backend === swConst.PHP) {
       if (!serverConfig.htaccess) {
-        lightjs.replacement(swConst.API_SUFFIX, `$1'.php'`, [specifiedEnvironmentFile]);
+        lightjs.replacement('(apiSuffix: )\'\'', `$1'.php'`, [specifiedEnvironmentFile]);
       }
-      lightjs.replacement(swConst.API_PATH, serverConfig.serverAsApi ? swConst.API_PATH_PHP_ROOT_API : swConst.API_PATH_PHP_ROOT, [specifiedEnvironmentFile]);
+      lightjs.replacement(swConst.API_PATH, serverConfig.serverAsApi ? './api/' : './', [specifiedEnvironmentFile]);
     } else if (backend === swConst.JAVA || backend === swConst.KOTLIN) {
-      lightjs.replacement(swConst.API_PATH, swConst.API_PATH_JAVA_KOTLIN, [specifiedEnvironmentFile]);
+      lightjs.replacement(swConst.API_PATH, 'http://localhost:8080/', [specifiedEnvironmentFile]);
     }
   }
 }
@@ -188,7 +191,7 @@ function updateTestFiles(config, projectPath) {
 
   const newTitle = config.general.title;
   if (newTitle !== swConst.SW_TITLE) {
-    lightjs.replacement(swConst.SW_TITLE, newTitle, [path.join(projectPath, swConst.SRC_APP, swConst.APP_COMPONENT_SPEC_TS)]);
+    lightjs.replacement(swConst.SW_TITLE, newTitle, [path.join(projectPath, 'src/app/', swConst.APP_COMPONENT_SPEC_TS)]);
     lightjs.replacement(swConst.SW_TITLE, newTitle, [path.join(projectPath, swConst.SRC_TEST_CLIENT, swConst.APP_E2E_SPEC_TS)]);
   }
   const newName = config.packageJson.name;
@@ -197,7 +200,7 @@ function updateTestFiles(config, projectPath) {
   }
   const prefix = config.general.selectorPrefix;
   if (prefix !== swConst.APP) {
-    lightjs.replacement(swConst.APP_ROOT, `${prefix}$1`, [path.join(projectPath, swConst.SRC_TEST_CLIENT, swConst.APP_PO_TS)]);
+    lightjs.replacement('app(-root)', `${prefix}$1`, [path.join(projectPath, swConst.SRC_TEST_CLIENT, swConst.APP_PO_TS)]);
   }
 }
 
@@ -231,10 +234,10 @@ function updateAngularFile(config, projectPath) {
 
   // extend webpack behaviour on php to copy php code
   if (config.server.backend === swConst.PHP) {
-    lightjs.replacement(swConst.ANGULAR_DEVKIT_BROWSER, swConst.ANGULAR_BUILDERS_BROWSER, [angularJson]);
-    lightjs.replacement(swConst.ANGULAR_DEVKIT_SERVER, swConst.ANGULAR_BUILDERS_SERVER, [angularJson]);
+    lightjs.replacement('@angular-devkit/build-angular:browser', '@angular-builders/custom-webpack:browser', [angularJson]);
+    lightjs.replacement('@angular-devkit/build-angular:dev-server', '@angular-builders/custom-webpack:dev-server', [angularJson]);
     const newLine = `${os.EOL}            `;
-    lightjs.replacement(swConst.OUTPUT_PATH, `$1${newLine}"customWebpackConfig": {${newLine}  "path": "./webpack.config.js"${newLine}},`, [angularJson]);
+    lightjs.replacement('("outputPath": "dist",)', `$1${newLine}"customWebpackConfig": {${newLine}  "path": "./webpack.config.js"${newLine}},`, [angularJson]);
   }
 }
 
@@ -306,8 +309,8 @@ function updateComponent(appPath, oldName, newName) {
   lightjs.replacement(`${oldUpper}Component`, `${newUpper}Component`, [srcPath], true, true);
   lightjs.replacement(`${oldUpper}Module`, `${newUpper}Module`, [srcPath], true, true);
   lightjs.replacement(`${oldUpper}RoutingModule`, `${newUpper}RoutingModule`, [srcPath], true, true);
-  lightjs.replacement(`${swConst.OLD_PART_1}${oldName}${swConst.OLD_PART_2}`, `$1${newName}$3`, [srcPath], true, true);
-  lightjs.replacement(`${swConst.OLD_NEW_PART_1}${oldName}${swConst.OLD_NEW_PART_2}${newName}${swConst.OLD_NEW_PART_3}`, `$1${newName}$3`, [srcPath], true, true);
+  lightjs.replacement(`(\\'|\\/|\\s)(${oldName})(\\'|\\.|-)`, `$1${newName}$3`, [srcPath], true, true);
+  lightjs.replacement(`(\\./)(${oldName})(/${newName})`, `$1${newName}$3`, [srcPath], true, true);
 
   lightjs.replacement(`${oldName}Module`, `${newName}Module`, [srcPath], true, true);
   lightjs.replacement(`${oldName}RoutingModule`, `${newName}RoutingModule`, [srcPath], true, true);

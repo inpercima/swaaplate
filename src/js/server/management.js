@@ -22,7 +22,6 @@ function configure(config, projectPath) {
   if (backend === swConst.JAVA || backend === swConst.KOTLIN) {
     const serverPath = path.join(projectPath, swConst.SERVER);
     const management = serverConfig.management;
-    const dismatch = backend === swConst.JAVA ? swConst.KOTLIN : swConst.JAVA;
     const managementPath = path.join('src/template/server/management', management);
 
     shjs.mkdir('-p', serverPath);
@@ -40,6 +39,7 @@ function configure(config, projectPath) {
       lightjs.info('-> no management should be used');
     }
     if (management === swConst.MAVEN || management === swConst.GRADLE) {
+      const dismatch = backend === swConst.JAVA ? swConst.KOTLIN : swConst.JAVA;
       const pomXml = path.join(serverPath, swConst.POM_XML);
       shjs.mv(path.join(serverPath, `pom.${backend}.xml`), pomXml);
       shjs.rm(path.join(serverPath, `pom.${dismatch}.xml`));
@@ -57,12 +57,12 @@ function configure(config, projectPath) {
  * @param {string} pomXml
  */
 function replaceInPomFile(config, pomXml) {
+  const packageJsonConfig = config.packageJson;
   lightjs.replacement(swConst.SW_PACKAGE, config.server.packagePath, [pomXml]);
-  lightjs.replacement(swConst.SWAAPLATE, config.packageJson.name, [pomXml]);
+  lightjs.replacement(swConst.SWAAPLATE, packageJsonConfig.name, [pomXml]);
   lightjs.replacement(swConst.DIST, config.general.buildWebDir, [pomXml]);
 
-  const newDescription = config.packageJson.description;
-  lightjs.replacement(swConst.SW_DESCRIPTION, newDescription, [pomXml]);
+  lightjs.replacement(swConst.SW_DESCRIPTION, packageJsonConfig.description, [pomXml]);
 }
 
 management.configure = configure;

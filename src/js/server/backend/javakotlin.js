@@ -5,6 +5,7 @@ const lightjs = require('light-js');
 const os = require('os');
 const path = require('path');
 const shjs = require('shelljs');
+
 const swConst = require('../../const.js');
 
 let backendJavaKotlin = {};
@@ -49,7 +50,7 @@ function configure(config, projectPath) {
   const indentSizeEndpoint = backend === swConst.KOTLIN ? 2 : 4;
   const indention = `${twoEol}[logback.xml]${os.EOL}indent_size = 4${twoEol}[*.${backendExt}]${os.EOL}indent_size = ${indentSizeEndpoint}`;
   const editorconfig = path.join(projectPath, '.editorconfig');
-  lightjs.replacement(swConst.WHITESPACES, `$1${indention}`, [editorconfig]);
+  lightjs.replacement('(trim_trailing_whitespace = true)', `$1${indention}`, [editorconfig]);
 
   if (author !== swConst.SW_AUTHOR) {
     lightjs.replacement(swConst.SW_AUTHOR, author, [serverSrcMainEndpointPath], true, true);
