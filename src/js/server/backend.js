@@ -5,9 +5,9 @@ const lightjs = require('light-js');
 const path = require('path');
 const shjs = require('shelljs');
 
-const swConst = require('../const.js');
 const swBackendJavaKotlin = require('./backend/javakotlin.js');
 const swBackendPhp = require('./backend/php.js');
+const swConst = require('../const.js');
 
 let backend = {};
 

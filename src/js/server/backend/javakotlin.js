@@ -5,6 +5,7 @@ const lightjs = require('light-js');
 const os = require('os');
 const path = require('path');
 const shjs = require('shelljs');
+
 const swConst = require('../../const.js');
 
 let backendJavaKotlin = {};
