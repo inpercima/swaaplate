@@ -126,9 +126,9 @@ ajv@^5.3.0:
     fast-json-stable-stringify "^2.0.0"
     json-schema-traverse "^0.3.0"
 
-angular-cli-for-swaaplate@inpercima/angular-cli-for-swaaplate#b4214a5:
-  version "0.3.6-SNAPSHOT"
-  resolved "https://codeload.github.com/inpercima/angular-cli-for-swaaplate/tar.gz/b4214a5ea3b11995df6aab42fe52c066424c00a1"
+angular-cli-for-swaaplate@inpercima/angular-cli-for-swaaplate#v0.3.6:
+  version "0.3.6"
+  resolved "https://codeload.github.com/inpercima/angular-cli-for-swaaplate/tar.gz/66280ba58a4a7f1a836e8b839d0eb23d2cef9b0a"
   dependencies:
     "@angular/animations" "8.2.13"
     "@angular/cdk" "8.2.3"
@@ -142,7 +142,7 @@ angular-cli-for-swaaplate@inpercima/angular-cli-for-swaaplate#b4214a5:
     "@angular/platform-browser-dynamic" "8.2.13"
     "@angular/router" "8.2.13"
     "@auth0/angular-jwt" "3.0.1"
-    core-js "3.3.6"
+    core-js "3.4.0"
     json-server "0.15.1"
     jsonwebtoken "8.5.1"
     rxjs "6.5.3"
@@ -459,10 +459,10 @@ cookie@0.4.0:
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.0.tgz#beb437e7022b3b6d49019d088665303ebe9c14ba"
   integrity sha512-+Hp8fLp57wnUSt0tY0tHEXh4voZRDnoIrZPqlo3DPiI4y9lwg/jqx+1Om94/W6ZaPDOUbnjOt/99w66zk+l1Xg==
 
-core-js@3.3.6:
-  version "3.3.6"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.3.6.tgz#6ad1650323c441f45379e176ed175c0d021eac92"
-  integrity sha512-u4oM8SHwmDuh5mWZdDg9UwNVq5s1uqq6ZDLLIs07VY+VJU91i3h4f3K/pgFvtUQPGdeStrZ+odKyfyt4EnKHfA==
+core-js@3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.4.0.tgz#29ea478601789c72f2978e9bb98f43546f89d3aa"
+  integrity sha512-lQxb4HScV71YugF/X28LtePZj9AB7WqOpcB+YztYxusvhrgZiQXPmCYfPC5LHsw/+ScEtDbXU3xbqH3CjBRmYA==
 
 core-util-is@1.0.2:
   version "1.0.2"
