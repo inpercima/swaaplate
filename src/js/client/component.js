@@ -151,6 +151,10 @@ function replaceInEnvironmentFile(config, environmentPath, environmentFile) {
   lightjs.replacement('(showLogin: )false', `$1${routeConfig.login.show}`, [specifiedEnvironmentFile]);
   lightjs.replacement(swConst.THEME, generalConfig.theme, [specifiedEnvironmentFile]);
 
+  if (environmentFile === swConst.ENVIRONMENT_PROD_TS) {
+    lightjs.replacement('(production: )false', `$1true`, [specifiedEnvironmentFile]);
+  }
+
   // remove first lines in environment.x.ts files
   if (environmentFile !== swConst.ENVIRONMENT_TS) {
     lightjs.replacement('\\/\\/\\sTh.*|\\/\\/\\s`n.*', '', [specifiedEnvironmentFile]);
@@ -159,7 +163,7 @@ function replaceInEnvironmentFile(config, environmentPath, environmentFile) {
   // remove last lines in environment.prod.ts files
   if (environmentFile === swConst.ENVIRONMENT_PROD_TS) {
     lightjs.replacement('\\/\\*.*|\\s\\*.*|\\/\\/.*', '', [specifiedEnvironmentFile]);
-    lightjs.replacement('(};)\\r?\\n\\s*\\n', `$1${os.EOL}${os.EOL}`, [specifiedEnvironmentFile]);
+    lightjs.replacement('(};)\\r?\\n\\s*\\n', `$1${os.EOL}`, [specifiedEnvironmentFile]);
   }
   // replace api in all none mock files
   if (environmentFile !== swConst.ENVIRONMENT_MOCK_TS) {
