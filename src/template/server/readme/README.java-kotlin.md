@@ -14,12 +14,11 @@ cp src/main/resources/application.yml src/main/resources/application-dev.yml
 cp src/main/resources/application.yml src/main/resources/application-prod.yml
 ```
 
-Update these files for your environment.
-Note: These files will not be under version control and listed in .gitignore.
+**Note**: These files will not be under version control and listed in .gitignore.
 
 ## Usage
 
-### Run in devMode with real data
+### Run in devMode
 
 ```bash
 # short
@@ -29,7 +28,7 @@ Note: These files will not be under version control and listed in .gitignore.
 ./mvnw spring-boot:run -Pdev
 ```
 
-### Run in prodMode with real data
+### Run in prodMode
 
 ```bash
 # short
@@ -39,7 +38,7 @@ Note: These files will not be under version control and listed in .gitignore.
 ./mvnw spring-boot:run -Pprod
 ```
 
-### Package in prodMode with real data
+### Package in prodMode
 
 ```bash
 ./mvnw clean package -Pprod
