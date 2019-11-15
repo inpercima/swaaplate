@@ -194,6 +194,8 @@ function updatePlaceholder(config, projectPath) {
   lightjs.replacement('{{PROJECT.NAME}}', packageJsonConfig.name, [projectPath], true, true);
   lightjs.replacement('{{PROJECT.DESCRIPTION}}', packageJsonConfig.description, [projectPath], true, true);
   lightjs.replacement('{{PROJECT.DIST}}', generalConfig.buildWebDir, [projectPath], true, true);
+  lightjs.replacement('{{MAVEN_VERSION}}', swConst.MAVEN_VERSION, [projectPath], true, true);
+  lightjs.replacement('{{MAVEN_WRAPPER}}', swConst.MAVEN_WRAPPER, [projectPath], true, true);
 }
 
 project.create = create;
