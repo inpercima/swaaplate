@@ -38,11 +38,18 @@ cp src/main/resources/application.yml src/main/resources/application-prod.yml
 ./mvnw spring-boot:run -Pprod
 ```
 
-### Package in prodMode
+### Package and run in prodMode
 
 ```bash
-./mvnw clean package -Pprod
+# package
+./mvnw clean package
 
-# without tests
-./mvnw clean package -Pprod -DskipTests
+# package without tests
+./mvnw clean package -DskipTests
+
+# run
+java -jar /target/{{PROJECT.NAME}}.jar --spring.profiles.active=prod
+
+# combine package and run
+./mvnw clean package && java -jar /target/{{PROJECT.NAME}}.jar --spring.profiles.active=prod
 ```
