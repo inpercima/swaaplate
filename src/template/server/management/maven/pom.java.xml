@@ -50,6 +50,34 @@
 
   <build>
     <defaultGoal>spring-boot:run</defaultGoal>
+
+    <finalName>${project.artifactId}</finalName>
+
+    <plguins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/classes/public</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>../client/{{PROJECT.DIST}}</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plguins>
+
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -94,28 +122,6 @@
                 <profile>prod</profile>
               </profiles>
             </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>copy-resources</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${basedir}/target/classes/public</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>../client/{{PROJECT.DIST}}</directory>
-                      <filtering>false</filtering>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
           </plugin>
         </plugins>
       </build>
