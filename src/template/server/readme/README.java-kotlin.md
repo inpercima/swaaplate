@@ -47,9 +47,8 @@ cp src/main/resources/application.yml src/main/resources/application-prod.yml
 # package without tests
 ./mvnw clean package -DskipTests
 
-# run
-java -jar /target/{{PROJECT.NAME}}.jar --spring.profiles.active=prod
-
-# combine package and run
-./mvnw clean package && java -jar /target/{{PROJECT.NAME}}.jar --spring.profiles.active=prod
+# place the `application-prod.yml` aside the {{PROJECT.NAME}}-{{PROJECT.VERSION}}-SNAPSHOT.jar and run the jar
+cp src/main/resources/application-prod.yml target/application-prod.yml
+cd target
+java -jar {{PROJECT.NAME}}-{{PROJECT.VERSION}}-SNAPSHOT.jar --spring.profiles.active=prod
 ```

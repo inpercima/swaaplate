@@ -10,13 +10,12 @@
     <version>{{SPRING.BOOT.VERSION}}</version>
   </parent>
 
-  <groupId>{{GROUP.ID}}</groupId>
   <artifactId>{{PROJECT.NAME}}</artifactId>
-  <version>{{PROJECT.VERSION}}</version>
-  <packaging>jar</packaging>
-
-  <name>{{PROJECT.TITLE}}</name>
+  <groupId>{{GROUP.ID}}</groupId>
   <description>{{PROJECT.DESCRIPTION}}</description>
+  <name>{{PROJECT.TITLE}}</name>
+  <packaging>jar</packaging>
+  <version>{{PROJECT.VERSION}}</version>
 
   <dependencies>
     <dependency>
@@ -32,13 +31,14 @@
       <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
     </dependency>
   </dependencies>
 
@@ -51,9 +51,19 @@
   <build>
     <defaultGoal>spring-boot:run</defaultGoal>
 
-    <finalName>${project.artifactId}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <excludes>
+            <exclude>**/*-dev.yml</exclude>
+            <exclude>**/*-prod.yml</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
 
-    <plguins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
@@ -76,7 +86,7 @@
           </execution>
         </executions>
       </plugin>
-    </plguins>
+    </plugins>
 
     <resources>
       <resource>
@@ -84,7 +94,6 @@
         <filtering>true</filtering>
         <includes>
           <include>**/*.yml</include>
-          <include>**/*.xml</include>
         </includes>
       </resource>
     </resources>
