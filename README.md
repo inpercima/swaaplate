@@ -57,8 +57,8 @@ Currently the following combinations are possible.
 git clone https://github.com/inpercima/swaaplate
 cd swaaplate
 
-# copy core/swaaplate.default.json to swaaplate.json
-cp core/swaaplate.default.json swaaplate.json
+# copy src/template/swaaplate.default.json to swaaplate.json
+cp src/template/swaaplate.default.json swaaplate.json
 
 # install tools
 yarn
