@@ -190,7 +190,7 @@ function updatePlaceholder(config, projectPath) {
   lightjs.replacement('{{SPRING.BOOT.VERSION}}', swConst.SPRING_BOOT, [projectPath], true, true);
   lightjs.replacement('{{GROUP.ID}}', config.server.packagePath, [projectPath], true, true);
   lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.title, [projectPath], true, true);
-  lightjs.replacement('{{PROJECT.VERSION}}', '0.0.1-SNAPSHOT', [projectPath], true, true);
+  lightjs.replacement('{{PROJECT.VERSION}}', swConst.PROJECT_VERSION, [projectPath], true, true);
   lightjs.replacement('{{PROJECT.NAME}}', packageJsonConfig.name, [projectPath], true, true);
   lightjs.replacement('{{PROJECT.DESCRIPTION}}', packageJsonConfig.description, [projectPath], true, true);
   lightjs.replacement('{{PROJECT.DIST}}', generalConfig.buildWebDir, [projectPath], true, true);
