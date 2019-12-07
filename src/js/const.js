@@ -88,13 +88,13 @@ module.exports = Object.freeze({
   THIS_PROJECT: 'This project.+',
 
   // by module
-  ANGULAR_BUILDERS: '8.2.0',
+  ANGULAR_BUILDERS: '8.4.1',
   // COPY_WEBPACK_PLUGIN version 5.x.x needs webpack 5.x.x but this is not released yet
   COPY_WEBPACK_PLUGIN: '4.6.0',
-  DOCKER_VERSION: '17.05.0-ce',
-  DOCKER_COMPOSE_VERSION: '1.9',
-  MAVEN_VERSION: '3.6.2',
-  MAVEN_WRAPPER: '0.5.5',
+  DOCKER_VERSION: '19.03.5',
+  DOCKER_COMPOSE_VERSION: '1.25.0',
+  MAVEN_VERSION: '3.6.3',
+  MAVEN_WRAPPER: '0.5.6',
   PROJECT_VERSION: '1.0.0-SNAPSHOT',
-  SPRING_BOOT: '2.2.0.RELEASE',
+  SPRING_BOOT: '2.2.2.RELEASE',
 });
