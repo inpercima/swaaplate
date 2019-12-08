@@ -155,7 +155,9 @@ function updateReadmeFile(config, projectPath) {
   }
 
   // replace dependency logos
-  lightjs.replacement(swConst.DEPENDENCY_LOGOS, '', [readmeMd]);
+  if (serverConfig.backend !== swConst.JS) {
+    lightjs.replacement(swConst.DEPENDENCY_LOGOS, '', [readmeMd]);
+  }
 
   // replace the first sentence
   lightjs.replacement('This.+projects.\\s*', '', [readmeMd]);

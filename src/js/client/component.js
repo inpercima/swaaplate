@@ -42,6 +42,8 @@ function installDependencies(generalConfig, backend, projectPath) {
     lightjs.setNpmDefault(!generalConfig.useYarn);
     if (backend !== swConst.JS) {
       shjs.cd(path.join(projectPath, swConst.CLIENT));
+    } else {
+      shjs.cd(projectPath);
     }
     lightjs.yarnpm('install');
   } else {
