@@ -94,6 +94,7 @@
         <filtering>true</filtering>
         <includes>
           <include>**/*.yml</include>
+          <include>**/*.xml</include>
         </includes>
       </resource>
     </resources>
