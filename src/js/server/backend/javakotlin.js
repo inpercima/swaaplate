@@ -18,7 +18,8 @@ let backendJavaKotlin = {};
  */
 function configure(config, projectPath) {
   const serverConfig = config.server;
-  const author = config.packageJson.author;
+  const generalConfig = config.general;
+  const author = generalConfig.author;
   const backend = serverConfig.backend;
   const serverSrcMain = path.join(swConst.SERVER, swConst.SRC_MAIN);
   const serverSrcTest = path.join(swConst.SERVER, swConst.SRC_TEST);
@@ -58,7 +59,7 @@ function configure(config, projectPath) {
 
   const readmeMd = path.join(projectPath, swConst.SERVER, swConst.README_MD);
   shjs.cp(path.join(swConst.TEMPLATE_README, 'README.java-kotlin.md'), readmeMd);
-  lightjs.replacement(swConst.SWAAPLATE, config.packageJson.name, [readmeMd]);
+  lightjs.replacement(swConst.SWAAPLATE, generalConfig.name, [readmeMd]);
 }
 
 backendJavaKotlin.configure = configure;

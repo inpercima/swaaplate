@@ -14,33 +14,40 @@ Therefore, I decided to write a small tool, which puts together all the necessar
 
 ## Benefits of swaaplate
 
+### The goal
+
 With swaaplate, the goal should be to create an angular web app with one of four backends, one of two management tools and one of two js dependency manager.
 You can choose between `js`, `php`, `java` or `kotlin` as backend, `maven` or `gradle` as management tool and `npm` or `yarn` as js dependency manager.
 
-Currently the following combinations are possible.
+As part of each backend, some features could be activated like creating a `htaccess` file or using `api` folder instead of `server` folder.
 
-* `angular` - `js` - `npm`
-* `angular` - `js` - `yarn`
-* `angular` - `php` - `npm`
-* `angular` - `php` - `npm` with api folder
-* `angular` - `php` - `npm` with htaccess file
-* `angular` - `php` - `npm` with api folder and htaccess file
-* `angular` - `php` - `yarn`
-* `angular` - `php` - `yarn` with api folder
-* `angular` - `php` - `yarn` with htaccess file
-* `angular` - `php` - `yarn` with api folder and htaccess file
-* `angular` - `java (Spring-Boot)` - `npm`
-* `angular` - `java (Spring-Boot)` - `yarn`
-* `angular` - `java (Spring-Boot)` - `maven` - `npm`
-* `angular` - `java (Spring-Boot)` - `maven` - `yarn`
-* `angular` - `java (Spring-Boot)` - `gradle` - `npm` in development
-* `angular` - `java (Spring-Boot)` - `gradle` - `yarn` in development
-* `angular` - `kotlin (Spring-Boot)` - `npm`
-* `angular` - `kotlin (Spring-Boot)` - `yarn`
-* `angular` - `kotlin (Spring-Boot)` - `maven` - `npm`
-* `angular` - `kotlin (Spring-Boot)` - `maven` - `yarn`
-* `angular` - `kotlin (Spring-Boot)` - `gradle` - `npm` in development
-* `angular` - `kotlin (Spring-Boot)` - `gradle` - `yarn`  in development
+### Combinations
+
+Currently the following combinations of backend, management tool and dependency manager are possible:
+
+* `js` - `npm`
+* `js` - `yarn`
+* `php` - `npm`
+* `php` - `yarn`
+* `java (Spring-Boot)` - `maven` - `npm`
+* `java (Spring-Boot)` - `maven` - `yarn`
+* `java (Spring-Boot)` - `gradle` - `npm` in development
+* `java (Spring-Boot)` - `gradle` - `yarn` in development
+* `kotlin (Spring-Boot)` - `maven` - `npm`
+* `kotlin (Spring-Boot)` - `maven` - `yarn`
+* `kotlin (Spring-Boot)` - `gradle` - `npm` in development
+* `kotlin (Spring-Boot)` - `gradle` - `yarn`  in development
+
+### Features
+
+#### General
+
+* using docker
+
+#### php
+
+* using api folder as backend
+* using a htaccess file
 
 ## Prerequisites
 
@@ -69,45 +76,53 @@ yarn
 
 ## Configuration
 
-### General
+### Introduction
 
 All options have to bet set but some of them do not need to be changed.
 Some of this options will be copied in the environment files of the new project and can be changed later.
 
 ### Table of contents
 
-* [general/buildWebDir](#generalbuildwebdir)
+* [general/author](#generalauthor)
+* [general/description](#generaldescription)
 * [general/github/use](#generalgithubuse)
 * [general/github/username](#generalgithubusername)
-* [general/installDependencies](#generalinstallDependencies)
-* [general/selectorPrefix](#generalselectorprefix)
-* [general/theme](#generaltheme)
+* [general/name](#generalname)
 * [general/title](#generaltitle)
-* [general/useYarn](#generaluseyarn)
-* [packageJson/author](#packageJsonauthor)
-* [packageJson/contributors](#packageJsoncontributors)
-* [packageJson/description](#packageJsondescription)
-* [packageJson/homepage](#packageJsonhomepage)
-* [packageJson/name](#packageJsonname)
-* [packageJson/repository](#packageJsonrepository)
-* [route/default](#routedefault)
-* [route/features/show](#routefeaturesshow)
-* [route/login/activate](#routeloginactivate)
-* [route/login/name](#routeloginname)
-* [route/login/show](#routeloginshow)
-* [route/notFound/name](#routenotfoundname)
-* [route/notFound/redirect](#routenotfoundredirect)
+* [general/useDocker](#generaluseDocker)
+* [client/buildDir](#clientbuildDir)
+* [client/installDependencies](#clientinstallDependencies)
+* [client/packageJson/contributors](#clientpackageJsoncontributors)
+* [client/packageJson/homepage](#clientpackageJsonhomepage)
+* [client/packageJson/repository](#clientpackageJsonrepository)
+* [client/route/features/default](#clientroutefeaturesdefault)
+* [client/route/features/show](#clientroutefeaturesshow)
+* [client/route/login/activate](#clientrouteloginactivate)
+* [client/route/login/name](#clientrouteloginname)
+* [client/route/login/show](#clientrouteloginshow)
+* [client/route/notFound/name](#clientroutenotfoundname)
+* [client/route/notFound/redirect](#clientroutenotfoundredirect)
+* [client/selectorPrefix](#clientselectorprefix)
+* [client/theme](#clienttheme)
+* [client/useYarn](#clientuseyarn)
 * [server/backend](#serverbackend)
 * [server/htaccess](#serverhtaccess)
 * [server/management](#servermanagement)
 * [server/packagePath](#serverpackagepath)
 * [server/serverAsApi](#serverserverasapi)
 
-### `general/buildWebDir`
+### `general/author`
 
-Path to the target from the angular webapp for buildtime.
+The name of the creator.
 
-* default: `dist`
+* default: `true`
+* type: `string`
+
+### `general/description`
+
+A description.
+
+* default: EMPTY
 * type: `string`
 
 ### `general/github/use`
@@ -126,30 +141,12 @@ If `general/github/use` is set to `true` you need to define a github username.
 * default: EMPTY
 * type: `string`
 
-### `general/installDependencies`
+### `general/name`
 
-Defines whether swaaplate should install tools and frontend dependencies or not.
+The name and foldername of the project in the workspace. See `Getting Started run section`.
 
-* default: `true`
-* type: `boolean`
-* values: `true`/`false`
-
-### `general/selectorPrefix`
-
-A shortcut of the project, used in components like `hw-home` or `hw-app`.
-
-* default: `hw`
+* default: `helloWorld`
 * type: `string`
-
-### `general/theme`
-
-Name of a build-in theme from angular-material.
-This option ca be changed in the environment files.
-
-* environment name: `theme`
-* default: `indigo-pink`
-* type: `string`
-* values: `deeppurple-amber`/`indigo-pink`/`pink-bluegrey`/`purple-green`
 
 ### `general/title`
 
@@ -160,58 +157,52 @@ This option ca be changed in the environment files.
 * default: `Hello world`
 * type: `string`
 
-### `general/useYarn`
+### `general/useDocker`
 
-Defines whatever yarn should be used or not.
-If this option is set to `false` npm will be used.
+Defines whether the project could be build within docker.
+An empty Dockerfile and a docker-compose file will be created.
+
+* default: `false`
+* type: `boolean`
+* values: `true`/`false`
+
+### `client/buildDir`
+
+Defines the build dir for the webapp.
+
+* default: `dist`
+* type: `string`
+
+### `client/installDependencies`
+
+Defines whether swaaplate should install tools and frontend dependencies or not.
 
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
 
-### `packageJson/author`
-
-The name of the creator.
-
-* default: `true`
-* type: `string`
-
-### `packageJson/contributors`
+### `client/packageJson/contributors`
 
 An array of contributers.
 
 * default: EMPTY
 * type: `array`
 
-### `packageJson/description`
+### `client/packageJson/homepage`
 
-A description.
-
-* default: EMPTY
-* type: `string`
-
-### `packageJson/homepage`
-
-The website. If this option is empty and `packageJson/repository` is set, this will be the same.
+The website. If this option is empty and `client/packageJson/repository` is set, this will be the same.
 
 * default: EMPTY
 * type: `string`
 
-### `packageJson/name`
-
-The name and foldername of the project in the workspace. See `Getting Started run section`.
-
-* default: `helloWorld`
-* type: `string`
-
-### `packageJson/repository`
+### `client/packageJson/repository`
 
 The repository. If `general/github/use` is activated, the repository will be generated automatically.
 
 * default: EMPTY
 * type: `string`
 
-### `route/default`
+### `client/route/features/default`
 
 The main route and the redirect route after login if no route is stored.
 This option ca be changed in the environment files.
@@ -220,7 +211,7 @@ This option ca be changed in the environment files.
 * default: `dashboard`
 * type: `string`
 
-### `route/features/show`
+### `client/route/features/show`
 
 Defines whether feature routes will be displayed or not.
 This option ca be changed in the environment files.
@@ -230,7 +221,7 @@ This option ca be changed in the environment files.
 * type: `boolean`
 * values: `true`/`false`
 
-### `route/login/activate`
+### `client/route/login/activate`
 
 Defines whether a login will be used or not.
 This option ca be changed in the environment files.
@@ -240,14 +231,14 @@ This option ca be changed in the environment files.
 * type: `boolean`
 * values: `true`/`false`
 
-### `route/login/name`
+### `client/route/login/name`
 
 Defines the name of the login route.
 
 * default: `login`
 * type: `string`
 
-### `route/login/show`
+### `client/route/login/show`
 
 Defines whether login route will be displayed or not.
 This option ca be changed in the environment files.
@@ -257,20 +248,46 @@ This option ca be changed in the environment files.
 * type: `boolean`
 * values: `true`/`false`
 
-### `route/notFound/name`
+### `client/route/notFound/name`
 
 The main route and the redirect route after login if no route is stored.
 
 * default: `not-found`
 * type: `string`
 
-### `route/notFound/redirect`
+### `client/route/notFound/redirect`
 
 Defines whether the 404 route will redirect to the default route or not.
 This option ca be changed in the environment files.
 
 * environment name: `redirectNotFound`
 * default: `false`
+* type: `boolean`
+* values: `true`/`false`
+
+### `client/selectorPrefix`
+
+A shortcut of the project, used in components like `hw-home` or `hw-app`.
+
+* default: `hw`
+* type: `string`
+
+### `client/theme`
+
+Name of a build-in theme from angular-material.
+This option ca be changed in the environment files.
+
+* environment name: `theme`
+* default: `indigo-pink`
+* type: `string`
+* values: `deeppurple-amber`/`indigo-pink`/`pink-bluegrey`/`purple-green`
+
+### `client/useYarn`
+
+Defines whatever yarn should be used or not.
+If this option is set to `false` npm will be used.
+
+* default: `true`
 * type: `boolean`
 * values: `true`/`false`
 
@@ -318,3 +335,7 @@ This will work for php only.
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
+
+## Changelog and migration
+
+Check the [Changelog](./CHANGELOG.md) for updates and the [migration guide](./MIGRATIONGUIDE.md) for updating your project.

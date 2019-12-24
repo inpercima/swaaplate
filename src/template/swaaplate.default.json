@@ -1,39 +1,41 @@
 {
   "general": {
-    "buildWebDir": "dist",
+    "author": "",
+    "description": "",
     "github": {
       "use": false,
       "username": ""
     },
+    "name": "helloWorld",
+    "title": "Hello world",
+    "useDocker": false
+  },
+  "client": {
+    "buildDir": "dist",
     "installDependencies": true,
+    "packageJson": {
+      "contributors": [],
+      "homepage": "",
+      "repository": ""
+    },
+    "route": {
+      "features": {
+        "default": "dashboard",
+        "show": true
+      },
+      "login": {
+        "activate": true,
+        "name": "login",
+        "show": false
+      },
+      "notFound": {
+        "name": "not-found",
+        "redirect": false
+      }
+    },
     "selectorPrefix": "hw",
     "theme": "indigo-pink",
-    "title": "Hello world",
-    "useDocker": false,
     "useYarn": true
-  },
-  "packageJson": {
-    "author": "",
-    "contributors": [],
-    "description": "",
-    "homepage": "",
-    "name": "helloWorld",
-    "repository": ""
-  },
-  "route": {
-    "default": "dashboard",
-    "features": {
-      "show": true
-    },
-    "login": {
-      "activate": true,
-      "name": "login",
-      "show": false
-    },
-    "notFound": {
-      "name": "not-found",
-      "redirect": false
-    }
   },
   "server": {
     "backend": "js",

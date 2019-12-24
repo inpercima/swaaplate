@@ -21,7 +21,7 @@ let project = {};
  */
 function create(workspacePath) {
   const config = lightjs.readJson(swConst.SWAAPLATE_JSON);
-  const projectName = config.packageJson.name;
+  const projectName = config.general.name;
   const projectPath = path.join(workspacePath, projectName);
   lightjs.info(`create project '${projectName}' in '${workspacePath}'`);
 
@@ -37,15 +37,16 @@ function create(workspacePath) {
   swManagement.configure(config, projectPath);
   swComponent.updateComponentFiles(config, projectPath);
 
+  const serverConfig = config.server;
   updateReadmeFile(config, projectPath);
-  if (config.server.backend !== swConst.JS) {
+  if (serverConfig.backend !== swConst.JS) {
     swComponent.updateReadmeFile(config, projectPath);
     swBackend.updateReadmeFile(config, projectPath);
   }
 
   updatePlaceholder(config, projectPath);
 
-  swComponent.installDependencies(config.general, config.server.backend, projectPath);
+  swComponent.installDependencies(config.client, serverConfig.backend, projectPath);
 }
 
 /**
@@ -72,12 +73,13 @@ function updateGeneralProjectFiles(config, projectPath) {
     });
   }
 
-  const author = config.packageJson.author;
+  const generalConfig = config.general;
+  const author = generalConfig.author;
   if (author !== swConst.SW_AUTHOR) {
     lightjs.replacement(swConst.SW_AUTHOR, author, [path.join(projectPath, swConst.LICENSE_MD)]);
   }
 
-  const docker = config.general.useDocker;
+  const docker = generalConfig.useDocker;
   if (docker) {
     shjs.touch(path.join(projectPath, swConst.DOCKERFILE));
     shjs.touch(path.join(projectPath, swConst.DOCKER_COMPOSE_YML));
@@ -112,21 +114,20 @@ function updateMockFiles(title, projectPath) {
  */
 function updateReadmeFile(config, projectPath) {
   const twoEol = `${os.EOL}${os.EOL}`;
-  const serverConfig = config.server;
-  const packageJsonConfig = config.packageJson;
   const generalConfig = config.general;
   const readmeMd = path.join(projectPath, swConst.README_MD);
   const packageJsonData = lightjs.readJson(swConst.PACKAGE_JSON);
-  const description = `${packageJsonConfig.description}${twoEol}${swConst.SW_GENERATED} ${packageJsonData.version}.`;
+  const description = `${generalConfig.description}${twoEol}${swConst.SW_GENERATED} ${packageJsonData.version}.`;
   lightjs.info(`update '${readmeMd}'`);
 
+  const serverConfig = config.server;
   if (serverConfig.backend !== swConst.JS) {
     shjs.cp(readmeMd, path.join(projectPath, swConst.CLIENT, swConst.README_MD));
 
     const usage = `## Usage${twoEol}### Modules${twoEol}`;
-    const clientUsage = createUsageLink(packageJsonConfig, generalConfig, swConst.CLIENT);
+    const clientUsage = createUsageLink(generalConfig, swConst.CLIENT);
     const serverOrApi = serverConfig.serverAsApi && serverConfig.backend === swConst.PHP ? swConst.API : swConst.SERVER;
-    const serverUsage = createUsageLink(packageJsonConfig, generalConfig, serverOrApi);
+    const serverUsage = createUsageLink(generalConfig, serverOrApi);
     lightjs.replacement('\\s# install.*(.|\\n)*To create.*\\s*', `\`\`\`${twoEol}${usage}${clientUsage}${twoEol}${serverUsage}${os.EOL}`, [readmeMd]);
   }
 
@@ -164,20 +165,19 @@ function updateReadmeFile(config, projectPath) {
   // replace the second sentence
   lightjs.replacement(swConst.THIS_PROJECT, description, [readmeMd]);
 
-  lightjs.replacement(swConst.SW_TITLE, packageJsonConfig.name, [readmeMd]);
-  lightjs.replacement(swConst.GIT_CLONE, `$1${packageJsonConfig.repository}`, [readmeMd]);
+  lightjs.replacement(swConst.SW_TITLE, generalConfig.name, [readmeMd]);
+  lightjs.replacement(swConst.GIT_CLONE, `$1${config.client.packageJson.repository}`, [readmeMd]);
 }
 
 /**
  * Creates links for usage.
  *
- * @param {object} packageJsonConfig
  * @param {object} generalConfig
  * @param {string} type
  */
-function createUsageLink(packageJsonConfig, generalConfig, type) {
-  const url = generalConfig.github.use ? `https://github.com/${generalConfig.github.username}/${packageJsonConfig.name}/tree/master` : '';
-  return `For the ${type} check [${packageJsonConfig.name} - ${type}](${url}/${type}).`;
+function createUsageLink(generalConfig, type) {
+  const url = generalConfig.github.use ? `https://github.com/${generalConfig.github.username}/${generalConfig.name}/tree/master` : '';
+  return `For the ${type} check [${generalConfig.name} - ${type}](${url}/${type}).`;
 }
 
 /**
@@ -188,14 +188,13 @@ function createUsageLink(packageJsonConfig, generalConfig, type) {
  */
 function updatePlaceholder(config, projectPath) {
   const generalConfig = config.general;
-  const packageJsonConfig = config.packageJson;
   lightjs.replacement('{{SPRING.BOOT.VERSION}}', swConst.SPRING_BOOT, [projectPath], true, true);
   lightjs.replacement('{{GROUP.ID}}', config.server.packagePath, [projectPath], true, true);
   lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.title, [projectPath], true, true);
   lightjs.replacement('{{PROJECT.VERSION}}', swConst.PROJECT_VERSION, [projectPath], true, true);
-  lightjs.replacement('{{PROJECT.NAME}}', packageJsonConfig.name, [projectPath], true, true);
-  lightjs.replacement('{{PROJECT.DESCRIPTION}}', packageJsonConfig.description, [projectPath], true, true);
-  lightjs.replacement('{{PROJECT.DIST}}', generalConfig.buildWebDir, [projectPath], true, true);
+  lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [projectPath], true, true);
+  lightjs.replacement('{{PROJECT.DESCRIPTION}}', generalConfig.description, [projectPath], true, true);
+  lightjs.replacement('{{PROJECT.DIST}}', config.client.buildDir, [projectPath], true, true);
 }
 
 project.create = create;

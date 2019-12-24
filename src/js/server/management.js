@@ -57,12 +57,12 @@ function configure(config, projectPath) {
  * @param {string} pomXml
  */
 function replaceInPomFile(config, pomXml) {
-  const packageJsonConfig = config.packageJson;
+  const generalConfig = config.general;
   lightjs.replacement(swConst.SW_PACKAGE, config.server.packagePath, [pomXml]);
-  lightjs.replacement(swConst.SWAAPLATE, packageJsonConfig.name, [pomXml]);
-  lightjs.replacement(swConst.DIST, config.general.buildWebDir, [pomXml]);
+  lightjs.replacement(swConst.SWAAPLATE, generalConfig.name, [pomXml]);
+  lightjs.replacement(swConst.DIST, config.client.buildDir, [pomXml]);
 
-  lightjs.replacement(swConst.SW_DESCRIPTION, packageJsonConfig.description, [pomXml]);
+  lightjs.replacement(swConst.SW_DESCRIPTION, generalConfigdescription, [pomXml]);
 }
 
 management.configure = configure;
