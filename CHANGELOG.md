@@ -12,3 +12,5 @@
   * `default` moved to `features`
 * created a changelog file
 * created a migration guide
+* added a update routine
+  * with `./swaaplate.js -u /absolute/path/to/project` you can update your general project files
