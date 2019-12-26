@@ -64,8 +64,7 @@ function updateReadmeFile(config, projectPath) {
   const readmeMd = path.join(projectPath, serverOrApi, swConst.README_MD);
   lightjs.info(`update '${readmeMd}'`);
 
-  const packageJsonConfig = config.packageJson;
-  const projectName = packageJsonConfig.name;
+  const projectName = config.general.name;
   lightjs.replacement('{{PROJECT.NAME}}', projectName, [readmeMd]);
 }
 

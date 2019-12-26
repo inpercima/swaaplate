@@ -16,7 +16,7 @@ let backendPhp = {};
  * @param {string} projectPath
  */
 function configure(config, projectPath) {
-  const projectName = config.packageJson.name;
+  const projectName = config.general.name;
   lightjs.info(`-> update webpack config and api-backend`);
 
   const configServer = config.server;

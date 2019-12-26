@@ -28,24 +28,58 @@ function copyFiles(projectPath) {
 }
 
 /**
+ * Copies the files in an update for the Angular client.
+ *
+ * @param {string} projectPath
+ * @param {string} backend
+ */
+function copyFilesForUpdate(projectPath, backend) {
+  const clientPath = path.join(projectPath, backend !== swConst.JS ? swConst.CLIENT : '');
+
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.DOT_EDITORCONFIG), projectPath);
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.DOT_GITATTRIBUTES), projectPath);
+  shjs.cp(path.join(swConst.SW_MODULE, 'browserslist'), clientPath);
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.KARMA_CONF_JS), clientPath);
+  shjs.cp(path.join(swConst.SW_MODULE, 'tsconfig.app.json'), clientPath);
+  shjs.cp(path.join(swConst.SW_MODULE, 'tsconfig.json'), clientPath);
+  shjs.cp(path.join(swConst.SW_MODULE, 'tsconfig.spec.json'), clientPath);
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.TSLINT_JSON), clientPath);
+
+  shjs.cp('-r', path.join(swConst.SW_MODULE, 'e2e', '*'), path.join(clientPath, 'e2e'));
+
+  shjs.cp('-r', path.join(swConst.SW_MODULE, swConst.MOCK_DIR, '*'), path.join(clientPath, swConst.MOCK_DIR));
+
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.SRC, 'main.ts'), path.join(clientPath, swConst.SRC));
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.SRC, 'polyfills.ts'), path.join(clientPath, swConst.SRC));
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.SRC, 'test.ts'), path.join(clientPath, swConst.SRC));
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.SRC, 'themes.scss'), path.join(clientPath, swConst.SRC));
+
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.SRC, swConst.APP, swConst.APP_COMPONENT_TS), path.join(clientPath, swConst.SRC, swConst.APP));
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.SRC, swConst.APP, swConst.APP_COMPONENT_SPEC_TS), path.join(clientPath, swConst.SRC, swConst.APP));
+
+  shjs.cp('-r', path.join(swConst.SW_MODULE, swConst.SRC, swConst.APP, 'core', '*'), path.join(clientPath, swConst.SRC, swConst.APP, 'core'));
+}
+
+/**
  * Installs the dependencies for the client.
  *
- * @param {object} generalConfig
+ * @param {object} clientConfig
  * @param {string} backend
  * @param {string} projectPath
  */
-function installDependencies(generalConfig, backend, projectPath) {
-  if (generalConfig.installDependencies) {
-    const yarnOrNpm = generalConfig.useYarn ? swConst.YARN : swConst.NPM;
-    lightjs.info(`install dependencies via ${yarnOrNpm}`);
-
-    lightjs.setNpmDefault(!generalConfig.useYarn);
+function installDependencies(clientConfig, backend, projectPath) {
+  if (clientConfig.installDependencies) {
     if (backend !== swConst.JS) {
       shjs.cd(path.join(projectPath, swConst.CLIENT));
     } else {
       shjs.cd(projectPath);
     }
-    lightjs.yarnpm('install');
+    if (shjs.which('ng')) {
+      shjs.exec('ng update --all --allowDirty=true --force=true');
+    } else {
+      lightjs.error(`Sorry, this script requires 'ng'.`);
+      shjs.exit(1);
+    }
   } else {
     lightjs.info('no dependencies will be installed');
   }
@@ -62,14 +96,15 @@ function updatePackageFile(config, projectPath) {
   lightjs.info(`${swConst.UPDATE} '${swConst.PACKAGE_JSON}'`);
 
   let packageJsonData = lightjs.readJson(packageJsonPath);
-  const packageJsonConfig = config.packageJson;
-  packageJsonData.author = packageJsonConfig.author;
+  const packageJsonConfig = config.client.packageJson;
+  const generalConfig = config.general;
+  packageJsonData.author = generalConfig.author;
   packageJsonData.contributors = packageJsonConfig.contributors;
-  packageJsonData.description = packageJsonConfig.description;
-  const name = packageJsonConfig.name;
+  packageJsonData.description = generalConfig.description;
+  const name = generalConfig.name;
   packageJsonData.name = name;
 
-  const github = config.general.github;
+  const github = generalConfig.github;
   packageJsonData.repository = github.use ? `https://github.com/${github.username}/${name}` : packageJsonConfig.repository;
   const homepage = packageJsonConfig.homepage;
 
@@ -144,14 +179,15 @@ function replaceInEnvironmentFile(config, environmentPath, environmentFile) {
   lightjs.info(`${swConst.UPDATE} '${environmentFile}'`);
 
   const generalConfig = config.general;
-  const routeConfig = config.route;
+  const clientConfig = config.client;
+  const routeConfig = clientConfig.route;
   lightjs.replacement('(activateLogin: )true', `$1${routeConfig.login.activate}`, [specifiedEnvironmentFile]);
   lightjs.replacement(swConst.SW_TITLE, generalConfig.title, [specifiedEnvironmentFile]);
   lightjs.replacement(swConst.DASHBOARD, routeConfig.default, [specifiedEnvironmentFile]);
   lightjs.replacement('(redirectNotFound: )false', `$1${routeConfig.notFound.redirect}`, [specifiedEnvironmentFile]);
   lightjs.replacement('(showFeatures: )true', `$1${routeConfig.features.show}`, [specifiedEnvironmentFile]);
   lightjs.replacement('(showLogin: )false', `$1${routeConfig.login.show}`, [specifiedEnvironmentFile]);
-  lightjs.replacement(swConst.THEME, generalConfig.theme, [specifiedEnvironmentFile]);
+  lightjs.replacement(swConst.THEME, clientConfig.theme, [specifiedEnvironmentFile]);
 
   if (environmentFile === swConst.ENVIRONMENT_PROD_TS) {
     lightjs.replacement('(production: )false', `$1true`, [specifiedEnvironmentFile]);
@@ -188,21 +224,23 @@ function replaceInEnvironmentFile(config, environmentPath, environmentFile) {
  * @param {object} config
  * @param {string} projectPath
  */
-function updateTestFiles(config, projectPath) {
+function updateTestFiles(config, projectPath, update) {
   lightjs.info(`${swConst.UPDATE} ${swConst.APP_COMPONENT_SPEC_TS}', '${swConst.APP_E2E_SPEC_TS}' and '${swConst.APP_PO_TS}'`);
 
-  const newTitle = config.general.title;
+  const generalConfig = config.general;
+  const newTitle = generalConfig.title;
+  const clientPath = path.join(projectPath, config.server.backend !== swConst.JS && update ? swConst.CLIENT : '');
   if (newTitle !== swConst.SW_TITLE) {
-    lightjs.replacement(swConst.SW_TITLE, newTitle, [path.join(projectPath, 'src/app/', swConst.APP_COMPONENT_SPEC_TS)]);
-    lightjs.replacement(swConst.SW_TITLE, newTitle, [path.join(projectPath, swConst.SRC_TEST_CLIENT, swConst.APP_E2E_SPEC_TS)]);
+    lightjs.replacement(swConst.SW_TITLE, newTitle, [path.join(clientPath, 'src/app/', swConst.APP_COMPONENT_SPEC_TS)]);
+    lightjs.replacement(swConst.SW_TITLE, newTitle, [path.join(clientPath, swConst.SRC_TEST_CLIENT, swConst.APP_E2E_SPEC_TS)]);
   }
-  const newName = config.packageJson.name;
+  const newName = generalConfig.name;
   if (newName !== swConst.SW_TITLE) {
-    lightjs.replacement(swConst.SW_TITLE, newName, [path.join(projectPath, swConst.KARMA_CONF_JS)]);
+    lightjs.replacement(swConst.SW_TITLE, newName, [path.join(clientPath, swConst.KARMA_CONF_JS)]);
   }
-  const prefix = config.general.selectorPrefix;
+  const prefix = config.client.selectorPrefix;
   if (prefix !== swConst.APP) {
-    lightjs.replacement('app(-root)', `${prefix}$1`, [path.join(projectPath, swConst.SRC_TEST_CLIENT, swConst.APP_PO_TS)]);
+    lightjs.replacement('app(-root)', `${prefix}$1`, [path.join(clientPath, swConst.SRC_TEST_CLIENT, swConst.APP_PO_TS)]);
   }
 }
 
@@ -215,21 +253,25 @@ function updateTestFiles(config, projectPath) {
 function updateAngularFile(config, projectPath) {
   lightjs.info(`${swConst.UPDATE} '${swConst.ANGULAR_JSON}'`);
 
+  const clientConfig = config.client;
   const angularJson = path.join(projectPath, swConst.ANGULAR_JSON);
-  lightjs.replacement(swConst.SW_TITLE, config.packageJson.name, [angularJson]);
+  lightjs.replacement(swConst.SW_TITLE, config.general.name, [angularJson]);
 
-  const generalConfig = config.general;
-  const buildWebDir = generalConfig.buildWebDir ;
-  if (buildWebDir !== swConst.DIST) {
-    lightjs.replacement(`"${swConst.DIST}"`, `"${buildWebDir}"`, [angularJson]);
+  if (!clientConfig.useYarn) {
+    lightjs.replacement('("packageManager": ")yarn', `$1${swConst.NPM}`, [angularJson]);
   }
 
-  const theme = generalConfig.theme;
+  const buildDir = clientConfig.buildDir;
+  if (buildDir !== swConst.DIST) {
+    lightjs.replacement(`"${swConst.DIST}"`, `"${buildDir}"`, [angularJson]);
+  }
+
+  const theme = clientConfig.theme;
   if (theme !== swConst.THEME) {
     lightjs.replacement(swConst.THEME, theme, [path.join(projectPath, swConst.SRC, swConst.STYLES_CSS)]);
   }
 
-  const selectorPrefix = generalConfig.selectorPrefix;
+  const selectorPrefix = clientConfig.selectorPrefix;
   if (selectorPrefix !== swConst.APP) {
     lightjs.replacement(`"${swConst.APP}"`, `"${selectorPrefix}"`, [angularJson]);
   }
@@ -253,12 +295,33 @@ function updateComponentFiles(config, projectPath) {
   lightjs.info(`${swConst.UPDATE} components`);
 
   const routes = [swConst.DASHBOARD, swConst.LOGIN, 'not-found'];
-  const routeConfig = config.route;
-  const configRoutes = [routeConfig.default, routeConfig.login.name, routeConfig.notFound.name];
-  const selectorPrefix = config.general.selectorPrefix;
-  const appPath = path.join(projectPath, config.server.backend === swConst.JS ? '' : swConst.CLIENT);
+  const clientConfig = config.client;
+  const routeConfig = clientConfig.route;
+  const configRoutes = [routeConfig.features.default, routeConfig.login.name, routeConfig.notFound.name];
+  const selectorPrefix = clientConfig.selectorPrefix;
+  const appPath = path.join(projectPath, config.server.backend !== swConst.JS ? swConst.CLIENT : '');
   const appSrcPath = path.join(appPath, swConst.SRC);
 
+  replaceSelectorPrefix(config, projectPath, config.server.backend);
+  for (let i = 0; i < routes.length; i++) {
+    const template = `'${selectorPrefix}-${configRoutes[i]}'`;
+    lightjs.replacement(`'${swConst.APP}-${routes[i]}'`, template, [path.join(appSrcPath, swConst.APP)], true, true);
+    if (configRoutes[i] !== routes[i]) {
+      updateComponent(appSrcPath, routes[i], configRoutes[i]);
+    }
+  }
+}
+
+/**
+ * Updates the prefix of the app.
+ *
+ * @param {object} selectorPrefix
+ * @param {string} projectPath
+ * @param {string} appSrcPath
+ */
+function replaceSelectorPrefix(selectorPrefix, projectPath, backend) {
+  const appPath = path.join(projectPath, backend !== swConst.JS ? swConst.CLIENT : '');
+  const appSrcPath = path.join(appPath, swConst.SRC);
   if (selectorPrefix !== swConst.APP) {
     lightjs.replacement('app-root', `${selectorPrefix}-root`, [
       path.join(appSrcPath, swConst.APP, swConst.APP_COMPONENT_TS),
@@ -270,14 +333,8 @@ function updateComponentFiles(config, projectPath) {
     tslintJsonData.rules["component-selector"] = [true, "element", selectorPrefix, "kebab-case"];
     lightjs.writeJson(tslintJson, tslintJsonData);
   }
-  for (let i = 0; i < routes.length; i++) {
-    const template = `'${selectorPrefix}-${configRoutes[i]}'`;
-    lightjs.replacement(`'${swConst.APP}-${routes[i]}'`, template, [path.join(appSrcPath, swConst.APP)], true, true);
-    if (configRoutes[i] !== routes[i]) {
-      updateComponent(appSrcPath, routes[i], configRoutes[i]);
-    }
-  }
 }
+
 
 /**
  * Updates one single component.
@@ -333,8 +390,8 @@ function updateReadmeFile(config, projectPath) {
   const readmeMd = path.join(projectPath, swConst.CLIENT, swConst.README_MD);
   lightjs.info(`update '${readmeMd}'`);
 
-  const packageJsonConfig = config.packageJson;
-  const projectName = packageJsonConfig.name;
+  const generalConfig = config.general;
+  const projectName = generalConfig.name;
   lightjs.replacement(swConst.SW_TITLE, projectName, [readmeMd]);
 
   // replace first part whic is in main readme
@@ -343,33 +400,34 @@ function updateReadmeFile(config, projectPath) {
   // replace license logo
   lightjs.replacement('\\[!\\[MIT.*\\s', '', [readmeMd]);
   lightjs.replacement('(status.svg)', '$1?path=client', [readmeMd]);
-  lightjs.replacement(`(/${config.packageJson.name})\\)`, '$1?path=client)', [readmeMd]);
+  lightjs.replacement(`(/${generalConfig.name})\\)`, '$1?path=client)', [readmeMd]);
   lightjs.replacement('\\?(type=dev)', '?path=client&$1', [readmeMd]);
 
   lightjs.replacement('# clone project', `# all commands used in ./${swConst.CLIENT}`, [readmeMd]);
   lightjs.replacement(`${swConst.GIT_CLONE}\\s(cd).*`, `$3 ${swConst.CLIENT}`, [readmeMd]);
 
-  const github = config.general.github;
+  const github = generalConfig.github;
   if (github.use) {
     lightjs.replacement('inpercima', github.username, [readmeMd]);
   } else {
     lightjs.replacement(swConst.DEPENDENCY_LOGOS, '', [readmeMd]);
   }
 
-  if (!config.general.useYarn) {
-      // replace yarn with npm in getting started section
+  const clientConfig = config.client;
+  if (!clientConfig.useYarn) {
+    // replace yarn with npm in getting started section
     lightjs.replacement('(dependencies\\s)(yarn)', `$1npm install`, [readmeMd]);
 
     // replace all other occurrences of yarn with npm
     lightjs.replacement('yarn (.*:)', `npm run $1`, [readmeMd]);
   }
 
-  const theme = config.general.theme;
+  const theme = clientConfig.theme;
   if (theme !== swConst.THEME) {
     lightjs.replacement(`(${swConst.DEFAULT}: )\`${swConst.THEME}\``, `$1\`${theme}\``, [readmeMd]);
   }
 
-  const defaultRoute = config.route.default;
+  const defaultRoute = clientConfig.route.features.default;
   if (defaultRoute !== swConst.DASHBOARD) {
     lightjs.replacement(`\`${swConst.DASHBOARD}\``, `\`${defaultRoute}\``, [readmeMd]);
   }
@@ -393,12 +451,14 @@ function updateReadmeFile(config, projectPath) {
 }
 
 component.copyFiles = copyFiles;
+component.copyFilesForUpdate = copyFilesForUpdate;
 component.installDependencies = installDependencies;
 component.updatePackageFile = updatePackageFile;
 component.updateEnvironmentFiles = updateEnvironmentFiles;
 component.updateTestFiles = updateTestFiles;
 component.updateAngularFile = updateAngularFile;
 component.updateComponentFiles = updateComponentFiles;
+component.replaceSelectorPrefix = replaceSelectorPrefix;
 component.updateReadmeFile = updateReadmeFile;
 
 module.exports = component;
