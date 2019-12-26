@@ -28,6 +28,39 @@ function copyFiles(projectPath) {
 }
 
 /**
+ * Copies the files in an update for the Angular client.
+ *
+ * @param {string} projectPath
+ * @param {string} backend
+ */
+function copyFilesForUpdate(projectPath, backend) {
+  const clientPath = path.join(projectPath, backend !== swConst.JS ? swConst.CLIENT : '');
+
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.DOT_EDITORCONFIG), projectPath);
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.DOT_GITATTRIBUTES), projectPath);
+  shjs.cp(path.join(swConst.SW_MODULE, 'browserslist'), clientPath);
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.KARMA_CONF_JS), clientPath);
+  shjs.cp(path.join(swConst.SW_MODULE, 'tsconfig.app.json'), clientPath);
+  shjs.cp(path.join(swConst.SW_MODULE, 'tsconfig.json'), clientPath);
+  shjs.cp(path.join(swConst.SW_MODULE, 'tsconfig.spec.json'), clientPath);
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.TSLINT_JSON), clientPath);
+
+  shjs.cp('-r', path.join(swConst.SW_MODULE, 'e2e', '*'), path.join(clientPath, 'e2e'));
+
+  shjs.cp('-r', path.join(swConst.SW_MODULE, swConst.MOCK_DIR, '*'), path.join(clientPath, swConst.MOCK_DIR));
+
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.SRC, 'main.ts'), path.join(clientPath, swConst.SRC));
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.SRC, 'polyfills.ts'), path.join(clientPath, swConst.SRC));
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.SRC, 'test.ts'), path.join(clientPath, swConst.SRC));
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.SRC, 'themes.scss'), path.join(clientPath, swConst.SRC));
+
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.SRC, swConst.APP, swConst.APP_COMPONENT_TS), path.join(clientPath, swConst.SRC, swConst.APP));
+  shjs.cp(path.join(swConst.SW_MODULE, swConst.SRC, swConst.APP, swConst.APP_COMPONENT_SPEC_TS), path.join(clientPath, swConst.SRC, swConst.APP));
+
+  shjs.cp('-r', path.join(swConst.SW_MODULE, swConst.SRC, swConst.APP, 'core', '*'), path.join(clientPath, swConst.SRC, swConst.APP, 'core'));
+}
+
+/**
  * Installs the dependencies for the client.
  *
  * @param {object} clientConfig
@@ -36,16 +69,17 @@ function copyFiles(projectPath) {
  */
 function installDependencies(clientConfig, backend, projectPath) {
   if (clientConfig.installDependencies) {
-    const yarnOrNpm = clientConfig.useYarn ? swConst.YARN : swConst.NPM;
-    lightjs.info(`install dependencies via ${yarnOrNpm}`);
-
-    lightjs.setNpmDefault(!clientConfig.useYarn);
     if (backend !== swConst.JS) {
       shjs.cd(path.join(projectPath, swConst.CLIENT));
     } else {
       shjs.cd(projectPath);
     }
-    lightjs.yarnpm('install');
+    if (shjs.which('ng')) {
+      shjs.exec('ng update --all --allowDirty=true --force=true');
+    } else {
+      lightjs.error(`Sorry, this script requires 'ng'.`);
+      shjs.exit(1);
+    }
   } else {
     lightjs.info('no dependencies will be installed');
   }
@@ -190,22 +224,23 @@ function replaceInEnvironmentFile(config, environmentPath, environmentFile) {
  * @param {object} config
  * @param {string} projectPath
  */
-function updateTestFiles(config, projectPath) {
+function updateTestFiles(config, projectPath, update) {
   lightjs.info(`${swConst.UPDATE} ${swConst.APP_COMPONENT_SPEC_TS}', '${swConst.APP_E2E_SPEC_TS}' and '${swConst.APP_PO_TS}'`);
 
   const generalConfig = config.general;
   const newTitle = generalConfig.title;
+  const clientPath = path.join(projectPath, config.server.backend !== swConst.JS && update ? swConst.CLIENT : '');
   if (newTitle !== swConst.SW_TITLE) {
-    lightjs.replacement(swConst.SW_TITLE, newTitle, [path.join(projectPath, 'src/app/', swConst.APP_COMPONENT_SPEC_TS)]);
-    lightjs.replacement(swConst.SW_TITLE, newTitle, [path.join(projectPath, swConst.SRC_TEST_CLIENT, swConst.APP_E2E_SPEC_TS)]);
+    lightjs.replacement(swConst.SW_TITLE, newTitle, [path.join(clientPath, 'src/app/', swConst.APP_COMPONENT_SPEC_TS)]);
+    lightjs.replacement(swConst.SW_TITLE, newTitle, [path.join(clientPath, swConst.SRC_TEST_CLIENT, swConst.APP_E2E_SPEC_TS)]);
   }
   const newName = generalConfig.name;
   if (newName !== swConst.SW_TITLE) {
-    lightjs.replacement(swConst.SW_TITLE, newName, [path.join(projectPath, swConst.KARMA_CONF_JS)]);
+    lightjs.replacement(swConst.SW_TITLE, newName, [path.join(clientPath, swConst.KARMA_CONF_JS)]);
   }
   const prefix = config.client.selectorPrefix;
   if (prefix !== swConst.APP) {
-    lightjs.replacement('app(-root)', `${prefix}$1`, [path.join(projectPath, swConst.SRC_TEST_CLIENT, swConst.APP_PO_TS)]);
+    lightjs.replacement('app(-root)', `${prefix}$1`, [path.join(clientPath, swConst.SRC_TEST_CLIENT, swConst.APP_PO_TS)]);
   }
 }
 
@@ -221,6 +256,10 @@ function updateAngularFile(config, projectPath) {
   const clientConfig = config.client;
   const angularJson = path.join(projectPath, swConst.ANGULAR_JSON);
   lightjs.replacement(swConst.SW_TITLE, config.general.name, [angularJson]);
+
+  if (!clientConfig.useYarn) {
+    lightjs.replacement('("packageManager": ")yarn', `$1${swConst.NPM}`, [angularJson]);
+  }
 
   const buildDir = clientConfig.buildDir;
   if (buildDir !== swConst.DIST) {
@@ -260,9 +299,29 @@ function updateComponentFiles(config, projectPath) {
   const routeConfig = clientConfig.route;
   const configRoutes = [routeConfig.features.default, routeConfig.login.name, routeConfig.notFound.name];
   const selectorPrefix = clientConfig.selectorPrefix;
-  const appPath = path.join(projectPath, config.server.backend === swConst.JS ? '' : swConst.CLIENT);
+  const appPath = path.join(projectPath, config.server.backend !== swConst.JS ? swConst.CLIENT : '');
   const appSrcPath = path.join(appPath, swConst.SRC);
 
+  replaceSelectorPrefix(config, projectPath, config.server.backend);
+  for (let i = 0; i < routes.length; i++) {
+    const template = `'${selectorPrefix}-${configRoutes[i]}'`;
+    lightjs.replacement(`'${swConst.APP}-${routes[i]}'`, template, [path.join(appSrcPath, swConst.APP)], true, true);
+    if (configRoutes[i] !== routes[i]) {
+      updateComponent(appSrcPath, routes[i], configRoutes[i]);
+    }
+  }
+}
+
+/**
+ * Updates the prefix of the app.
+ *
+ * @param {object} selectorPrefix
+ * @param {string} projectPath
+ * @param {string} appSrcPath
+ */
+function replaceSelectorPrefix(selectorPrefix, projectPath, backend) {
+  const appPath = path.join(projectPath, backend !== swConst.JS ? swConst.CLIENT : '');
+  const appSrcPath = path.join(appPath, swConst.SRC);
   if (selectorPrefix !== swConst.APP) {
     lightjs.replacement('app-root', `${selectorPrefix}-root`, [
       path.join(appSrcPath, swConst.APP, swConst.APP_COMPONENT_TS),
@@ -274,14 +333,8 @@ function updateComponentFiles(config, projectPath) {
     tslintJsonData.rules["component-selector"] = [true, "element", selectorPrefix, "kebab-case"];
     lightjs.writeJson(tslintJson, tslintJsonData);
   }
-  for (let i = 0; i < routes.length; i++) {
-    const template = `'${selectorPrefix}-${configRoutes[i]}'`;
-    lightjs.replacement(`'${swConst.APP}-${routes[i]}'`, template, [path.join(appSrcPath, swConst.APP)], true, true);
-    if (configRoutes[i] !== routes[i]) {
-      updateComponent(appSrcPath, routes[i], configRoutes[i]);
-    }
-  }
 }
+
 
 /**
  * Updates one single component.
@@ -362,7 +415,7 @@ function updateReadmeFile(config, projectPath) {
 
   const clientConfig = config.client;
   if (!clientConfig.useYarn) {
-      // replace yarn with npm in getting started section
+    // replace yarn with npm in getting started section
     lightjs.replacement('(dependencies\\s)(yarn)', `$1npm install`, [readmeMd]);
 
     // replace all other occurrences of yarn with npm
@@ -398,12 +451,14 @@ function updateReadmeFile(config, projectPath) {
 }
 
 component.copyFiles = copyFiles;
+component.copyFilesForUpdate = copyFilesForUpdate;
 component.installDependencies = installDependencies;
 component.updatePackageFile = updatePackageFile;
 component.updateEnvironmentFiles = updateEnvironmentFiles;
 component.updateTestFiles = updateTestFiles;
 component.updateAngularFile = updateAngularFile;
 component.updateComponentFiles = updateComponentFiles;
+component.replaceSelectorPrefix = replaceSelectorPrefix;
 component.updateReadmeFile = updateReadmeFile;
 
 module.exports = component;

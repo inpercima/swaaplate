@@ -72,6 +72,9 @@ yarn
 
 # change data in swaaplate.json (more info in configuration) and run swaaplate with one argument for the workspace path
 ./swaaplate.js /absolute/path/to/workspace
+
+# to update a project use following syntax, the swaaplate.json file from your project will be used
+./swaaplate.js -u /absolute/path/to/project
 ```
 
 ## Configuration

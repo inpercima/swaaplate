@@ -27,10 +27,10 @@ function create(workspacePath) {
 
   swComponent.copyFiles(projectPath);
   updateGeneralProjectFiles(config, projectPath);
-  updateMockFiles(projectName, projectPath);
+  updateMockFiles(projectName, projectPath, config.server.backend, false);
   swComponent.updatePackageFile(config, projectPath);
   swComponent.updateEnvironmentFiles(config, projectPath);
-  swComponent.updateTestFiles(config, projectPath);
+  swComponent.updateTestFiles(config, projectPath, false);
   swComponent.updateAngularFile(config, projectPath);
 
   swBackend.configure(config, projectPath);
@@ -91,19 +91,22 @@ function updateGeneralProjectFiles(config, projectPath) {
  *
  * @param {string} title
  * @param {string} projectPath
+ * @param {string} backend
+ * @param {boolean} update
  */
-function updateMockFiles(title, projectPath) {
+function updateMockFiles(title, projectPath, backend, update) {
   const dbJsonFileTile = path.join(swConst.MOCK_DIR, swConst.DB_JSON);
   const middlewareJsFile = path.join(swConst.MOCK_DIR, swConst.MIDDLEWARE_JS);
   lightjs.info(`${swConst.UPDATE} '${dbJsonFileTile}' and '${middlewareJsFile}'`);
 
-  const dbJsonFile = path.join(projectPath, dbJsonFileTile);
+  const clientPath = path.join(projectPath, backend !== swConst.JS && update ? swConst.CLIENT : '');
+  const dbJsonFile = path.join(clientPath, dbJsonFileTile);
   const dbJsonData = lightjs.readJson(dbJsonFile);
   dbJsonData.users[0].username = title;
   dbJsonData.users[0].password = title;
   lightjs.writeJson(dbJsonFile, dbJsonData);
 
-  lightjs.replacement(swConst.SW_TITLE, title, [path.join(projectPath, middlewareJsFile)]);
+  lightjs.replacement(swConst.SW_TITLE, title, [path.join(clientPath, middlewareJsFile)]);
 }
 
 /**
@@ -138,7 +141,7 @@ function updateReadmeFile(config, projectPath) {
 
   // append line in dependency table for copy-webpack-plugin if backend php
   if (serverConfig.backend === swConst.PHP) {
-    const row = `| copy-webpack-plugin | ${swConst.COPY_WEBPACK_PLUGIN} | 5.0.3 | copy-webpack-plugin@5.0.3" has unmet peer dependency "webpack@^4.0.0" |`;
+    const row = `| copy-webpack-plugin | ${swConst.COPY_WEBPACK_PLUGIN} | 5.1.1 | copy-webpack-plugin@5.1.1" has unmet peer dependency "webpack@^4.0.0 \|\| ^5.0.0" |`;
     lightjs.replacement('(\\| ------ \\|)', `$1${os.EOL}${row}`, [readmeMd]);
     const apache = `* \`${swConst.APACHE} 2.4\` ${swConst.OR_HIGHER}`;
     const php = `* \`${swConst.PHP} 7.3\` ${swConst.OR_HIGHER}`;
@@ -197,6 +200,26 @@ function updatePlaceholder(config, projectPath) {
   lightjs.replacement('{{PROJECT.DIST}}', config.client.buildDir, [projectPath], true, true);
 }
 
+/**
+ * Updates the project.
+ *
+ * @param {string} projectPath
+ */
+function update(projectPath) {
+  const config = lightjs.readJson(path.join(projectPath, swConst.SWAAPLATE_JSON));
+  const projectName = config.general.name;
+  const serverConfig = config.server;
+  lightjs.info(`update project '${projectName}' in '${projectPath}'`);
+
+  swComponent.copyFilesForUpdate(projectPath, serverConfig.backend);
+  swComponent.updateTestFiles(config, projectPath, true);
+  updateMockFiles(projectName, projectPath, serverConfig.backend, true);
+  swComponent.replaceSelectorPrefix(config.client.selectorPrefix, projectPath, serverConfig.backend);
+
+  swComponent.installDependencies(config.client, serverConfig.backend, projectPath);
+}
+
 project.create = create;
+project.update = update;
 
 module.exports = project;
