@@ -3,6 +3,7 @@
 ## 1.0.1 to 1.1.0
 
 * update your swaaplate.json described in [Changelog 1.1.0](./CHANGELOG.md)
+* add the package manager to your `angular.json` file like this commit: [Define package manager for angular-cli](https://github.com/inpercima/angular-cli-for-swaaplate/commit/c2dc6d4e98d355f54980332398c278ce90e5cf4d)
 
 ## 1.0.0 to 1.0.1
 

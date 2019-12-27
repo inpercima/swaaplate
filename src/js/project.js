@@ -216,6 +216,11 @@ function update(projectPath) {
   updateMockFiles(projectName, projectPath, serverConfig.backend, true);
   swComponent.replaceSelectorPrefix(config.client.selectorPrefix, projectPath, serverConfig.backend);
 
+  // update swaaplate version in readme
+  const readmeMd = path.join(projectPath, swConst.README_MD);
+  const packageJsonData = lightjs.readJson(swConst.PACKAGE_JSON);
+  lightjs.replacement('This project was generated with.+', `${swConst.SW_GENERATED} ${packageJsonData.version}.`, [readmeMd]);
+
   swComponent.installDependencies(config.client, serverConfig.backend, projectPath);
 }
 
