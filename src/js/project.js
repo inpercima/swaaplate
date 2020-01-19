@@ -148,7 +148,7 @@ function updateReadmeFile(config, projectPath) {
     lightjs.replacement(swConst.REQUIREMENT, `### ${swConst.APACHE} and ${swConst.PHP}${twoEol}${apache}${os.EOL}${php}${twoEol}$1`, [readmeMd]);
   }
 
-  if (!generalConfig.useYarn) {
+  if (!config.client.useYarn) {
     lightjs.replacement(`${swConst.OR_HIGHER},.*`, swConst.OR_HIGHER, [readmeMd]);
     lightjs.replacement(`${swConst.OR_HIGHER} or`, `${swConst.OR_HIGHER}, used in this repository, or`, [readmeMd]);
   }

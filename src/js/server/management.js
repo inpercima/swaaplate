@@ -62,7 +62,7 @@ function replaceInPomFile(config, pomXml) {
   lightjs.replacement(swConst.SWAAPLATE, generalConfig.name, [pomXml]);
   lightjs.replacement(swConst.DIST, config.client.buildDir, [pomXml]);
 
-  lightjs.replacement(swConst.SW_DESCRIPTION, generalConfigdescription, [pomXml]);
+  lightjs.replacement(swConst.SW_DESCRIPTION, generalConfig.description, [pomXml]);
 }
 
 management.configure = configure;

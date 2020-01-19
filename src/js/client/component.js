@@ -302,7 +302,7 @@ function updateComponentFiles(config, projectPath) {
   const appPath = path.join(projectPath, config.server.backend !== swConst.JS ? swConst.CLIENT : '');
   const appSrcPath = path.join(appPath, swConst.SRC);
 
-  replaceSelectorPrefix(config, projectPath, config.server.backend);
+  replaceSelectorPrefix(selectorPrefix, projectPath, config.server.backend);
   for (let i = 0; i < routes.length; i++) {
     const template = `'${selectorPrefix}-${configRoutes[i]}'`;
     lightjs.replacement(`'${swConst.APP}-${routes[i]}'`, template, [path.join(appSrcPath, swConst.APP)], true, true);
@@ -317,7 +317,7 @@ function updateComponentFiles(config, projectPath) {
  *
  * @param {object} selectorPrefix
  * @param {string} projectPath
- * @param {string} appSrcPath
+ * @param {string} backend
  */
 function replaceSelectorPrefix(selectorPrefix, projectPath, backend) {
   const appPath = path.join(projectPath, backend !== swConst.JS ? swConst.CLIENT : '');
