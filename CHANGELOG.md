@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+* [bugfixes](https://github.com/inpercima/swaaplate/commit/863c85f691af6dc1d139823402b012d4d2a150cc)
+
 ## 1.1.0
 
 * updated swaaplate.json structure
