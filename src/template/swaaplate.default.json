@@ -1,15 +1,4 @@
 {
-  "general": {
-    "author": "",
-    "description": "",
-    "github": {
-      "use": false,
-      "username": ""
-    },
-    "name": "helloWorld",
-    "title": "Hello world",
-    "useDocker": false
-  },
   "client": {
     "buildDir": "dist",
     "installDependencies": true,
@@ -36,6 +25,17 @@
     "selectorPrefix": "hw",
     "theme": "indigo-pink",
     "useYarn": true
+  },
+  "general": {
+    "author": "",
+    "description": "",
+    "github": {
+      "use": false,
+      "username": ""
+    },
+    "name": "helloWorld",
+    "title": "Hello world",
+    "useDocker": false
   },
   "server": {
     "backend": "js",
