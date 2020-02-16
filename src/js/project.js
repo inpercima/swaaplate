@@ -7,46 +7,123 @@ const path = require('path');
 const request = require('request');
 const shjs = require('shelljs');
 
-const swBackend = require('./server/backend.js');
+const swClient = require('./client/index.js');
 const swComponent = require('./client/component.js');
 const swConst = require('./const.js');
-const swManagement = require('./server/management.js');
+const swHelper = require('./helper.js');
 
-let project = {};
+let projectConfig = {};
+let projectPath = '';
 
 /**
- * Creates the project.
+ * Create the project.
  *
  * @param {string} workspacePath
  */
 function create(workspacePath) {
-  const config = lightjs.readJson(swConst.SWAAPLATE_JSON);
-  const projectName = config.general.name;
-  const projectPath = path.join(workspacePath, projectName);
+  projectConfig = lightjs.readJson(swConst.SWAAPLATE_JSON);
+  const projectName = projectConfig.general.name;
+  projectPath = path.join(workspacePath, projectName);
   lightjs.info(`create project '${projectName}' in '${workspacePath}'`);
 
-  swComponent.copyFiles(projectPath);
-  updateGeneralProjectFiles(config, projectPath);
-  updateMockFiles(projectName, projectPath, config.server.backend, false);
-  swComponent.updatePackageFile(config, projectPath);
-  swComponent.updateEnvironmentFiles(config, projectPath);
-  swComponent.updateTestFiles(config, projectPath, false);
-  swComponent.updateAngularFile(config, projectPath);
+  swHelper.config = projectConfig;
+  swClient.config = projectConfig;
+  swClient.projectPath = projectPath;
 
-  swBackend.configure(config, projectPath);
-  swManagement.configure(config, projectPath);
-  swComponent.updateComponentFiles(config, projectPath);
+  swClient.create(workspacePath);
 
-  const serverConfig = config.server;
-  updateReadmeFile(config, projectPath);
+  checkBackend();
+  copyFiles();
+  updateGitignoreFile();
+  replacePlaceholder();
+
+  // updateReadmeFile(config, projectPath);
+  // if (serverConfig.backend !== swConst.JS) {
+  //   swComponent.updateReadmeFile(config, projectPath);
+  //   swBackend.updateReadmeFile(config, projectPath);
+  // }
+
+  // updatePlaceholder(config, projectPath);
+
+  //swComponent.installDependencies(config.client, serverConfig.backend, projectPath);
+}
+
+/**
+ * Create the server and client folder if neccessary.
+ *
+ */
+function checkBackend() {
+  lightjs.info('check backend ...');
+
+  const serverConfig = projectConfig.server;
   if (serverConfig.backend !== swConst.JS) {
-    swComponent.updateReadmeFile(config, projectPath);
-    swBackend.updateReadmeFile(config, projectPath);
+    lightjs.info('... not js is used, create folder for client and server and move files');
+    shjs.mkdir(path.join(projectPath, swConst.CLIENT));
+    shjs.mv(path.join(projectPath, `!(${swConst.CLIENT})`), path.join(projectPath, swConst.CLIENT));
+
+    shjs.mkdir(path.join(projectPath, swHelper.getBackendFolder()));
+  } else {
+    lightjs.info('... js is used, no folder will be created');
   }
+}
 
-  updatePlaceholder(config, projectPath);
+/**
+ * Copy files for root.
+ *
+ */
+function copyFiles() {
+  lightjs.info('copy root files');
 
-  swComponent.installDependencies(config.client, serverConfig.backend, projectPath);
+  const templatePath = 'src/template/root';
+  if (projectConfig.general.useMITLicense) {
+    shjs.cp(path.join(templatePath, swConst.LICENSE_MD), projectPath);
+  }
+  shjs.cp(path.join(templatePath, swConst.DOT_EDITORCONFIG), projectPath);
+  shjs.cp(path.join(templatePath, swConst.DOT_GITATTRIBUTES), projectPath);
+  shjs.cp('src/template/README.md', projectPath);
+  shjs.cp(swConst.SWAAPLATE_JSON, projectPath);
+}
+
+/**
+ * Update the gitignore file created by angular-cli.
+ *
+ */
+function updateGitignoreFile() {
+  const content = `# begin project specific
+
+environment.dev.ts
+environment.mock.ts
+environment.prod.ts
+
+# ignore all in '.vscode' b/c some vsc config files contain user specific content
+.vscode/*
+
+# end project specific`;
+  lightjs.info(`${swConst.UPDATE} '${swConst.DOT_GITIGNORE}'`);
+
+  const gitignoreFile = path.join(projectPath, swConst.DOT_GITIGNORE);
+
+  const serverConfig = projectConfig.server;
+  const backend = serverConfig.backend;
+  if (backend === swConst.JAVA || backend === swConst.KOTLIN) {
+    request(`${swConst.GITIGNORE_URL},${backend},${serverConfig.management}`, function (error, response, body) {
+      lightjs.writeFile(gitignoreFile, `${content}${os.EOL}${body}`);
+    });
+  } else {
+    request(`${swConst.GITIGNORE_URL}`, function (error, response, body) {
+      lightjs.writeFile(gitignoreFile, `${content}${os.EOL}${body}`);
+    });
+  }
+}
+
+/**
+ * Replace project specific values global.
+ *
+ */
+function replacePlaceholder() {
+  lightjs.replacement('{{AUTHOR}}', projectConfig.general.author, [projectPath], true, true);
+  lightjs.replacement('{{PREFIX}}', projectConfig.client.prefix, [projectPath], true, true);
+  lightjs.replacement('{{YEAR}}', new Date().getFullYear(), [projectPath], true, true);
 }
 
 /**
@@ -224,7 +301,8 @@ function update(projectPath) {
   swComponent.installDependencies(config.client, serverConfig.backend, projectPath);
 }
 
-project.create = create;
-project.update = update;
+let exp = {};
+exp.create = create;
+exp.update = update;
 
-module.exports = project;
+module.exports = exp;

@@ -10,6 +10,7 @@ init();
 
 /**
  * Initialize swaaplate.
+ *
  */
 function init() {
   lightjs.info('initialize swaaplate');

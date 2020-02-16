@@ -77,7 +77,7 @@ function installDependencies(clientConfig, backend, projectPath) {
     if (shjs.which('ng')) {
       shjs.exec('ng update --all --allowDirty=true --force=true');
     } else {
-      lightjs.error(`Sorry, this script requires 'ng'.`);
+      lightjs.error(`sorry, this script requires 'ng'`);
       shjs.exit(1);
     }
   } else {
