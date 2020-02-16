@@ -1,10 +1,10 @@
 'use strict';
 
 /* requirements */
+const axios = require('axios');
 const lightjs = require('light-js');
 const os = require('os');
 const path = require('path');
-const request = require('request');
 const shjs = require('shelljs');
 
 const swClient = require('./client/index.js');
@@ -106,12 +106,12 @@ environment.prod.ts
   const serverConfig = projectConfig.server;
   const backend = serverConfig.backend;
   if (backend === swConst.JAVA || backend === swConst.KOTLIN) {
-    request(`${swConst.GITIGNORE_URL},${backend},${serverConfig.management}`, function (error, response, body) {
-      lightjs.writeFile(gitignoreFile, `${content}${os.EOL}${body}`);
+    axios.get(`${swConst.GITIGNORE_URL},${backend},${serverConfig.management}`).then(function (response) {
+      lightjs.writeFile(gitignoreFile, `${content}${os.EOL}${response.data}`);
     });
   } else {
-    request(`${swConst.GITIGNORE_URL}`, function (error, response, body) {
-      lightjs.writeFile(gitignoreFile, `${content}${os.EOL}${body}`);
+    axios.get(`${swConst.GITIGNORE_URL}`).then(function (response) {
+      lightjs.writeFile(gitignoreFile, `${content}${os.EOL}${response.data}`);
     });
   }
 }
@@ -140,13 +140,13 @@ function updateGeneralProjectFiles(config, projectPath) {
   const serverConfig = config.server;
   const backend = serverConfig.backend;
   if (backend === swConst.JAVA || backend === swConst.KOTLIN) {
-    request(`${swConst.GITIGNORE_URL},${backend},${serverConfig.management}`, function (error, response, body) {
-      lightjs.replacement(swConst.GITIGNORE_BODY, body, [gitignoreFile]);
+    axios.get(`${swConst.GITIGNORE_URL},${backend},${serverConfig.management}`).then(function (response) {
+      lightjs.replacement(swConst.GITIGNORE_BODY, response.data, [gitignoreFile]);
       lightjs.replacement('(environment.prod.ts)', `$1${os.EOL}${swConst.APPLICATION_DEV_YML}${os.EOL}${swConst.APPLICATION_PROD_YML}`, [gitignoreFile]);
     });
   } else {
-    request(`${swConst.GITIGNORE_URL}`, function (error, response, body) {
-      lightjs.replacement(swConst.GITIGNORE_BODY, body, [gitignoreFile]);
+    axios.get(`${swConst.GITIGNORE_URL}`).then(function (response) {
+      lightjs.replacement(swConst.GITIGNORE_BODY, response.data, [gitignoreFile]);
     });
   }
 
