@@ -10,8 +10,10 @@ const shjs = require('shelljs');
 const swClient = require('./client/index.js');
 const swComponent = require('./client/component.js');
 const swConst = require('./const.js');
-const swHelper = require('./helper.js');
+const swManagement = require('./server/management.js');
+const swServer = require('./server/index.js');
 
+let exp = {};
 let projectConfig = {};
 let projectPath = '';
 
@@ -26,45 +28,30 @@ function create(workspacePath) {
   projectPath = path.join(workspacePath, projectName);
   lightjs.info(`create project '${projectName}' in '${workspacePath}'`);
 
-  swHelper.config = projectConfig;
-  swClient.config = projectConfig;
-  swClient.projectPath = projectPath;
+  swClient.configure(workspacePath, projectConfig, projectPath);
+  swServer.configure(projectConfig, projectPath);
+  swManagement.configure(projectConfig, projectPath);
 
-  swClient.create(workspacePath);
-
-  checkBackend();
   copyFiles();
   updateGitignoreFile();
   replacePlaceholder();
-
-  // updateReadmeFile(config, projectPath);
-  // if (serverConfig.backend !== swConst.JS) {
-  //   swComponent.updateReadmeFile(config, projectPath);
-  //   swBackend.updateReadmeFile(config, projectPath);
-  // }
-
-  // updatePlaceholder(config, projectPath);
-
-  //swComponent.installDependencies(config.client, serverConfig.backend, projectPath);
 }
 
+
+
+
+
+
+
+
+
+
 /**
- * Create the server and client folder if neccessary.
+ * Determine the client folder.
  *
  */
-function checkBackend() {
-  lightjs.info('check backend ...');
-
-  const serverConfig = projectConfig.server;
-  if (serverConfig.backend !== swConst.JS) {
-    lightjs.info('... not js is used, create folder for client and server and move files');
-    shjs.mkdir(path.join(projectPath, swConst.CLIENT));
-    shjs.mv(path.join(projectPath, `!(${swConst.CLIENT})`), path.join(projectPath, swConst.CLIENT));
-
-    shjs.mkdir(path.join(projectPath, swHelper.getBackendFolder()));
-  } else {
-    lightjs.info('... js is used, no folder will be created');
-  }
+function getClientFolder() {
+  return projectConfig.server.backend === swConst.JS ? '' : swConst.CLIENT;
 }
 
 /**
@@ -121,9 +108,8 @@ environment.prod.ts
  *
  */
 function replacePlaceholder() {
-  lightjs.replacement('{{AUTHOR}}', projectConfig.general.author, [projectPath], true, true);
-  lightjs.replacement('{{PREFIX}}', projectConfig.client.prefix, [projectPath], true, true);
-  lightjs.replacement('{{YEAR}}', new Date().getFullYear(), [projectPath], true, true);
+  lightjs.replacement('{{PROJECT.AUTHOR}}', projectConfig.general.author, [projectPath], true, true, 'node_modules');
+  lightjs.replacement('{{PROJECT.YEAR}}', new Date().getFullYear(), [projectPath], true, true, 'node_modules');
 }
 
 /**
@@ -261,28 +247,25 @@ function createUsageLink(generalConfig, type) {
 }
 
 /**
- * Replaces project specific values globally.
+ * Replace project specific values globally.
  *
- * @param {object} config
- * @param {string} projectPath
  */
-function updatePlaceholder(config, projectPath) {
-  const generalConfig = config.general;
-  lightjs.replacement('{{SPRING.BOOT.VERSION}}', swConst.SPRING_BOOT, [projectPath], true, true);
-  lightjs.replacement('{{GROUP.ID}}', config.server.packagePath, [projectPath], true, true);
-  lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.title, [projectPath], true, true);
-  lightjs.replacement('{{PROJECT.VERSION}}', swConst.PROJECT_VERSION, [projectPath], true, true);
-  lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [projectPath], true, true);
-  lightjs.replacement('{{PROJECT.DESCRIPTION}}', generalConfig.description, [projectPath], true, true);
-  lightjs.replacement('{{PROJECT.DIST}}', config.client.buildDir, [projectPath], true, true);
+function updatePlaceholder() {
+  // const generalConfig = projectConfig.general;
+  // lightjs.replacement('{{SPRING.BOOT.VERSION}}', swConst.SPRING_BOOT, [projectPath], true, true);
+  // lightjs.replacement('{{GROUP.ID}}', projectConfig.server.packagePath, [projectPath], true, true);
+  // lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.title, [projectPath], true, true);
+  // lightjs.replacement('{{PROJECT.VERSION}}', swConst.PROJECT_VERSION, [projectPath], true, true);
+  // lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [projectPath], true, true);
+  // lightjs.replacement('{{PROJECT.DESCRIPTION}}', generalConfig.description, [projectPath], true, true);
+  // lightjs.replacement('{{PROJECT.DIST}}', projectConfig.client.buildDir, [projectPath], true, true);
 }
 
 /**
  * Updates the project.
  *
- * @param {string} projectPath
  */
-function update(projectPath) {
+function update() {
   const config = lightjs.readJson(path.join(projectPath, swConst.SWAAPLATE_JSON));
   const projectName = config.general.name;
   const serverConfig = config.server;
@@ -301,7 +284,6 @@ function update(projectPath) {
   swComponent.installDependencies(config.client, serverConfig.backend, projectPath);
 }
 
-let exp = {};
 exp.create = create;
 exp.update = update;
 

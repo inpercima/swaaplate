@@ -6,7 +6,7 @@ import { AuthService } from '../core/auth.service';
 import { environment } from '../../environments/environment';
 
 @Component({
-  selector: 'app-login',
+  selector: '{{PROJECT.PREFIX}}-login',
   templateUrl: './login.component.html',
 })
 export class LoginComponent implements OnInit {

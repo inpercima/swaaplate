@@ -27,16 +27,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as appname 'angular-cli-for-swaaplate'`, () => {
+  it(`should have as appname '{{PROJECT.NAME}}'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.appname).toEqual('angular-cli-for-swaaplate');
+    expect(app.appname).toEqual('{{PROJECT.NAME}}');
   });
 
   it('should render toolbar', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('mat-toolbar').textContent).toContain('angular-cli-for-swaaplate');
+    expect(compiled.querySelector('mat-toolbar').textContent).toContain('{{PROJECT.NAME}}');
   });
 });

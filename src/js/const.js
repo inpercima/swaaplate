@@ -15,9 +15,7 @@ module.exports = Object.freeze({
   SW_USER: 'inpercima',
   SW_DESCRIPTION: '\\[s\\]imple \\[w\\]eb \\[a\\]pp \\[a\\]ngular tem\\[plate\\]. A very simple template generator for angular webapps with different backends.',
   SW_GENERATED: 'This project was generated with [swaaplate](https://github.com/inpercima/swaaplate) version',
-  SW_MODULE: 'node_modules/angular-cli-for-swaaplate',
   SW_PACKAGE: 'net.inpercima.swaaplate',
-  SW_TITLE: 'angular-cli-for-swaaplate',
   TEMPLATE_README: 'src/template/server/readme',
   THEME: 'indigo-pink',
 
@@ -65,6 +63,7 @@ module.exports = Object.freeze({
   DASHBOARD: 'dashboard',
   DEFAULT: 'default',
   DIST: 'dist',
+  FEATURES: 'features',
   GRADLE: 'gradle',
   JAVA: 'java',
   JS: 'js',
