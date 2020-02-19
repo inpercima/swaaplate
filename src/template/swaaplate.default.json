@@ -1,6 +1,7 @@
 {
   "client": {
     "buildDir": "dist",
+    "ghUser": "",
     "installDependencies": true,
     "language": "en",
     "packageJson": {
@@ -34,10 +35,6 @@
   "general": {
     "author": "",
     "description": "",
-    "github": {
-      "use": false,
-      "username": ""
-    },
     "name": "helloWorld",
     "title": "Hello world",
     "useDocker": false,

@@ -2,13 +2,13 @@
 
 /* requirements */
 const axios = require('axios');
+const fs = require('fs');
 const lightjs = require('light-js');
 const os = require('os');
 const path = require('path');
 const shjs = require('shelljs');
 
 const swClient = require('./client/index.js');
-const swComponent = require('./client/component.js');
 const swConst = require('./const.js');
 const swManagement = require('./server/management.js');
 const swServer = require('./server/index.js');
@@ -34,7 +34,8 @@ function create(workspacePath) {
 
   copyFiles();
   updateGitignoreFile();
-  replacePlaceholder();
+  updateReadmeFiles();
+  updateFiles();
 }
 
 
@@ -61,14 +62,20 @@ function getClientFolder() {
 function copyFiles() {
   lightjs.info('copy root files');
 
+  const generalConfig = projectConfig.general;
   const templatePath = 'src/template/root';
-  if (projectConfig.general.useMITLicense) {
+  if (generalConfig.useMITLicense) {
     shjs.cp(path.join(templatePath, swConst.LICENSE_MD), projectPath);
+    lightjs.replacement('{{PROJECT.YEAR}}', new Date().getFullYear(), [path.join(projectPath, swConst.LICENSE_MD)]);
   }
   shjs.cp(path.join(templatePath, swConst.DOT_EDITORCONFIG), projectPath);
   shjs.cp(path.join(templatePath, swConst.DOT_GITATTRIBUTES), projectPath);
-  shjs.cp('src/template/README.md', projectPath);
   shjs.cp(swConst.SWAAPLATE_JSON, projectPath);
+
+  if (generalConfig.useDocker) {
+    shjs.touch(path.join(projectPath, swConst.DOCKERFILE));
+    shjs.touch(path.join(projectPath, swConst.DOCKER_COMPOSE_YML));
+  }
 }
 
 /**
@@ -76,29 +83,32 @@ function copyFiles() {
  *
  */
 function updateGitignoreFile() {
+  const serverConfig = projectConfig.server;
+  const backend = serverConfig.backend;
+  const javaKotlinContent = `${os.EOL}${swConst.APPLICATION_DEV_YML}${os.EOL}${swConst.APPLICATION_PROD_YML}`;
+  const serverContent = backend === swConst.JAVA || backend === swConst.KOTLIN ? javaKotlinContent : '';
   const content = `# begin project specific
 
 environment.dev.ts
 environment.mock.ts
-environment.prod.ts
+environment.prod.ts${serverContent}
 
 # ignore all in '.vscode' b/c some vsc config files contain user specific content
 .vscode/*
 
 # end project specific`;
-  lightjs.info(`${swConst.UPDATE} '${swConst.DOT_GITIGNORE}'`);
+  const gitignoreFile = '.gitignore';
+  lightjs.info(`${swConst.UPDATE} '${gitignoreFile}'`);
 
-  const gitignoreFile = path.join(projectPath, swConst.DOT_GITIGNORE);
-
-  const serverConfig = projectConfig.server;
-  const backend = serverConfig.backend;
+  const gitignoreUrl = 'https://www.gitignore.io/api/node,angular,eclipse,intellij+all';
+  const gitignoreFilePath = path.join(projectPath, gitignoreFile);
   if (backend === swConst.JAVA || backend === swConst.KOTLIN) {
-    axios.get(`${swConst.GITIGNORE_URL},${backend},${serverConfig.management}`).then(function (response) {
-      lightjs.writeFile(gitignoreFile, `${content}${os.EOL}${response.data}`);
+    axios.get(`${gitignoreUrl},${backend},${serverConfig.management}`).then(function (response) {
+      lightjs.writeFile(gitignoreFilePath, `${content}${os.EOL}${response.data}`);
     });
   } else {
-    axios.get(`${swConst.GITIGNORE_URL}`).then(function (response) {
-      lightjs.writeFile(gitignoreFile, `${content}${os.EOL}${response.data}`);
+    axios.get(gitignoreUrl).then(function (response) {
+      lightjs.writeFile(gitignoreFilePath, `${content}${os.EOL}${response.data}`);
     });
   }
 }
@@ -107,46 +117,12 @@ environment.prod.ts
  * Replace project specific values global.
  *
  */
-function replacePlaceholder() {
-  lightjs.replacement('{{PROJECT.AUTHOR}}', projectConfig.general.author, [projectPath], true, true, 'node_modules');
-  lightjs.replacement('{{PROJECT.YEAR}}', new Date().getFullYear(), [projectPath], true, true, 'node_modules');
-}
-
-/**
- * Updates the general project files with data from config.
- *
- * @param {object} config
- * @param {string} projectPath
- */
-function updateGeneralProjectFiles(config, projectPath) {
-  lightjs.info(`${swConst.UPDATE} '${swConst.DOT_GITIGNORE}' and '${swConst.LICENSE_MD}'`);
-
-  const gitignoreFile = path.join(projectPath, swConst.DOT_GITIGNORE);
-
-  const serverConfig = config.server;
-  const backend = serverConfig.backend;
-  if (backend === swConst.JAVA || backend === swConst.KOTLIN) {
-    axios.get(`${swConst.GITIGNORE_URL},${backend},${serverConfig.management}`).then(function (response) {
-      lightjs.replacement(swConst.GITIGNORE_BODY, response.data, [gitignoreFile]);
-      lightjs.replacement('(environment.prod.ts)', `$1${os.EOL}${swConst.APPLICATION_DEV_YML}${os.EOL}${swConst.APPLICATION_PROD_YML}`, [gitignoreFile]);
-    });
-  } else {
-    axios.get(`${swConst.GITIGNORE_URL}`).then(function (response) {
-      lightjs.replacement(swConst.GITIGNORE_BODY, response.data, [gitignoreFile]);
-    });
-  }
-
-  const generalConfig = config.general;
-  const author = generalConfig.author;
-  if (author !== swConst.SW_AUTHOR) {
-    lightjs.replacement(swConst.SW_AUTHOR, author, [path.join(projectPath, swConst.LICENSE_MD)]);
-  }
-
-  const docker = generalConfig.useDocker;
-  if (docker) {
-    shjs.touch(path.join(projectPath, swConst.DOCKERFILE));
-    shjs.touch(path.join(projectPath, swConst.DOCKER_COMPOSE_YML));
-  }
+function updateFiles() {
+  const generalConfig = projectConfig.general;
+  lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [projectPath], true, true, 'node_modules');
+  lightjs.replacement('{{PROJECT.DESCRIPTION}}', generalConfig.description, [projectPath], true, true, 'node_modules');
+  lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [projectPath], true, true, 'node_modules');
+  lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.title, [projectPath], true, true, 'node_modules');
 }
 
 /**
@@ -247,18 +223,49 @@ function createUsageLink(generalConfig, type) {
 }
 
 /**
- * Replace project specific values globally.
+ * Update readme files.
  *
  */
-function updatePlaceholder() {
-  // const generalConfig = projectConfig.general;
-  // lightjs.replacement('{{SPRING.BOOT.VERSION}}', swConst.SPRING_BOOT, [projectPath], true, true);
-  // lightjs.replacement('{{GROUP.ID}}', projectConfig.server.packagePath, [projectPath], true, true);
-  // lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.title, [projectPath], true, true);
-  // lightjs.replacement('{{PROJECT.VERSION}}', swConst.PROJECT_VERSION, [projectPath], true, true);
-  // lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [projectPath], true, true);
-  // lightjs.replacement('{{PROJECT.DESCRIPTION}}', generalConfig.description, [projectPath], true, true);
-  // lightjs.replacement('{{PROJECT.DIST}}', projectConfig.client.buildDir, [projectPath], true, true);
+function updateReadmeFiles() {
+  const templatePath = 'src/template/root/readme/';
+  shjs.cp(path.join(templatePath, swConst.README_MD), projectPath);
+  const readmeMdPath = path.join(projectPath, swConst.README_MD);
+  const readmeHeaderMdData = fs.readFileSync(path.join(templatePath, 'README.header.md'), 'utf8');
+  lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderRoot(readmeHeaderMdData, true), [readmeMdPath]);
+  if (projectConfig.server.backend !== swConst.JS) {
+    shjs.cp(path.join('src/template/client/', swConst.README_MD), path.join(projectPath, swConst.CLIENT));
+    lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderRoot(readmeHeaderMdData, false), [path.join(projectPath, swConst.CLIENT, swConst.README_MD)]);
+  }
+}
+
+function updateReadmeHeaderRoot(readmeHeaderMdData, isRoot) {
+  readmeHeaderMdData = readmeHeaderMdData.replace('{{PROJECT.TITLE}}', projectConfig.general.title);
+  readmeHeaderMdData = readmeHeaderMdData.replace('{{PROJECT.LICENSE}}', checkLicense(isRoot));
+  readmeHeaderMdData = readmeHeaderMdData.replace('{{PROJECT.DESCRIPTION}}', checkDescription(isRoot));
+  readmeHeaderMdData = readmeHeaderMdData.replace('{{PROJECT.DEPENDENCIES}}', checkDependencies(isRoot));
+  return readmeHeaderMdData;
+}
+
+function checkLicense(isRoot) {
+  return isRoot && projectConfig.general.useMITLicense ? '[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)' : '';
+}
+
+function checkDescription(isRoot) {
+  return isRoot ? os.EOL + os.EOL + projectConfig.general.description : '';
+}
+
+function checkDependencies(isRoot) {
+  let dependencies = '';
+  const ghUser = projectConfig.client.ghUser;
+  if (ghUser !== '') {
+    const projectName = projectConfig.general.name;
+    const davidDmLink = `https://david-dm.org/${ghUser}/${projectName}`;
+    const dependenciesStatus = `[![dependencies Status](${davidDmLink}/status.svg)](${davidDmLink})`;
+    const devDependenciesStatus = `[![devDependencies Status](${davidDmLink}/dev-status.svg)](${davidDmLink}?type=dev)`;
+    const useDavidDm = (isRoot && projectConfig.server.backend === swConst.JS) || (!isRoot && projectConfig.server.backend !== swConst.JS);
+    dependencies = useDavidDm ? dependenciesStatus + os.EOL + devDependenciesStatus : '';
+  }
+  return dependencies;
 }
 
 /**

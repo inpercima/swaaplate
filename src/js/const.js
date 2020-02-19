@@ -2,7 +2,6 @@
 
 module.exports = Object.freeze({
   // misc
-  GITIGNORE_URL: 'https://www.gitignore.io/api/node,angular,eclipse,intellij+all',
   MOCK_DIR: 'mock',
   OR_HIGHER: 'or higher',
   SRC: 'src',
@@ -35,7 +34,6 @@ module.exports = Object.freeze({
   DOCKER_COMPOSE_YML: 'docker-compose.yml',
   DOT_EDITORCONFIG: '.editorconfig',
   DOT_GITATTRIBUTES: '.gitattributes',
-  DOT_GITIGNORE: '.gitignore',
   DOT_GRADLE: '.gradle',
   DOT_MVN: '.mvn',
   ENVIRONMENT_TS: 'environment.ts',
@@ -92,6 +90,4 @@ module.exports = Object.freeze({
   COPY_WEBPACK_PLUGIN: '4.6.0',
   DOCKER_VERSION: '19.03.5',
   DOCKER_COMPOSE_VERSION: '1.25.0',
-  PROJECT_VERSION: '1.0.0-SNAPSHOT',
-  SPRING_BOOT: '2.2.4.RELEASE',
 });

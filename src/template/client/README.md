@@ -1,48 +1,5 @@
-# angular-cli-for-swaaplate
-
-[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
-[![dependencies Status](https://david-dm.org/inpercima/angular-cli-for-swaaplate/status.svg)](https://david-dm.org/inpercima/angular-cli-for-swaaplate)
-[![devDependencies Status](https://david-dm.org/inpercima/angular-cli-for-swaaplate/dev-status.svg)](https://david-dm.org/inpercima/angular-cli-for-swaaplate?type=dev)
-
-This project helps to understand and test the latest versions and plugins of angular and webpack in combination with angular-cli in order to integrate them into other projects.
-
-This project is a copy of [inpercima/angular-cli](https://github.com/inpercima/angular-cli) but preconfigured for [inpercima/swaaplate](https://github.com/inpercima/swaaplate).
-
-## Prerequisites
-
-### Angular CLI
-
-* `angular-cli 8.3.23` or higher
-
-### Node, npm or yarn
-
-* `node 12.14.1` or higher in combination with
-  * `npm 6.13.4` or higher or
-  * `yarn 1.21.1` or higher, used in this repository
-
-## Dependency check
-
-Some libraries could not be updated b/c of peer dependencies or knowing issues.
-
-| library    | current version | wanted version | reason |
-| ---------- | --------------- | -------------- | ------ |
-| zone.js    | 0.9.1           | 0.10.2         | "@angular/core@8.2.14" has incorrect peer dependency "zone.js@~0.9.1" |
-| typescript | 3.5.3           | 3.7.5          | "@angular-devkit/build-angular@0.803.23" has incorrect peer dependency "typescript@>=3.1 < 3.6 |
-| typescript | 3.5.3           | 3.7.5          | "@angular-devkit/build-angular > @ngtools/webpack@8.3.23" has incorrect peer dependency "typescript@>=3.4 < 3.6 |
-| typescript | 3.5.3           | 3.7.5          | "@angular/compiler-cli@8.2.14" has incorrect peer dependency "typescript@>=3.4 <3.6 |
-| tslint     | 5.20.1          | 6.0.0          | "codelyzer@5.2.1" has incorrect peer dependency "tslint@^5.0.0" |
-
-## Getting started
-
-```bash
-# clone project
-git clone https://github.com/inpercima/angular-cli-for-swaaplate
-cd angular-cli-for-swaaplate
-
-# install tools and frontend dependencies
-yarn
-```
-
+{{PROJECT.READMEHEADER}}
+{{PROJECT.READMEGETTINGSTARTED}}
 Create environment files for `devMode`, `mockMode` and `prodMode`.
 
 ```bash
@@ -151,7 +108,7 @@ Defines a suffix for the api to the backend.
 
 Applicationwide title of the app, displayed in title and toolbar.
 
-* default: `angular-cli-for-swaaplate`
+* default: `cryptocheck`
 * type: `string`
 
 ### `defaultRoute`
