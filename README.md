@@ -1,11 +1,15 @@
 # swaaplate
 
+## Atention
+
+This project is currently under high construction!
+
 [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
 [![devDependencies Status](https://david-dm.org/inpercima/swaaplate/dev-status.svg)](https://david-dm.org/inpercima/swaaplate?type=dev)
 
 [s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple template generator for angular webapps with different backends.
 
-Projects like [publicmedia](https://github.com/inpercima/publicmedia), [mittagstisch](https://github.com/inpercima/mittagstisch) or [run-and-fun](https://github.com/inpercima/run-and-fun) are build on it.
+Projects like [publicmedia](https://github.com/inpercima/publicmedia), [cryptocheck](https://github.com/inpercima/cryptocheck), [mittagstisch](https://github.com/inpercima/mittagstisch) or [run-and-fun](https://github.com/inpercima/run-and-fun) are build on it.
 
 ## Motivation
 
@@ -17,7 +21,7 @@ Therefore, I decided to write a small tool, which puts together all the necessar
 ### The goal
 
 With swaaplate, the goal should be to create an angular web app with one of four backends, one of two management tools and one of two js dependency manager.
-You can choose between `js`, `php`, `java` or `kotlin` as backend, `maven` or `gradle` as management tool and `npm` or `yarn` as js dependency manager.
+You can choose between `js` (means angular only), `php`, `java` or `kotlin` as backend, `maven` or `gradle` as management tool and `npm` or `yarn` as js dependency manager.
 
 As part of each backend, some features could be activated like creating a `htaccess` file or using `api` folder instead of `server` folder.
 

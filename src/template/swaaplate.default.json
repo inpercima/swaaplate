@@ -1,41 +1,44 @@
 {
-  "general": {
-    "author": "",
-    "description": "",
-    "github": {
-      "use": false,
-      "username": ""
-    },
-    "name": "helloWorld",
-    "title": "Hello world",
-    "useDocker": false
-  },
   "client": {
     "buildDir": "dist",
+    "ghUser": "",
     "installDependencies": true,
+    "language": "en",
     "packageJson": {
       "contributors": [],
       "homepage": "",
       "repository": ""
     },
-    "route": {
+    "prefix": "hw",
+    "routing": {
+      "enabled": true,
       "features": {
         "default": "dashboard",
         "show": true
       },
       "login": {
+        "enabled": true,
         "activate": true,
         "name": "login",
         "show": false
       },
       "notFound": {
+        "enabled": true,
         "name": "not-found",
-        "redirect": false
+        "redirect": true
       }
     },
-    "selectorPrefix": "hw",
     "theme": "indigo-pink",
+    "useGoogleFonts": true,
     "useYarn": true
+  },
+  "general": {
+    "author": "",
+    "description": "",
+    "name": "helloWorld",
+    "title": "Hello world",
+    "useDocker": false,
+    "useMITLicense": true
   },
   "server": {
     "backend": "js",

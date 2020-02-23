@@ -7,16 +7,21 @@ const shjs = require('shelljs');
 
 const swConst = require('../const.js');
 
-let management = {};
+let exp = {};
+let projectConfig = {};
+let projectPath = '';
 
 /**
  * Configures the management of the app.
  *
- * @param {object} config
- * @param {string} projectPath
+ * @param {object} pConfig
+ * @param {string} pPath
  */
-function configure(config, projectPath) {
-  const serverConfig = config.server;
+function configure(pConfig, pPath) {
+  projectConfig = pConfig;
+  projectPath = pPath;
+
+  const serverConfig = projectConfig.server;
   const backend = serverConfig.backend;
 
   if (backend === swConst.JAVA || backend === swConst.KOTLIN) {
@@ -43,28 +48,27 @@ function configure(config, projectPath) {
       const pomXml = path.join(serverPath, swConst.POM_XML);
       shjs.mv(path.join(serverPath, `pom.${backend}.xml`), pomXml);
       shjs.rm(path.join(serverPath, `pom.${dismatch}.xml`));
-      replaceInPomFile(config, pomXml);
+      replaceInPomFile(pomXml);
     }
   } else {
-    lightjs.info('-> an backend unlike java or kotlin is used, no management is needed');
+    lightjs.info('-> an backend unlike java or kotlin is used, no management should be used');
   }
 }
 
 /**
- * Configures the management of the app.
+ * Configure the management of the app.
  *
- * @param {object} config
  * @param {string} pomXml
  */
-function replaceInPomFile(config, pomXml) {
-  const generalConfig = config.general;
-  lightjs.replacement(swConst.SW_PACKAGE, config.server.packagePath, [pomXml]);
+function replaceInPomFile(pomXml) {
+  const generalConfig = projectConfig.general;
+  lightjs.replacement(swConst.SW_PACKAGE, projectConfig.server.packagePath, [pomXml]);
   lightjs.replacement(swConst.SWAAPLATE, generalConfig.name, [pomXml]);
-  lightjs.replacement(swConst.DIST, config.client.buildDir, [pomXml]);
+  lightjs.replacement(swConst.DIST, projectConfig.client.buildDir, [pomXml]);
 
   lightjs.replacement(swConst.SW_DESCRIPTION, generalConfig.description, [pomXml]);
 }
 
-management.configure = configure;
+exp.configure = configure;
 
-module.exports = management;
+module.exports = exp;

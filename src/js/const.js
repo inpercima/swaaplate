@@ -2,7 +2,6 @@
 
 module.exports = Object.freeze({
   // misc
-  GITIGNORE_URL: 'https://www.gitignore.io/api/node,angular,eclipse,intellij+all',
   MOCK_DIR: 'mock',
   OR_HIGHER: 'or higher',
   SRC: 'src',
@@ -15,9 +14,7 @@ module.exports = Object.freeze({
   SW_USER: 'inpercima',
   SW_DESCRIPTION: '\\[s\\]imple \\[w\\]eb \\[a\\]pp \\[a\\]ngular tem\\[plate\\]. A very simple template generator for angular webapps with different backends.',
   SW_GENERATED: 'This project was generated with [swaaplate](https://github.com/inpercima/swaaplate) version',
-  SW_MODULE: 'node_modules/angular-cli-for-swaaplate',
   SW_PACKAGE: 'net.inpercima.swaaplate',
-  SW_TITLE: 'angular-cli-for-swaaplate',
   TEMPLATE_README: 'src/template/server/readme',
   THEME: 'indigo-pink',
 
@@ -37,7 +34,6 @@ module.exports = Object.freeze({
   DOCKER_COMPOSE_YML: 'docker-compose.yml',
   DOT_EDITORCONFIG: '.editorconfig',
   DOT_GITATTRIBUTES: '.gitattributes',
-  DOT_GITIGNORE: '.gitignore',
   DOT_GRADLE: '.gradle',
   DOT_MVN: '.mvn',
   ENVIRONMENT_TS: 'environment.ts',
@@ -65,6 +61,7 @@ module.exports = Object.freeze({
   DASHBOARD: 'dashboard',
   DEFAULT: 'default',
   DIST: 'dist',
+  FEATURES: 'features',
   GRADLE: 'gradle',
   JAVA: 'java',
   JS: 'js',
@@ -93,6 +90,4 @@ module.exports = Object.freeze({
   COPY_WEBPACK_PLUGIN: '4.6.0',
   DOCKER_VERSION: '19.03.5',
   DOCKER_COMPOSE_VERSION: '1.25.0',
-  PROJECT_VERSION: '1.0.0-SNAPSHOT',
-  SPRING_BOOT: '2.2.4.RELEASE',
 });
