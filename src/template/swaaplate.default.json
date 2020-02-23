@@ -13,12 +13,12 @@
     "routing": {
       "enabled": true,
       "features": {
-        "default": "dashboard",
+        "default": "hello-world",
         "show": true
       },
       "login": {
-        "enabled": true,
         "activate": true,
+        "enabled": true,
         "name": "login",
         "show": false
       },
@@ -35,16 +35,16 @@
   "general": {
     "author": "",
     "description": "",
-    "name": "helloWorld",
+    "name": "hello-world",
     "title": "Hello world",
     "useDocker": false,
     "useMITLicense": true
   },
   "server": {
     "backend": "js",
-    "htaccess": true,
+    "htaccess": false,
     "management": "",
     "packagePath": "",
-    "serverAsApi": true
+    "serverAsApi": false
   }
 }
