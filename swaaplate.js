@@ -22,7 +22,8 @@ function init() {
     lightjs.error('no absolute path was specified for the project');
   } else if (args.length === 2 && args[0] === '-u') {
     lightjs.info('two parameters were found, use first as updating the project, second as absolute workspace path');
-    swProject.update(args[1]);
+    //swProject.update(args[1]);
+    lightjs.warn('the update process is version 2.0.0 not available');
   } else {
     lightjs.error('too many parameters were specified. Only one parameter for the workspace path of the project is allowed');
   }

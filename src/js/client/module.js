@@ -98,7 +98,9 @@ function replaceLinesInModule(module, component) {
   const moduleFile = `${module}.module.ts`;
   const componentName = module === swConst.FEATURES ? uppercamelcase(component) : uppercamelcase(module);
   lightjs.replacement(`\\[(${componentName}Component)\\]`, '[ $1 ]', [path.join(appPath, appDir, moduleFile)]);
-  lightjs.replacement('{{PROJECT.PREFIX}}', projectConfig.client.prefix, [path.join(appPath, appDir, moduleFile)]);
+  if (module === swConst.APP || module === projectConfig.client.routing.login.name) {
+    lightjs.replacement('{{PROJECT.PREFIX}}', projectConfig.client.prefix, [path.join(appPath, appDir, `${module}.component.ts`)]);
+  }
 }
 
 /**
