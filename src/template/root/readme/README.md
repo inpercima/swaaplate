@@ -1,5 +1,5 @@
 {{PROJECT.READMEHEADER}}
-This project was generated with [swaaplate](https://github.com/inpercima/swaaplate) version {{PROJECT.SWVERSION}}.
+This project was generated with [swaaplate](https://github.com/inpercima/swaaplate) version {{PROJECT.VERSION}}.
 
 ## Prerequisites
 
@@ -9,7 +9,7 @@ This project was generated with [swaaplate](https://github.com/inpercima/swaapla
 
 ### Node, npm or yarn
 
-* `node 12.16.0` or higher in combination with
+* `node 12.16.1` or higher in combination with
   * `npm 6.13.4` or higher{{PROJECT.USENPM}} or
   * `yarn 1.22.0` or higher{{PROJECT.USEYARN}}
 

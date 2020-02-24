@@ -30,6 +30,7 @@ module.exports = Object.freeze({
   APPLICATION_DEV_YML: 'application-dev.yml',
   APPLICATION_PROD_YML: 'application-prod.yml',
   DB_JSON: 'db.json',
+  DOCKER: 'docker',
   DOCKERFILE: 'Dockerfile',
   DOCKER_COMPOSE_YML: 'docker-compose.yml',
   DOT_EDITORCONFIG: '.editorconfig',

@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
       }
     }, error => {
       this.wrongLogin = true;
-      this.message = error.error.message;
+      this.message = error.message;
     });
   }
 

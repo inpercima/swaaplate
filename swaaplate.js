@@ -3,6 +3,7 @@
 
 /* requirements */
 const lightjs = require('light-js');
+
 const swProject = require('./src/js/project.js');
 
 /* init */

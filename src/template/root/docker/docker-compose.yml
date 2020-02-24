@@ -1,0 +1,7 @@
+version: '2'
+services:
+  {{PROJECT.TITLE}}:
+    build: .
+    image: {{PROJECT.TITLE}}:latest
+    mem_limit: 256mb
+    restart: unless-stopped
