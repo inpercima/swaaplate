@@ -26,15 +26,18 @@ function configure(workspacePath, pConfig, pPath) {
 
   const clientConfig = projectConfig.client;
   const pwd = shjs.pwd();
-  const name = projectConfig.general.name;
+  const projectName = projectConfig.general.name;
   if (shjs.which('ng')) {
     shjs.cd(workspacePath);
-    const packageManager = clientConfig.useYarn ? swConst.YARN : swConst.NPM;
-    const paramsDirStyPack = `--directory=${name} --style=css --packageManager=${packageManager}`;
-    const paramsPreRout = `--prefix=${clientConfig.prefix} --routing=${clientConfig.routing.enabled}`;
-
-    lightjs.info(`run 'ng new ${name} --interactive=false --skipInstall=true ${paramsDirStyPack} ${paramsPreRout}'`);
-    shjs.exec(`ng new ${name} --interactive=false --skipInstall=true ${paramsDirStyPack} ${paramsPreRout}`);
+    const params = [
+      '--interactive=false --skipInstall=true --style=css',
+      `--packageManager=${clientConfig.useYarn ? swConst.YARN : swConst.NPM}`,
+      `--directory=${projectName}`,
+      `--prefix=${clientConfig.prefix}`,
+      `--routing=${clientConfig.routing.enabled}`
+    ];
+    lightjs.info(`run 'ng new ${projectName} ${params.join(" ")}'`);
+    shjs.exec(`ng new ${projectName} ${params.join(" ")}`);
   } else {
     lightjs.error(`sorry, this script requires 'ng'`);
     shjs.exit(1);
@@ -48,7 +51,6 @@ function configure(workspacePath, pConfig, pPath) {
   replaceSectionsInFiles();
   updatePackageJsonFile();
   installDependencies();
-  updateDependencies();
 }
 
 /**

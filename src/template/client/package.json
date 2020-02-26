@@ -5,7 +5,7 @@
   "description": "",
   "devDependencies": {},
   "engines": {
-    "node": ">=12.16.0"
+    "node": ">=12.16.1"
   },
   "homepage": "",
   "name": "",
