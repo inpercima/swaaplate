@@ -65,7 +65,7 @@ ng e2e
 
 ### General
 
-All options have to bet set in the environment files but some of them do not need to be changed.
+All options have to been set in the environment files but some of them do not need to be changed.
 All defaults refer to the development environment file (`environment.dev.ts`).
 Change for prodMode the option `production` to `true` and for mockMode the option `api` to `http://localhost:3000/`.
 
@@ -84,7 +84,7 @@ Change for prodMode the option `production` to `true` and for mockMode the optio
 
 ### `activateLogin`
 
-Defines whether a login will be used or not.
+Defines whether the login module will be used or not.
 
 * default: `true`
 * type: `boolean`
@@ -108,14 +108,14 @@ Defines a suffix for the api to the backend.
 
 Applicationwide title of the app, displayed in title and toolbar.
 
-* default: `cryptocheck`
+* default: `Hello world`
 * type: `string`
 
 ### `defaultRoute`
 
-The main route and the redirect route after login if no route is stored.
+The default route and the route to be redirected after a login if no route is stored or if a route does not exist.
 
-* default: `dashboard`
+* default: `hello-world`
 * type: `string`
 
 ### `production`
@@ -130,13 +130,13 @@ Defines whether the app is in production or not.
 
 Defines whether the 404 route will redirect to the default route or not.
 
-* default: `false`
+* default: `true`
 * type: `boolean`
 * values: `true`/`false`
 
 ### `showFeatures`
 
-Defines whether feature routes will be displayed or not.
+Defines whether the feature routes will be displayed in navigation or not.
 
 * default: `true`
 * type: `boolean`
@@ -144,7 +144,7 @@ Defines whether feature routes will be displayed or not.
 
 ### `showLogin`
 
-Defines whether login route will be displayed or not.
+Defines whether the login route will be displayed in navigation or not.
 
 * default: `false`
 * type: `boolean`
