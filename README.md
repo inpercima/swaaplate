@@ -27,7 +27,7 @@ You can choose between `js` (means angular only), `php`, `java` or `kotlin` as b
 
 ### Node, npm or yarn
 
-* `node 12.16.0` or higher in combination with
+* `node 12.16.1` or higher in combination with
   * `npm 6.13.4` or higher or
   * `yarn 1.22.0` or higher, used in this repository
 
@@ -70,6 +70,7 @@ Some of this options will be copied in the environment files of the new project 
 * [client/prefix](#clientprefix)
 * [client/routing/enabled](#clientroutingenabled)
 * [client/routing/features/default](#clientroutingfeaturesdefault)
+* [client/routing/features/name](#clientroutingfeaturesname)
 * [client/routing/features/show](#clientroutingfeaturesshow)
 * [client/routing/login/activate](#clientroutingloginactivate)
 * [client/routing/login/enabled](#clientroutingloginenabled)
@@ -167,6 +168,14 @@ This depends on `client/routing/enabled`.
 
 * environment name: `defaultRoute`
 * default: `dashboard`
+* type: `string`
+
+### `client/routing/features/name`
+
+Defines the name of the features module.
+This depends on `client/routing/enabled`.
+
+* default: `features`
 * type: `string`
 
 ### `client/routing/features/show`

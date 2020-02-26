@@ -26,7 +26,7 @@ function generateModulesAndComponents(pConfig, pPath) {
   const clientConfigRouting = projectConfig.client.routing;
   if (clientConfigRouting.enabled) {
     lightjs.info('routing is activated ...');
-    generateModuleAndComponent(true, swConst.FEATURES, clientConfigRouting.features.default);
+    generateModuleAndComponent(true, clientConfigRouting.features.name, clientConfigRouting.features.default);
     const clientConfigLogin = clientConfigRouting.login;
     const login = clientConfigLogin.name;
     generateModuleAndComponent(clientConfigLogin.enabled, login, login);
@@ -96,7 +96,7 @@ function replaceLinesInModule(module, component) {
   lightjs.replacement('\\n\\n\\n', os.EOL + os.EOL, [path.join(appPath, appDir, moduleRoutingFile)]);
 
   const moduleFile = `${module}.module.ts`;
-  const componentName = module === swConst.FEATURES ? uppercamelcase(component) : uppercamelcase(module);
+  const componentName = module === projectConfig.client.routing.features.name ? uppercamelcase(component) : uppercamelcase(module);
   lightjs.replacement(`\\[(${componentName}Component)\\]`, '[ $1 ]', [path.join(appPath, appDir, moduleFile)]);
   if (module === swConst.APP || module === projectConfig.client.routing.login.name) {
     lightjs.replacement('{{PROJECT.PREFIX}}', projectConfig.client.prefix, [path.join(appPath, appDir, `${module}.component.ts`)]);
@@ -116,14 +116,14 @@ function addRouteInformation(module, component) {
   const moduleName = uppercamelcase(module);
   const routingModuleFile = path.join(projectPath, swConst.SRC, module === swConst.APP ? '' : swConst.APP, module, `${module}-routing.module.ts`);
 
-  const componentName = module === swConst.FEATURES ? uppercamelcase(component) : moduleName;
+  const clientConfigRouting = projectConfig.client.routing;
+  const componentName = module === clientConfigRouting.features.name ? uppercamelcase(component) : moduleName;
   const routes = addRoute(module, componentName);
   lightjs.replacement('(Routes = \\[)', `$1${routes}`, [routingModuleFile]);
 
-  const clientConfigRouting = projectConfig.client.routing;
-  const authGuardImport = module === swConst.FEATURES ? `${twoEol}import { AuthGuard } from '../core/auth-guard.service';` : '';
-  const lineBreakComponent = module === swConst.FEATURES ? os.EOL : twoEol;
-  const componentFolder = module === swConst.FEATURES ? `${component}/` : '';
+  const authGuardImport = module === clientConfigRouting.features.name ? `${twoEol}import { AuthGuard } from '../core/auth-guard.service';` : '';
+  const lineBreakComponent = module === clientConfigRouting.features.name ? os.EOL : twoEol;
+  const componentFolder = module === clientConfigRouting.features.name ? `${component}/` : '';
   const componentImport = module === swConst.APP ? '' : `${lineBreakComponent}import { ${componentName}Component } from './${componentFolder}${component}.component';`;
   const lineBreakEnvironment = module === swConst.APP ? twoEol : os.EOL;
   const environmentFolder = module === swConst.APP ? '' : '../';
@@ -160,7 +160,7 @@ function addRoute(module, componentName) {
   component: ${componentName}Component,
   path: '**',
 }`;
-  } else if (module === swConst.FEATURES) {
+  } else if (module === clientConfigRouting.features.name) {
     routes = `{
   canActivate: [AuthGuard],
   component: ${componentName}Component,
