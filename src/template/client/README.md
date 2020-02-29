@@ -86,7 +86,7 @@ Change for prodMode the option `production` to `true` and for mockMode the optio
 
 Defines whether the login module will be used or not.
 
-* default: `true`
+* default: `{{PROJECT.ACTIVATELOGIN}}`
 * type: `boolean`
 * values: `true`/`false`
 
@@ -94,28 +94,28 @@ Defines whether the login module will be used or not.
 
 Defines the URL to the backend.
 
-* default: `./`
+* default: `{{PROJECT.API}}`
 * type: `string`
 
 ### `apiSuffix`
 
 Defines a suffix for the api to the backend.
 
-* default: EMPTY
+* default: {{PROJECT.APISUFFIX}}
 * type: `string`
 
 ### `appname`
 
 Applicationwide title of the app, displayed in title and toolbar.
 
-* default: `Hello world`
+* default: `{{PROJECT.TITLE}}`
 * type: `string`
 
 ### `defaultRoute`
 
 The default route and the route to be redirected after a login if no route is stored or if a route does not exist.
 
-* default: `hello-world`
+* default: `{{PROJECT.DEFAULTROUTE}}`
 * type: `string`
 
 ### `production`
@@ -130,7 +130,7 @@ Defines whether the app is in production or not.
 
 Defines whether the 404 route will redirect to the default route or not.
 
-* default: `true`
+* default: `{{PROJECT.REDIRECTNOTFOUND}}`
 * type: `boolean`
 * values: `true`/`false`
 
@@ -138,7 +138,7 @@ Defines whether the 404 route will redirect to the default route or not.
 
 Defines whether the feature routes will be displayed in navigation or not.
 
-* default: `true`
+* default: `{{PROJECT.SHOWFEATURES}}`
 * type: `boolean`
 * values: `true`/`false`
 
@@ -146,7 +146,7 @@ Defines whether the feature routes will be displayed in navigation or not.
 
 Defines whether the login route will be displayed in navigation or not.
 
-* default: `false`
+* default: `{{PROJECT.SHOWLOGIN}}`
 * type: `boolean`
 * values: `true`/`false`
 
@@ -154,7 +154,7 @@ Defines whether the login route will be displayed in navigation or not.
 
 Name of a build-in theme from angular-material or a custom light or dark theme.
 
-* default: `indigo-pink`
+* default: `{{PROJECT.THEME}}`
 * type: `string`
 * values: `deeppurple-amber`/`indigo-pink`/`pink-bluegrey`/`purple-green`/`custom-light`/`custom-dark`
 

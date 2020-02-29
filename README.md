@@ -1,6 +1,6 @@
 # swaaplate
 
-## Atention
+## Attention
 
 This project is currently under high construction!
 
@@ -24,6 +24,10 @@ With swaaplate, the goal should be to create an angular web app with one of four
 You can choose between `js` (means angular only), `php`, `java` or `kotlin` as backend, `maven` or `gradle` as management tool and `npm` or `yarn` as js dependency manager.
 
 ## Prerequisites
+
+### Angular cli
+
+* `angular-cli 9.0.5` or higher
 
 ### Node, npm or yarn
 
