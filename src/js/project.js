@@ -2,7 +2,6 @@
 
 /* requirements */
 const axios = require('axios');
-const fs = require('fs');
 const lightjs = require('light-js');
 const os = require('os');
 const path = require('path');
@@ -58,10 +57,15 @@ function configure() {
   shjs.cp(swConst.SWAAPLATE_JSON, projectPath);
 
   if (generalConfig.useDocker) {
-    shjs.touch(path.join(projectPath, swConst.DOCKERFILE));
+    shjs.cp(path.join(templatePath, swConst.DOCKER, swConst.DOCKERFILE), path.join(projectPath, swConst.DOCKERFILE));
     shjs.cp(path.join(templatePath, swConst.DOCKER, swConst.DOCKER_COMPOSE_YML), path.join(projectPath, swConst.DOCKER_COMPOSE_YML));
     shjs.cp(path.join(templatePath, swConst.DOCKER, swConst.README_MD), path.join(projectPath, 'README_docker.md'));
     lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.name, [path.join(projectPath, swConst.DOCKER_COMPOSE_YML)]);
+    const contributors = projectConfig.client.packageJson.contributors;
+    const name = contributors[0].name ? contributors[0].name : '';
+    const email = contributors[0].name ? contributors[0].email : '';
+    lightjs.replacement('{{PROJECT.AUTHOR}}', name, [path.join(projectPath, swConst.DOCKERFILE)]);
+    lightjs.replacement('{{PROJECT.FIRSTCONTRIBUTORSMAIL}}', email, [path.join(projectPath, swConst.DOCKERFILE)]);
   }
 }
 
