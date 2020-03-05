@@ -92,10 +92,11 @@ function copyModuleFiles(module) {
 function replaceLinesInModule(module, component) {
   const appPath = path.join(projectPath, swConst.SRC, swConst.APP);
   const moduleRoutingFile = `${module}-routing.module.ts`;
+  const moduleFile = `${module}.module.ts`;
   const appDir =  module == swConst.APP ? '' : module;
+  lightjs.replacement('\\n\\n\\n', os.EOL + os.EOL, [path.join(appPath, appDir, moduleFile)]);
   lightjs.replacement('\\n\\n\\n', os.EOL + os.EOL, [path.join(appPath, appDir, moduleRoutingFile)]);
 
-  const moduleFile = `${module}.module.ts`;
   const componentName = module === projectConfig.client.routing.features.name ? uppercamelcase(component) : uppercamelcase(module);
   lightjs.replacement(`\\[(${componentName}Component)\\]`, '[ $1 ]', [path.join(appPath, appDir, moduleFile)]);
   if (module === swConst.APP || module === projectConfig.client.routing.login.name) {

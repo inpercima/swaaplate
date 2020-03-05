@@ -20,6 +20,7 @@ let projectPath = '';
  * @param {string} pPath
  */
 function configure(pConfig, pPath) {
+  const packageJsonData = lightjs.readJson(swConst.PACKAGE_JSON);
   projectConfig = pConfig;
   projectPath = pPath;
 
@@ -55,26 +56,41 @@ function configure(pConfig, pPath) {
 
   const readmeGettingStartedMdData = fs.readFileSync(path.join(templatePath, 'README.getting-started.md'), 'utf8');
   lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', checkGettingStarted(readmeGettingStartedMdData, true), [readmeMdPath]);
+  const readmeMdClientPath = path.join(projectPath, swConst.CLIENT, swConst.README_MD);
   if (serverConfig.backend !== swConst.JS) {
-    lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', checkGettingStarted(readmeGettingStartedMdData, false), [path.join(projectPath, swConst.CLIENT, swConst.README_MD)]);
+    lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', checkGettingStarted(readmeGettingStartedMdData, false), [readmeMdClientPath]);
   }
 
-  if (serverConfig.backend === swConst.JS) {
-    const readmeClientData = fs.readFileSync(path.join('src/template/client/', swConst.README_MD), 'utf8');
-    lightjs.replacement('{{PROJECT.READMEIMPORT}}', readmeClientData, [readmeMdPath]);
-  }
+  const readmeClientData = serverConfig.backend === swConst.JS ? fs.readFileSync(path.join('src/template/client/', swConst.README_MD), 'utf8') : '';
+  lightjs.replacement('{{PROJECT.READMEIMPORT}}', readmeClientData, [readmeMdPath]);
 
   const usage = `## Usage
 
-### Modules`;
+### Modules` + os.EOL + os.EOL;
   lightjs.replacement('{{PROJECT.USAGE}}', serverConfig.backend !== swConst.JS ? usage : '', [readmeMdPath]);
 
-  const clientLink = `For the client check [${projectConfig.general.name} - client](./client).`;
-  const serverLink = `For the server check [${projectConfig.general.name} - server](./server).`;
+  const clientLink = `For the client check [${projectConfig.general.name} - client](./client).` + os.EOL + os.EOL;
+  const serverLink = `For the server check [${projectConfig.general.name} - server](./server).` + os.EOL + os.EOL;
   const dockerLink = `For the docker check [${projectConfig.general.name} - docker](./README_docker.md).`;
   lightjs.replacement('{{PROJECT.CLIENT}}', serverConfig.backend !== swConst.JS ? clientLink : '', [readmeMdPath]);
   lightjs.replacement('{{PROJECT.SERVER}}', serverConfig.backend !== swConst.JS ? serverLink : '', [readmeMdPath]);
   lightjs.replacement('{{PROJECT.DOCKER}}', projectConfig.general.useDocker ? dockerLink : '', [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.VERSION}}', packageJsonData.version, [readmeMdPath]);
+
+  const clientConfig = projectConfig.client;
+  const clientConfigRouting = clientConfig.routing;
+  const api = serverConfig.backend === swConst.JAVA || serverConfig.backend === swConst.KOTLIN ? 'http://localhost:8080/' : ( serverConfig.backend === swConst.PHP && serverConfig.serverAsApi ? './api/' : './');
+  const apiSuffix = serverConfig.backend === swConst.PHP && !serverConfig.htaccess ? '`.php`' : 'EMPTY';
+
+  const readmeFile = serverConfig.backend === swConst.JS ? readmeMdPath : readmeMdClientPath;
+  lightjs.replacement('{{PROJECT.ACTIVATELOGIN}}', clientConfigRouting.login.activate, [readmeFile]);
+  lightjs.replacement('{{PROJECT.API}}', api, [readmeFile]);
+  lightjs.replacement('{{PROJECT.APISUFFIX}}', apiSuffix, [readmeFile]);
+  lightjs.replacement('{{PROJECT.DEFAULTROUTE}}', clientConfigRouting.features.default, [readmeFile]);
+  lightjs.replacement('{{PROJECT.REDIRECTNOTFOUND}}', clientConfigRouting.notFound.redirect, [readmeFile]);
+  lightjs.replacement('{{PROJECT.SHOWFEATURES}}', clientConfigRouting.features.show, [readmeFile]);
+  lightjs.replacement('{{PROJECT.SHOWLOGIN}}', clientConfigRouting.login.show, [readmeFile]);
+  lightjs.replacement('{{PROJECT.THEME}}', clientConfig.theme, [readmeFile]);
 }
 
 function checkManager(manager) {
@@ -84,21 +100,17 @@ function checkManager(manager) {
 }
 
 function checkGettingStarted(readmeGettingStartedMdData, isRoot) {
-  const cd = `# all commands used in ./client
-cd client`;
-  const installTools = `# install tools and frontend dependencies
-${projectConfig.client.useYarn ? swConst.YARN : swConst.NPM}`;
-  const getttingStartet = `\`\`\`bash
-# clone project
+  const cd = `# all commands used in ./client${os.EOL}cd client`;
+  const installTools = `# install tools and frontend dependencies${os.EOL}${projectConfig.client.useYarn ? swConst.YARN : swConst.NPM}`;
+  const getttingStartet = `# clone project
 git clone ${projectConfig.client.packageJson.repository}
-cd ${projectConfig.general.name}${isRoot && projectConfig.server.backend === swConst.JS ? os.EOL + installTools : ''}
-\`\`\``;
-  readmeGettingStartedMdData = readmeGettingStartedMdData.replace('{{PROJECT.GETTINGSTARTED}}', isRoot ? getttingStartet : cd);
+cd ${projectConfig.general.name}${isRoot && projectConfig.server.backend === swConst.JS ? os.EOL + os.EOL + installTools : ''}`;
+  readmeGettingStartedMdData = readmeGettingStartedMdData.replace('{{PROJECT.GETTINGSTARTED}}', isRoot ? getttingStartet : cd + os.EOL + os.EOL + installTools);
   return readmeGettingStartedMdData;
 }
 
 function updateReadmeHeaderRoot(readmeHeaderMdData, isRoot) {
-  readmeHeaderMdData = readmeHeaderMdData.replace('{{PROJECT.TITLE}}', projectConfig.general.title);
+  readmeHeaderMdData = readmeHeaderMdData.replace('{{PROJECT.TITLE}}', projectConfig.general.title + (isRoot ? '' : ' - client'));
   readmeHeaderMdData = readmeHeaderMdData.replace('{{PROJECT.LICENSE}}', checkLicense(isRoot));
   readmeHeaderMdData = readmeHeaderMdData.replace('{{PROJECT.DESCRIPTION}}', checkDescription(isRoot));
   readmeHeaderMdData = readmeHeaderMdData.replace('{{PROJECT.DEPENDENCIES}}', checkDependencies(isRoot));
@@ -120,9 +132,11 @@ function checkDependencies(isRoot) {
 }
 
 function generateDavidDmLinks(isRoot) {
+  const pathParam = isRoot ? '' : '?path=client';
   const davidDmLink = `https://david-dm.org/${projectConfig.client.ghUser}/${projectConfig.general.name}`;
-  const dependenciesStatus = `[![dependencies Status](${davidDmLink}/status.svg)](${davidDmLink})`;
-  const devDependenciesStatus = `[![devDependencies Status](${davidDmLink}/dev-status.svg)](${davidDmLink}?type=dev)`;
+  const dependenciesStatus = `[![dependencies Status](${davidDmLink}/status.svg${pathParam})](${davidDmLink}${pathParam})`;
+  const typeParam = isRoot ? '?' : '&';
+  const devDependenciesStatus = `[![devDependencies Status](${davidDmLink}/dev-status.svg${pathParam})](${davidDmLink}${pathParam}${typeParam}type=dev)`;
   return (isRoot ? os.EOL : '') + dependenciesStatus + os.EOL + devDependenciesStatus;
 }
 

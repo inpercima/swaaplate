@@ -71,8 +71,6 @@ function copyFiles() {
   shjs.cp(path.join(templatePath, 'src/favicon.ico'), srcPath);
   shjs.cp(path.join(templatePath, 'src/themes.scss'), srcPath);
 
-  shjs.cp('src/template/package.json', projectPath);
-
   const coreFolder = 'core';
   const corePath = path.join(srcPath, swConst.APP, coreFolder);
   shjs.mkdir(corePath);
@@ -148,8 +146,8 @@ function updateEnvironmentTsFiles() {
   const clientConfigRouting = clientConfig.routing;
   const generalConfig = projectConfig.general;
   const serverConfig = projectConfig.server;
-  const api = serverConfig.backend === swConst.JAVA || serverConfig.backend === swConst.KOTLIN ? 'http://localhost:8080/' : './';
-  const apiSuffix = serverConfig.backend === swConst.PHP ? '.php' : '';
+  const api = serverConfig.backend === swConst.JAVA || serverConfig.backend === swConst.KOTLIN ? 'http://localhost:8080/' : ( serverConfig.backend === swConst.PHP && serverConfig.serverAsApi ? './api/' : './');
+  const apiSuffix = serverConfig.backend === swConst.PHP && !serverConfig.htaccess ? '.php' : '';
   const environments = `activateLogin: ${clientConfigRouting.login.activate},
   api: '${api}',
   apiSuffix: '${apiSuffix}',
@@ -235,45 +233,57 @@ function createLink(font) {
  *
  */
 function updatePackageJsonFile() {
-  const templatePath = 'src/template/client/';
-  const packageJsonTemplateFile = path.join(templatePath, swConst.PACKAGE_JSON);
-  let packageJsonTemplateData = lightjs.readJson(packageJsonTemplateFile);
   const packageJsonFile = path.join(projectPath, swConst.PACKAGE_JSON);
   let packageJsonData = lightjs.readJson(packageJsonFile);
 
+  let scripts = {
+    "build:dev": "ng lint && ng build --configuration=dev",
+    "serve:dev": "ng serve -o --configuration=dev",
+    "watch:dev": "ng build --watch --configuration=dev",
+    "build:mock": "ng lint && ng build --configuration=mock",
+    "run:mock": "json-server mock/db.json --middlewares mock/middleware.js",
+    "serve:mock": "ng serve -o --configuration=mock",
+    "watch:mock": "ng build --watch --configuration=mock",
+    "build:prod": "ng lint && ng build --prod"
+  };
+
+  let packageJsonTemplateData = {};
   const clientConfig = projectConfig.client;
   const generalConfig = projectConfig.general;
   packageJsonTemplateData.author = generalConfig.author;
-  packageJsonTemplateData.description = generalConfig.description;
-  packageJsonTemplateData.name = generalConfig.name;
   packageJsonTemplateData.contributors = clientConfig.packageJson.contributors;
-  packageJsonTemplateData.homepage = clientConfig.packageJson.homepage;
-  packageJsonTemplateData.repository = clientConfig.packageJson.repository;
-  packageJsonTemplateData.contributors = clientConfig.packageJson.contributors;
-  if (generalConfig.useMITLicense) {
-    packageJsonTemplateData.license = 'MIT';
-  }
-  packageJsonTemplateData.version = swConst.PROJECT_VERSION;
   packageJsonTemplateData.dependencies = packageJsonData.dependencies;
-  packageJsonTemplateData.dependencies['@angular/cdk'] = '~9.0.1',
+  packageJsonTemplateData.dependencies['@angular/cdk'] = '~9.1.1',
   packageJsonTemplateData.dependencies['@angular/flex-layout'] = '~9.0.0-beta.29',
-  packageJsonTemplateData.dependencies['@angular/material'] = '~9.0.1',
+  packageJsonTemplateData.dependencies['@angular/material'] = '~9.1.1',
   packageJsonTemplateData.dependencies['@auth0/angular-jwt'] = '~3.0.1',
   packageJsonTemplateData.dependencies['json-server'] = '~0.15.1',
   packageJsonTemplateData.dependencies['jsonwebtoken'] = '~8.5.1',
+  packageJsonTemplateData.description = generalConfig.description;
   packageJsonTemplateData.devDependencies = packageJsonData.devDependencies;
-
   const serverConfig = projectConfig.server;
   if (serverConfig.backend === swConst.PHP) {
     packageJsonTemplateData.devDependencies['copy-webpack-plugin'] = swConst.COPY_WEBPACK_PLUGIN;
     packageJsonTemplateData.devDependencies['@angular-builders/custom-webpack'] = swConst.ANGULAR_BUILDERS;
-    packageJsonTemplateData.scripts['build:mock'] = updateTask(packageJsonTemplateData, 'build:mock');
-    packageJsonTemplateData.scripts['watch:mock'] = updateTask(packageJsonTemplateData, 'watch:mock');
+    scripts['build:mock'] = updateTask(scripts, 'build:mock');
+    scripts['watch:mock'] = updateTask(scripts, 'watch:mock');
   }
-
+  packageJsonTemplateData.engines = {
+    node: ">=12.16.1"
+  };
+  packageJsonTemplateData.homepage = clientConfig.packageJson.homepage;
+  if (generalConfig.useMITLicense) {
+    packageJsonTemplateData.license = 'MIT';
+  }
+  packageJsonTemplateData.name = generalConfig.name;
+  packageJsonTemplateData.private = true;
+  packageJsonTemplateData.repository = clientConfig.packageJson.repository;
   if (serverConfig.backend === swConst.JAVA || serverConfig.backend === swConst.KOTLIN) {
-    packageJsonTemplateData.scripts['serve:dev'] = 'ng serve -o --configuration=dev';
+    scripts['serve:dev'] = 'ng serve -o --configuration=dev';
   }
+  packageJsonTemplateData.scripts = scripts;
+  packageJsonTemplateData.version = '1.0.0-SNAPSHOT';
+
   lightjs.writeJson(packageJsonFile, packageJsonTemplateData);
 }
 
@@ -284,7 +294,7 @@ function updatePackageJsonFile() {
  * @param {string} mockTask
  */
 function updateTask(packageJsonData, mockTask) {
-  return `export NODE_ENV='mock' && ${packageJsonData.scripts[mockTask]}`;
+  return `export NODE_ENV='mock' && ${packageJsonData[mockTask]}`;
 }
 
 /**
