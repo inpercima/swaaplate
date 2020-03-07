@@ -34,6 +34,7 @@ function configure(pConfig, pPath) {
     shjs.cp(path.join('src/template/client/', swConst.README_MD), path.join(projectPath, swConst.CLIENT));
     lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderRoot(readmeHeaderMdData, false), [path.join(projectPath, swConst.CLIENT, swConst.README_MD)]);
   }
+
   let prerequisites = '';
   if (serverConfig.backend === swConst.PHP) {
     prerequisites += os.EOL + os.EOL + `### Apache and php
@@ -63,6 +64,10 @@ function configure(pConfig, pPath) {
 
   const readmeClientData = serverConfig.backend === swConst.JS ? fs.readFileSync(path.join('src/template/client/', swConst.README_MD), 'utf8') : '';
   lightjs.replacement('{{PROJECT.READMEIMPORT}}', readmeClientData, [readmeMdPath]);
+  if (serverConfig.backend === swConst.JS) {
+    lightjs.replacement('{{PROJECT.READMEHEADER}}', '', [readmeMdPath]);
+    lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', '', [readmeMdPath]);
+  }
 
   const usage = `## Usage
 
@@ -91,6 +96,8 @@ function configure(pConfig, pPath) {
   lightjs.replacement('{{PROJECT.SHOWFEATURES}}', clientConfigRouting.features.show, [readmeFile]);
   lightjs.replacement('{{PROJECT.SHOWLOGIN}}', clientConfigRouting.login.show, [readmeFile]);
   lightjs.replacement('{{PROJECT.THEME}}', clientConfig.theme, [readmeFile]);
+
+  lightjs.replacement('(`themes\\.scss`\\.)\\n\\s*', '$1' + os.EOL, [readmeFile]);
 }
 
 function checkManager(manager) {
