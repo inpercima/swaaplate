@@ -78,7 +78,7 @@ function configurePhp(projectConfig, projectPath) {
   const htaccess = configServer.htaccess;
   shjs.mkdir('-p', srcMainPath);
   const phpTemplatePath = 'src/template/server/backend/php';
-  shjs.cp(path.join(phpTemplatePath, swConst.AUTH_PHP), srcMainPath);
+  shjs.cp(path.join(phpTemplatePath, 'auth.php'), srcMainPath);
   shjs.cp(path.join(phpTemplatePath, swConst.AUTH_SERVICE_PHP), srcMainPath);
   if (htaccess) {
     shjs.cp(path.join(phpTemplatePath, '.htaccess'), srcMainPath);

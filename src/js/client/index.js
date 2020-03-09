@@ -194,7 +194,7 @@ function replaceSectionsInFiles() {
   // replace in e2e/
   lightjs.replacement('welcome message', 'title in toolbar', [path.join(projectPath, 'e2e', swConst.SRC, swConst.APP_E2E_SPEC_TS)]);
   lightjs.replacement(' app is running!', '', [path.join(projectPath, 'e2e', swConst.SRC, swConst.APP_E2E_SPEC_TS)]);
-  lightjs.replacement('.content span', 'mat-toolbar', [path.join(projectPath, 'e2e', swConst.SRC, swConst.APP_PO_TS)]);
+  lightjs.replacement('.content span', 'mat-toolbar', [path.join(projectPath, 'e2e', swConst.SRC, 'app.po.ts')]);
   lightjs.replacement('$', os.EOL, [path.join(projectPath, 'e2e', 'protractor.conf.js')]);
 
   const clientConfig = projectConfig.client;
@@ -213,10 +213,10 @@ function replaceSectionsInFiles() {
   lightjs.replacement(`(<${prefix}-root>)(</${prefix}-root>)`, `$1Loading...$2`, [path.join(srcPath, swConst.INDEX_HTML)]);
 
   // replace in styles.css
-  lightjs.replacement('$', `@import 'app/app.component.css';\n`, [path.join(projectPath, swConst.SRC, swConst.STYLES_CSS)]);
+  lightjs.replacement('$', `@import 'app/app.component.css';\n`, [path.join(projectPath, swConst.SRC, 'styles.css')]);
 
   // misc
-  lightjs.replacement('$', os.EOL, [path.join(projectPath, swConst.TSLINT_JSON)]);
+  lightjs.replacement('$', os.EOL, [path.join(projectPath, 'tslint.json')]);
   lightjs.replacement('$', os.EOL, [path.join(projectPath, swConst.ANGULAR_JSON)]);
 }
 
@@ -263,8 +263,8 @@ function updatePackageJsonFile() {
   packageJsonTemplateData.devDependencies = packageJsonData.devDependencies;
   const serverConfig = projectConfig.server;
   if (serverConfig.backend === swConst.PHP) {
-    packageJsonTemplateData.devDependencies['copy-webpack-plugin'] = swConst.COPY_WEBPACK_PLUGIN;
-    packageJsonTemplateData.devDependencies['@angular-builders/custom-webpack'] = swConst.ANGULAR_BUILDERS;
+    packageJsonTemplateData.devDependencies['copy-webpack-plugin'] = '4.6.0';
+    packageJsonTemplateData.devDependencies['@angular-builders/custom-webpack'] = '8.4.1';
     scripts['build:mock'] = updateTask(scripts, 'build:mock');
     scripts['watch:mock'] = updateTask(scripts, 'watch:mock');
   }

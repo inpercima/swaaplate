@@ -53,7 +53,7 @@ function configure() {
     lightjs.replacement('{{PROJECT.YEAR}}', new Date().getFullYear(), [path.join(projectPath, swConst.LICENSE_MD)]);
   }
   shjs.cp(path.join(templatePath, swConst.DOT_EDITORCONFIG), projectPath);
-  shjs.cp(path.join(templatePath, swConst.DOT_GITATTRIBUTES), projectPath);
+  shjs.cp(path.join(templatePath, '.gitattributes'), projectPath);
   shjs.cp(swConst.SWAAPLATE_JSON, projectPath);
 
   if (generalConfig.useDocker) {
@@ -79,7 +79,7 @@ function updateGitignoreFile() {
 
   const serverConfig = projectConfig.server;
   const backend = serverConfig.backend;
-  const javaKotlinContent = swConst.APPLICATION_DEV_YML + os.EOL + swConst.APPLICATION_PROD_YML + os.EOL;
+  const javaKotlinContent = 'application-dev.yml' + os.EOL + 'application-prod.yml' + os.EOL;
   const content = [
     `# begin project specific${os.EOL}`,
     `environment.dev.ts${os.EOL}environment.mock.ts${os.EOL}environment.prod.ts${os.EOL}${isJavaKotlin() ? javaKotlinContent : ''}`,

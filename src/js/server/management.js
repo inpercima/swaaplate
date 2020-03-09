@@ -32,20 +32,16 @@ function configure(pConfig, pPath) {
     shjs.mkdir('-p', serverPath);
 
     shjs.cp('-r', path.join(managementPath, '*'), serverPath);
-    if (management === swConst.MAVEN) {
-      lightjs.info(`-> use management '${swConst.MAVEN}', copy wrapper and pom-file for ${backend}`);
+    if (management === swConst.MAVEN || management === 'gradle') {
+      lightjs.info(`* use management '${management}', copy wrapper and pom-file for ${backend}`);
 
-      shjs.cp('-r', path.join(managementPath, swConst.DOT_MVN), serverPath);
-    } else if (serverConfig.management === swConst.GRADLE) {
-      lightjs.info(`-> use management '${swConst.GRADLE}', copy wrapper and build-file for ${backend}`);
-
-      shjs.cp(path.join(managementPath, swConst.DOT_GRADLE), serverPath);
-    } else {
-      lightjs.info('-> no management should be used');
-    }
-    if (management === swConst.MAVEN || management === swConst.GRADLE) {
-      const dismatch = backend === swConst.JAVA ? swConst.KOTLIN : swConst.JAVA;
-      const pomXml = path.join(serverPath, swConst.POM_XML);
+      if (management === swConst.MAVEN) {
+        shjs.cp('-r', path.join(managementPath, '.mvn'), serverPath);
+      } else {
+        shjs.cp('-r', path.join(managementPath, '.gradle'), serverPath);
+      }
+      const dismatch = swHelper.isJava() ? swConst.KOTLIN : swConst.JAVA;
+      const pomXml = path.join(serverPath, 'pom.xml');
       shjs.mv(path.join(serverPath, `pom.${backend}.xml`), pomXml);
       shjs.rm(path.join(serverPath, `pom.${dismatch}.xml`));
       replaceInPomFile(pomXml);
