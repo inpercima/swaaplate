@@ -147,7 +147,7 @@ function updateEnvironmentTsFiles() {
   const generalConfig = projectConfig.general;
   const serverConfig = projectConfig.server;
   const api = serverConfig.backend === swConst.JAVA || serverConfig.backend === swConst.KOTLIN ? 'http://localhost:8080/' : ( serverConfig.backend === swConst.PHP && serverConfig.serverAsApi ? './api/' : './');
-  const apiSuffix = serverConfig.backend === swConst.PHP && !serverConfig.htaccess ? '.php' : '';
+  const apiSuffix = serverConfig.backend === swConst.PHP && !serverConfig.htaccess ? `.${swConst.PHP}` : '';
   const environments = `activateLogin: ${clientConfigRouting.login.activate},
   api: '${api}',
   apiSuffix: '${apiSuffix}',
@@ -191,10 +191,12 @@ function replaceCommentsInEnvironmentTsFile(environmentsPath, environmentTsFile)
  *
  */
 function replaceSectionsInFiles() {
+  const generalConfig = projectConfig.general;
   // replace in e2e/
   lightjs.replacement('welcome message', 'title in toolbar', [path.join(projectPath, 'e2e', swConst.SRC, swConst.APP_E2E_SPEC_TS)]);
   lightjs.replacement(' app is running!', '', [path.join(projectPath, 'e2e', swConst.SRC, swConst.APP_E2E_SPEC_TS)]);
   lightjs.replacement('.content span', 'mat-toolbar', [path.join(projectPath, 'e2e', swConst.SRC, 'app.po.ts')]);
+  lightjs.replacement(generalConfig.name, generalConfig.title, [path.join(projectPath, 'e2e', swConst.SRC, swConst.APP_E2E_SPEC_TS)]);
   lightjs.replacement('$', os.EOL, [path.join(projectPath, 'e2e', 'protractor.conf.js')]);
 
   const clientConfig = projectConfig.client;
@@ -212,10 +214,24 @@ function replaceSectionsInFiles() {
   const prefix = clientConfig.prefix;
   lightjs.replacement(`(<${prefix}-root>)(</${prefix}-root>)`, `$1Loading...$2`, [path.join(srcPath, swConst.INDEX_HTML)]);
 
-  // replace in styles.css
-  lightjs.replacement('$', `@import 'app/app.component.css';\n`, [path.join(projectPath, swConst.SRC, 'styles.css')]);
+  // replace in app.component.spec.ts
+  const tabsImport = `import { MatTabsModule } from '@angular/material/tabs';`
+  const toolbarImport = `import { MatToolbarModule } from '@angular/material/toolbar';`;
+  const pipeImport = `import { AppRoutingPipe } from './app-routing.pipe';`;
+  const specPath = path.join(projectPath, swConst.SRC, swConst.APP, 'app.component.spec.ts');
+  lightjs.replacement(`(router/testing';)`, `$1${os.EOL}${tabsImport}${os.EOL}${toolbarImport}${os.EOL}`, [specPath]);
+  lightjs.replacement(`(component';)`, `$1${os.EOL}${pipeImport}`, [specPath]);
+  lightjs.replacement('(imports: \\[)', `$1${os.EOL}        MatTabsModule,${os.EOL}        MatToolbarModule,`, [specPath]);
+  lightjs.replacement('(declarations: \\[\\n        AppComponent)', `$1,${os.EOL}        AppRoutingPipe`, [specPath]);
+
+  lightjs.replacement(generalConfig.name, generalConfig.title, [specPath]);
+  lightjs.replacement(' app is running!', '', [specPath]);
+  lightjs.replacement('.content span', 'mat-toolbar', [specPath]);
+  lightjs.replacement('as title', 'as appname', [specPath]);
+  lightjs.replacement('app.title', 'app.appname', [specPath]);
 
   // misc
+  lightjs.replacement('$', `@import 'app/app.component.css';\n`, [path.join(projectPath, swConst.SRC, 'styles.css')]);
   lightjs.replacement('$', os.EOL, [path.join(projectPath, 'tslint.json')]);
   lightjs.replacement('$', os.EOL, [path.join(projectPath, swConst.ANGULAR_JSON)]);
 }
