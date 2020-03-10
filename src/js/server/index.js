@@ -5,15 +5,16 @@ const lightjs = require('light-js');
 const path = require('path');
 const shjs = require('shelljs');
 
-const swServerBackend = require('./backend.js');
+const swBackend = require('./backend.js');
 const swConst = require('../const.js');
+const swHelper = require('../helper.js');
 
 let exp = {};
 let projectConfig = {};
 let projectPath = '';
 
 /**
- * Configure the backend.
+ * Configures the backend.
  *
  * @param {object} pConfig
  * @param {string} pPath
@@ -22,59 +23,42 @@ function configure(pConfig, pPath) {
   projectConfig = pConfig;
   projectPath = pPath;
 
-  lightjs.info('check used backend ...');
+  lightjs.info('--> begin backend setup ...');
 
-  const serverConfig = projectConfig.server;
-  if (serverConfig.backend !== swConst.JS) {
-    lightjs.info('... not js is used, create folder for client and server and move files');
+  if (!swHelper.isJs()) {
     shjs.mkdir(path.join(projectPath, swConst.CLIENT));
     shjs.mv(path.join(projectPath, `!(${swConst.CLIENT})`), path.join(projectPath, swConst.CLIENT));
-    shjs.mkdir(path.join(projectPath, getBackendFolder()));
+    shjs.mkdir(path.join(projectPath, swHelper.getBackendFolder()));
+
+    if (swHelper.isJavaKotlin()) {
+      swBackend.configureJavaKotlin(projectConfig, projectPath);
+    }
+    if (swHelper.isPhp()) {
+      swBackend.configurePhp(projectConfig, projectPath);
+    }
   } else {
-    lightjs.info('... js is used, no folder will be created');
+    lightjs.info('* backend js is used, no extra folders will be created');
   }
-
-  lightjs.info(`prepare data for backend '${serverConfig.backend}'`);
-
-  // java or kotlin
-  if (serverConfig.backend === swConst.JAVA || serverConfig.backend === swConst.KOTLIN) {
-    swServerBackend.configureJavaKotlin(projectConfig, projectPath);
-  }
-  // php
-  if (serverConfig.backend === swConst.PHP) {
-    swServerBackend.configurePhp(projectConfig, projectPath);
-  }
-  // js
-  if (serverConfig.backend === swConst.JS) {
-    lightjs.info(`use backend 'js', nothing special todo`);
-  }
+  updateReadmeFile();
+  lightjs.info('<-- end backend setup ...');
 }
 
 /**
- * Determine the backend folder.
- *
- */
-function getBackendFolder() {
-  const serverConfig = projectConfig.server;
-  const serverAsApi = serverConfig.backend === swConst.PHP && serverConfig.serverAsApi;
-  return serverConfig.backend === swConst.JS ? '' : (serverAsApi ? swConst.API : swConst.SERVER);
-}
-
-/**
- * Update readme file.
+ * Updates the readme file for the server.
  *
  */
 function updateReadmeFile() {
-  const serverConfig = projectConfig.server;
-  const serverOrApi = serverConfig.serverAsApi && serverConfig.backend === swConst.PHP ? swConst.API : swConst.SERVER;
-  const readmeMd = path.join(projectPath, serverOrApi, swConst.README_MD);
-  lightjs.info(`update '${readmeMd}'`);
+  const readmeMd = path.join(projectPath, swHelper.getBackendFolder(), swConst.README_MD);
+  lightjs.info(`* update '${readmeMd}'`);
+
+  shjs.cp(path.join(swConst.TEMPLATE_README, `README.${swHelper.isPhp() ? 'php' : 'java-kotlin'}.md`), readmeMd);
 
   const projectName = projectConfig.general.name;
   lightjs.replacement('{{PROJECT.NAME}}', projectName, [readmeMd]);
+  lightjs.replacement('{{PROJECT.TITLE}}', projectName, [readmeMd]);
+  lightjs.replacement('{{PROJECT.SERVERDIR}}', swHelper.getBackendFolder(), [readmeMd]);
 }
 
 exp.configure = configure;
-exp.updateReadmeFile = updateReadmeFile;
 
 module.exports = exp;

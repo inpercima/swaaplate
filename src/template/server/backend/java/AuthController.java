@@ -1,4 +1,4 @@
-package net.inpercima.swaaplate.web;
+package {{PROJECT.PACKAGEPATH}}.web;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @author Marcel Jänicke
+ * @author {{PROJECT.AUTHOR}}
  */
 @RestController
 public class AuthController {

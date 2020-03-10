@@ -9,6 +9,7 @@ const shjs = require('shelljs');
 
 const swClient = require('./client/index.js');
 const swConst = require('./const.js');
+const swHelper = require('./helper.js');
 const swManagement = require('./server/management.js');
 const swReadme = require('./readme.js');
 const swServer = require('./server/index.js');
@@ -28,6 +29,7 @@ function create(workspacePath) {
   projectPath = path.join(workspacePath, projectName);
   lightjs.info(`create project '${projectName}' in '${workspacePath}'`);
 
+  swHelper.configure(projectConfig);
   swClient.configure(workspacePath, projectConfig, projectPath);
   swServer.configure(projectConfig, projectPath);
   swManagement.configure(projectConfig, projectPath);

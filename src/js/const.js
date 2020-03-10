@@ -5,16 +5,10 @@ module.exports = Object.freeze({
   SRC: 'src',
   SRC_MAIN: 'src/main',
   SRC_TEST: 'src/test',
-
-  // sw specific
-  SW_AUTHOR: 'Marcel Jänicke',
-  SW_USER: 'inpercima',
-  SW_DESCRIPTION: '\\[s\\]imple \\[w\\]eb \\[a\\]pp \\[a\\]ngular tem\\[plate\\]. A very simple template generator for angular webapps with different backends.',
-  SW_PACKAGE: 'net.inpercima.swaaplate',
+  KOTLIN: 'kt',
   TEMPLATE_README: 'src/template/server/readme',
-  THEME: 'indigo-pink',
 
-  // by filename
+  // by file or foldername
   ANGULAR_JSON: 'angular.json',
   AUTH_SERVICE_PHP: 'auth.service.php',
   APP_E2E_SPEC_TS: 'app.e2e-spec.ts',

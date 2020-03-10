@@ -6,6 +6,7 @@ const path = require('path');
 const shjs = require('shelljs');
 
 const swConst = require('../const.js');
+const swHelper = require('../helper.js');
 
 let exp = {};
 let projectConfig = {};
@@ -21,16 +22,17 @@ function configure(pConfig, pPath) {
   projectConfig = pConfig;
   projectPath = pPath;
 
-  const serverConfig = projectConfig.server;
-  const backend = serverConfig.backend;
+  lightjs.info('--> begin management setup ...');
 
-  if (backend === swConst.JAVA || backend === swConst.KOTLIN) {
+  const serverConfig = projectConfig.server;
+  if (swHelper.isJavaKotlin()) {
     const serverPath = path.join(projectPath, swConst.SERVER);
     const management = serverConfig.management;
     const managementPath = path.join('src/template/server/management', management);
 
     shjs.mkdir('-p', serverPath);
 
+    const backend = serverConfig.backend;
     shjs.cp('-r', path.join(managementPath, '*'), serverPath);
     if (management === swConst.MAVEN || management === 'gradle') {
       lightjs.info(`* use management '${management}', copy wrapper and pom-file for ${backend}`);
@@ -45,24 +47,28 @@ function configure(pConfig, pPath) {
       shjs.mv(path.join(serverPath, `pom.${backend}.xml`), pomXml);
       shjs.rm(path.join(serverPath, `pom.${dismatch}.xml`));
       replaceInPomFile(pomXml);
+    } else {
+      lightjs.info('* a management unlike maven or gradle is used, nothing todo by swaaplate');
     }
   } else {
-    lightjs.info('-> an backend unlike java or kotlin is used, no management should be used');
+    lightjs.info('* a backend unlike java or kotlin is used, no management is used');
   }
+
+  lightjs.info('<-- end management setup ...');
 }
 
 /**
- * Configure the management of the app.
+ * Replaces placeholder in pom.xml.
  *
  * @param {string} pomXml
  */
 function replaceInPomFile(pomXml) {
   const generalConfig = projectConfig.general;
-  lightjs.replacement(swConst.SW_PACKAGE, projectConfig.server.packagePath, [pomXml]);
-  lightjs.replacement(swConst.SWAAPLATE, generalConfig.name, [pomXml]);
-  lightjs.replacement(swConst.DIST, projectConfig.client.buildDir, [pomXml]);
-
-  lightjs.replacement(swConst.SW_DESCRIPTION, generalConfig.description, [pomXml]);
+  lightjs.replacement('{{PROJECT.DESCRIPTION}}', generalConfig.description, [pomXml]);
+  lightjs.replacement('{{PROJECT.DIST}}', projectConfig.client.buildDir, [pomXml]);
+  lightjs.replacement('{{PROJECT.GROUPID}}', projectConfig.server.packagePath, [pomXml]);
+  lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [pomXml]);
+  lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.title, [pomXml]);
 }
 
 exp.configure = configure;

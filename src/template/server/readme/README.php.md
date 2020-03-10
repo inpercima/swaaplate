@@ -1,4 +1,4 @@
-# {{PROJECT.TITLE}} - server
+# {{PROJECT.TITLE}} - {{PROJECT.SERVERDIR}
 
 ## Getting started
 
