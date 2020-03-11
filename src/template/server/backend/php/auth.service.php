@@ -12,7 +12,7 @@ class AuthService {
   public function authenticate() {
     $request = json_decode(file_get_contents('php://input'));
     $result = array('message' => 'Username or password is incorrect');
-    if ($request->username == 'inpercima' && $request->password == 'inpercima') {
+    if ($request->username == '{{PROJECT.NAME}}' && $request->password == '{{PROJECT.NAME}}') {
       $result = array('token' => $this->generateToken($request->username));
     } else {
       http_response_code(400);

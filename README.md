@@ -21,7 +21,7 @@ Therefore, I decided to write a small tool, which puts together all the necessar
 ### The goal
 
 With swaaplate, the goal should be to create an angular web app with one of four backends, one of two management tools and one of two js dependency manager.
-You can choose between `js` (means angular only), `php`, `java` or `kotlin` as backend, `maven` or `gradle` as management tool and `npm` or `yarn` as js dependency manager.
+You can choose between `js` (means angular only), `php`, `java` or `kt` as backend, `maven` or `gradle` as management tool and `npm` or `yarn` as js dependency manager.
 
 ## Prerequisites
 
@@ -340,7 +340,7 @@ Defines the backend of the app.
 
 * default: `js`
 * type: `string`
-* values: `java`/`kotlin`/`js`/`php`
+* values: `java`/`kt`/`js`/`php`
 
 ### `server/htaccess`
 

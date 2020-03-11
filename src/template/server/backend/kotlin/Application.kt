@@ -1,10 +1,10 @@
-package net.inpercima.swaaplate
+package {{PROJECT.PACKAGEPATH}}
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 /**
- * @author Marcel Jänicke
+ * @author {{PROJECT.AUTHOR}}
  */
 @SpringBootApplication
 class Application

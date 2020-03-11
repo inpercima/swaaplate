@@ -1,4 +1,4 @@
-package net.inpercima.swaaplate;
+package {{PROJECT.PACKAGEPATH}};
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,7 +9,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 /**
- * @author Marcel Jänicke
+ * @author {{PROJECT.AUTHOR}}
  */
 @SpringBootApplication
 public class Application {
