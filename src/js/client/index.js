@@ -227,8 +227,9 @@ function replaceSectionsInFiles() {
   lightjs.replacement(generalConfig.name, generalConfig.title, [specPath]);
   lightjs.replacement(' app is running!', '', [specPath]);
   lightjs.replacement('.content span', 'mat-toolbar', [specPath]);
-  lightjs.replacement('as title', 'as appname', [specPath]);
-  lightjs.replacement('app.title', 'app.appname', [specPath]);
+  lightjs.replacement('(as )title', '$1appname', [specPath]);
+  lightjs.replacement('(app.)title', '$1appname', [specPath]);
+  lightjs.replacement('(render )title', '$1toolbar', [specPath]);
 
   // misc
   lightjs.replacement('$', `@import 'app/app.component.css';\n`, [path.join(projectPath, swConst.SRC, 'styles.css')]);

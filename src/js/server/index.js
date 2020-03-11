@@ -36,10 +36,10 @@ function configure(pConfig, pPath) {
     if (swHelper.isPhp()) {
       swBackend.configurePhp(projectConfig, projectPath);
     }
+    updateReadmeFile();
   } else {
     lightjs.info('* backend js is used, no extra folders will be created');
   }
-  updateReadmeFile();
   lightjs.info('<-- end backend setup ...');
 }
 
