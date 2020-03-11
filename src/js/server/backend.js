@@ -68,7 +68,7 @@ function configureJavaKotlin() {
   shjs.mkdir('-p', webPath);
   shjs.cp(path.join(templatePath, backend, `AuthController.${backend}`), webPath);
   shjs.mkdir('-p', serverSrcMainResourcesPath);
-  shjs.cp(path.join(templatePath, 'java-kotlin/*'), serverSrcMainResourcesPath);
+  shjs.cp(path.join(templatePath, 'java-kt/*'), serverSrcMainResourcesPath);
 
   shjs.mkdir('-p', path.join(projectPath, serverSrcTest, backendPath));
   shjs.mkdir('-p', path.join(projectPath, serverSrcTest, 'resources'));
