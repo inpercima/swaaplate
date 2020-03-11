@@ -5,8 +5,8 @@ const lightjs = require('light-js');
 const path = require('path');
 const shjs = require('shelljs');
 
-const swConst = require('../const.js');
-const swHelper = require('../helper.js');
+const swConst = require('../root/const.js');
+const swHelper = require('../root/helper.js');
 
 let exp = {};
 let projectConfig = {};

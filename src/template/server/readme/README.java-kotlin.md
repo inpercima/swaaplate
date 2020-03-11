@@ -14,7 +14,7 @@ cp src/main/resources/application.yml src/main/resources/application-dev.yml
 cp src/main/resources/application.yml src/main/resources/application-prod.yml
 ```
 
-**Note**: These files will not be under version control and listed in .gitignore.
+**Note**: These files will not be under version control and they are listed in .gitignore.
 
 ## Usage
 

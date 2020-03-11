@@ -7,7 +7,7 @@ const path = require('path');
 const shjs = require('shelljs');
 const uppercamelcase = require('uppercamelcase');
 
-const swConst = require('../const.js');
+const swConst = require('../root/const');
 
 let exp = {};
 let projectConfig = {};

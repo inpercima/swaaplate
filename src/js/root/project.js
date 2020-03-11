@@ -7,12 +7,12 @@ const os = require('os');
 const path = require('path');
 const shjs = require('shelljs');
 
-const swClient = require('./client/index.js');
+const swBackend = require('../server/backend');
 const swConst = require('./const.js');
-const swHelper = require('./helper.js');
-const swManagement = require('./server/management.js');
-const swReadme = require('./readme.js');
-const swServer = require('./server/index.js');
+const swFrontend = require('../client/frontend');
+const swHelper = require('./helper');
+const swManagement = require('../server/management');
+const swReadme = require('./readme');
 
 let exp = {};
 let projectConfig = {};
@@ -30,8 +30,8 @@ function create(workspacePath) {
   lightjs.info(`create project '${projectName}' in '${workspacePath}'`);
 
   swHelper.configure(projectConfig);
-  swClient.configure(workspacePath, projectConfig, projectPath);
-  swServer.configure(projectConfig, projectPath);
+  swFrontend.configure(workspacePath, projectConfig, projectPath);
+  swBackend.configure(projectConfig, projectPath);
   swManagement.configure(projectConfig, projectPath);
   swReadme.configure(projectConfig, projectPath);
 

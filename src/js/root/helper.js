@@ -1,7 +1,7 @@
 'use strict';
 
 /* requirements */
-const swConst = require('./const.js');
+const swConst = require('./const');
 
 let exp = {};
 let projectConfig = {};

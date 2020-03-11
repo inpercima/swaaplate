@@ -6,8 +6,8 @@ const os = require('os');
 const path = require('path');
 const shjs = require('shelljs');
 
-const swClientModule = require('./module.js');
-const swConst = require('../const.js');
+const swFrontendModule = require('./frontend-module');
+const swConst = require('../root/const');
 
 let exp = {};
 let projectConfig = {};
@@ -44,7 +44,7 @@ function configure(workspacePath, pConfig, pPath) {
   }
   shjs.cd(pwd);
 
-  swClientModule.generateModulesAndComponents(projectConfig, projectPath);
+  swFrontendModule.generateModulesAndComponents(projectConfig, projectPath);
   copyFiles();
   updateAngularJsonFile();
   updateEnvironmentTsFiles();

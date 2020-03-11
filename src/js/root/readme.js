@@ -7,7 +7,7 @@ const os = require('os');
 const path = require('path');
 const shjs = require('shelljs');
 
-const swConst = require('./const.js');
+const swConst = require('./const');
 
 let exp = {};
 let projectConfig = {};
