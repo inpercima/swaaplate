@@ -93,7 +93,8 @@ function configureJavaKotlin() {
  */
 function configurePhp() {
   const serverConfig = projectConfig.server;
-  lightjs.info(`* configure backend 'php', create 'webpack config' and '${swHelper.getBackendFolder()}' as server folder`);
+  const serverDir = swHelper.getBackendFolder();
+  lightjs.info(`* configure backend 'php', create 'webpack config' and '${serverDir}' as server folder`);
 
   const srcMainPath = path.join(projectPath, serverDir, swConst.SRC_MAIN);
   shjs.mkdir('-p', srcMainPath);
@@ -122,9 +123,8 @@ function updateReadmeFile() {
 
   shjs.cp(path.join(swConst.TEMPLATE_README, `README.${swHelper.isPhp() ? 'php' : 'java-kotlin'}.md`), readmeMd);
 
-  const projectName = projectConfig.general.name;
-  lightjs.replacement('{{PROJECT.NAME}}', projectName, [readmeMd]);
-  lightjs.replacement('{{PROJECT.TITLE}}', projectName, [readmeMd]);
+  lightjs.replacement('{{PROJECT.NAME}}', projectConfig.general.name, [readmeMd]);
+  lightjs.replacement('{{PROJECT.TITLE}}', projectConfig.general.title, [readmeMd]);
   lightjs.replacement('{{PROJECT.SERVERDIR}}', swHelper.getBackendFolder(), [readmeMd]);
 }
 

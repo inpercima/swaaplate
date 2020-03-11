@@ -324,7 +324,7 @@ function installDependencies() {
   if (projectConfig.client.installDependencies) {
     const pwd = shjs.pwd();
     shjs.cd(projectPath);
-    lightjs.setNpmDefault = !projectConfig.client.useYarn;
+    lightjs.setNpmDefault(!projectConfig.client.useYarn);
     lightjs.yarnpm('install');
     shjs.cd(pwd);
   } else {

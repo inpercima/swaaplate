@@ -7,7 +7,7 @@ module.exports = (config, options) => {
   config.plugins.push(
     process.env.NODE_ENV !== 'mock' ?
       new CopyWebpackPlugin([{
-        from: '../server/src/main',
+        from: '../{{PROJECT.SERVERDIR}}/src/main',
         to: './{{PROJECT.SERVERDIR}}',
       }]) : {},
   );
