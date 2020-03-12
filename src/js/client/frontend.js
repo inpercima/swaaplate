@@ -62,11 +62,22 @@ function copyFiles() {
   lightjs.info('copy client files');
 
   const templatePath = 'src/template/client/';
-
   const mockFolder = 'mock';
   const mockPath = path.join(projectPath, mockFolder);
   shjs.mkdir(mockPath);
-  shjs.cp(path.join(templatePath, mockFolder, '*'), mockPath);
+  shjs.cp(path.join(templatePath, mockFolder, 'middleware.js'), mockPath);
+
+  const generalConfig = projectConfig.general;
+  const dbJsonData = {
+    "users": [
+      {
+        "id": 1,
+        "username": generalConfig.name,
+        "password": generalConfig.name
+      }
+    ]
+  };
+  lightjs.writeJson(path.join(mockPath, 'db.json'), dbJsonData);
 
   const srcPath = path.join(projectPath, swConst.SRC);
   shjs.cp(path.join(templatePath, 'src/favicon.ico'), srcPath);

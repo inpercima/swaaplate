@@ -1,9 +1,0 @@
-{
-  "users": [
-    {
-      "id": 1,
-      "username": "{{PROJECT.NAME}}",
-      "password": "{{PROJECT.NAME}}"
-    }
-  ]
-}
