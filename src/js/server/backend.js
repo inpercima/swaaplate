@@ -79,7 +79,6 @@ function configureJavaKotlin() {
   const editorconfig = path.join(projectPath, swConst.DOT_EDITORCONFIG);
   lightjs.replacement('(trim_trailing_whitespace = true)', `$1${indention}`, [editorconfig]);
 
-
   lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(serverSrcMainJavaPath, `Application.${backend}`)]);
   lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(webPath, `AuthController.${backend}`)]);
   lightjs.replacement('{{PROJECT.PACKAGEPATH}}', serverConfig.packagePath, [path.join(serverSrcMainJavaPath, `Application.${backend}`)]);

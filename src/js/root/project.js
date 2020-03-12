@@ -123,6 +123,20 @@ function updateFiles() {
   lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.title, [projectPath], true, true, 'node_modules');
 }
 
+/**
+ * Updates the project.
+ *
+ * @param {string} pPath
+ */
+function update(pPath) {
+  const pConfig = lightjs.readJson(path.join(pPath, swConst.SWAAPLATE_JSON));
+  swHelper.configure(pConfig);
+  lightjs.info(`update project '${pConfig.general.name}' in '${pPath}'`);
+
+  swFrontend.updateDependencies(pPath);
+}
+
 exp.create = create;
+exp.update = update;
 
 module.exports = exp;

@@ -7,6 +7,7 @@ const path = require('path');
 const shjs = require('shelljs');
 
 const swFrontendModule = require('./frontend-module');
+const swHelper = require('../root/helper');
 const swConst = require('../root/const');
 
 let exp = {};
@@ -146,7 +147,7 @@ function updateEnvironmentTsFiles() {
   const clientConfigRouting = clientConfig.routing;
   const generalConfig = projectConfig.general;
   const serverConfig = projectConfig.server;
-  const api = serverConfig.backend === swConst.JAVA || serverConfig.backend === swConst.KOTLIN ? 'http://localhost:8080/' : ( serverConfig.backend === swConst.PHP && serverConfig.serverAsApi ? './api/' : './');
+  const api = serverConfig.backend === swConst.JAVA || serverConfig.backend === swConst.KOTLIN ? 'http://localhost:8080/' : (serverConfig.backend === swConst.PHP && serverConfig.serverAsApi ? './api/' : './');
   const apiSuffix = serverConfig.backend === swConst.PHP && !serverConfig.htaccess ? `.${swConst.PHP}` : '';
   const environments = `activateLogin: ${clientConfigRouting.login.activate},
   api: '${api}',
@@ -270,12 +271,12 @@ function updatePackageJsonFile() {
   packageJsonTemplateData.author = generalConfig.author;
   packageJsonTemplateData.contributors = clientConfig.packageJson.contributors;
   packageJsonTemplateData.dependencies = packageJsonData.dependencies;
-  packageJsonTemplateData.dependencies['@angular/cdk'] = '~9.1.1',
-  packageJsonTemplateData.dependencies['@angular/flex-layout'] = '~9.0.0-beta.29',
-  packageJsonTemplateData.dependencies['@angular/material'] = '~9.1.1',
-  packageJsonTemplateData.dependencies['@auth0/angular-jwt'] = '~3.0.1',
-  packageJsonTemplateData.dependencies['json-server'] = '~0.15.1',
-  packageJsonTemplateData.dependencies['jsonwebtoken'] = '~8.5.1',
+  packageJsonTemplateData.dependencies['@angular/cdk'] = '~9.1.1';
+  packageJsonTemplateData.dependencies['@angular/flex-layout'] = '~9.0.0-beta.29';
+  packageJsonTemplateData.dependencies['@angular/material'] = '~9.1.1';
+  packageJsonTemplateData.dependencies['@auth0/angular-jwt'] = '~3.0.1';
+  packageJsonTemplateData.dependencies['json-server'] = '~0.15.1';
+  packageJsonTemplateData.dependencies['jsonwebtoken'] = '~8.5.1';
   packageJsonTemplateData.description = generalConfig.description;
   packageJsonTemplateData.devDependencies = packageJsonData.devDependencies;
   const serverConfig = projectConfig.server;
@@ -315,7 +316,7 @@ function updateTask(packageJsonData, mockTask) {
 }
 
 /**
- * Install dependencies.
+ * Installs dependencies.
  *
  */
 function installDependencies() {
@@ -332,6 +333,30 @@ function installDependencies() {
   }
 }
 
+/**
+ * Updates dependencies.
+ *
+ * @param {string} pPath
+ */
+function updateDependencies(pPath) {
+  lightjs.info('update dependencies');
+
+  if (shjs.which('ng')) {
+    const pwd = shjs.pwd();
+    if (!swHelper.isJs()) {
+      shjs.cd(path.join(pPath, swConst.CLIENT));
+    } else {
+      shjs.cd(pPath);
+    }
+    shjs.exec('ng update --all --allowDirty=true --force=true');
+    shjs.cd(pwd);
+  } else {
+    lightjs.error(`sorry, this script requires 'ng'`);
+    shjs.exit(1);
+  }
+}
+
 exp.configure = configure;
+exp.updateDependencies = updateDependencies;
 
 module.exports = exp;
