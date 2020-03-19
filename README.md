@@ -27,7 +27,7 @@ You can choose between `js` (means angular only), `php`, `java` or `kt` as backe
 
 ### Angular cli
 
-* `angular-cli 9.0.5` or higher
+* `angular-cli 9.0.7` or higher
 
 ### Node, npm or yarn
 

@@ -61,6 +61,8 @@ function configure() {
     shjs.cp(path.join(templatePath, swConst.DOCKER, swConst.DOCKERFILE), path.join(projectPath, swConst.DOCKERFILE));
     shjs.cp(path.join(templatePath, swConst.DOCKER, swConst.DOCKER_COMPOSE_YML), path.join(projectPath, swConst.DOCKER_COMPOSE_YML));
     shjs.cp(path.join(templatePath, swConst.DOCKER, swConst.README_MD), path.join(projectPath, 'README_docker.md'));
+    shjs.cp(path.join(templatePath, swConst.DOCKER, 'default.env'), path.join(projectPath, 'default.env'));
+    shjs.cp(path.join(templatePath, swConst.DOCKER, 'default.env'), path.join(projectPath, '.env'));
     lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.name, [path.join(projectPath, swConst.DOCKER_COMPOSE_YML)]);
     const contributors = projectConfig.client.packageJson.contributors;
     const name = contributors[0].name ? contributors[0].name : '';

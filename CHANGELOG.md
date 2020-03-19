@@ -13,7 +13,6 @@
   * `name` was added to `features`
   * `github` was removed from `general`
   * `useMITLicense` was added to `general`
-* the update routine, integrated with 1.1.0, was temporarily deactivated
 
 ## 1.1.1
 

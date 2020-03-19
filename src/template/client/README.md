@@ -8,7 +8,7 @@ cp src/environments/environment.ts src/environments/environment.mock.ts
 cp src/environments/environment.ts src/environments/environment.prod.ts
 ```
 
-**Note**: These files will not be under version control and they are listed in .gitignore.
+**Note**: These files will not be under version control but listed in .gitignore.
 
 ## Usage
 

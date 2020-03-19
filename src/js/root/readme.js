@@ -43,10 +43,15 @@ function configure(pConfig, pPath) {
 * \`php 7.3\` or higher`;
   }
   if (projectConfig.general.useDocker) {
-    prerequisites += (prerequisites.length ? os.EOL + os.EOL : '') + `### Docker
+    prerequisites += os.EOL + os.EOL + `### Docker
 
 * \`docker 19.03.5\` or higher
 * \`docker-compose 1.25.0\` or higher`;
+  }
+  if (serverConfig.backend === swConst.JAVA) {
+    prerequisites += os.EOL + os.EOL + `### Java
+
+* \`jdk 11\` or higher`;
   }
   lightjs.replacement('{{PROJECT.PREREQUISITES}}', prerequisites, [readmeMdPath]);
   lightjs.replacement('{{PROJECT.USENPM}}', checkManager(swConst.NPM), [readmeMdPath]);
@@ -129,7 +134,7 @@ function checkLicense(isRoot) {
 }
 
 function checkDescription(isRoot) {
-  return isRoot ? os.EOL + os.EOL + projectConfig.general.description : '';
+  return isRoot ? (projectConfig.general.useMITLicense ? os.EOL + os.EOL : '') + projectConfig.general.description : '';
 }
 
 function checkDependencies(isRoot) {
@@ -144,7 +149,7 @@ function generateDavidDmLinks(isRoot) {
   const dependenciesStatus = `[![dependencies Status](${davidDmLink}/status.svg${pathParam})](${davidDmLink}${pathParam})`;
   const typeParam = isRoot ? '?' : '&';
   const devDependenciesStatus = `[![devDependencies Status](${davidDmLink}/dev-status.svg${pathParam})](${davidDmLink}${pathParam}${typeParam}type=dev)`;
-  return (isRoot ? os.EOL : '') + dependenciesStatus + os.EOL + devDependenciesStatus;
+  return (isRoot && projectConfig.general.useMITLicense ? os.EOL : '') + dependenciesStatus + os.EOL + devDependenciesStatus;
 }
 
 exp.configure = configure;

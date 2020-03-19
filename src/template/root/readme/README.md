@@ -5,7 +5,7 @@ This project was generated with [swaaplate](https://github.com/inpercima/swaapla
 
 ### Angular CLI
 
-* `angular-cli 9.0.5` or higher{{PROJECT.PREREQUISITES}}
+* `angular-cli 9.0.7` or higher{{PROJECT.PREREQUISITES}}
 
 ### Node, npm or yarn
 
@@ -20,6 +20,10 @@ Some libraries could not be updated b/c of peer dependencies or knowing issues.
 | library    | current version | wanted version | reason |
 | ---------- | --------------- | -------------- | ------ |{{PROJECT.DEPCHECK}}
 | tslint     | 5.20.1          | 6.0.0          | "codelyzer@5.2.1" has incorrect peer dependency "tslint@^5.0.0" |
+| typescript | 3.7.5           | 3.8.3          | " > @angular-devkit/build-angular@0.900.7" has incorrect peer dependency "typescript@>=3.6 < 3.8". |
+| typescript | 3.7.5           | 3.8.3          | "@angular-devkit/build-angular > @ngtools/webpack@9.0.7" has incorrect peer dependency "typescript@>=3.6 < 3.8". |
+| typescript | 3.7.5           | 3.8.3          | " > @angular/compiler-cli@9.0.7" has incorrect peer dependency "typescript@>=3.6 <3.8". |
+| typescript | 3.7.5           | 3.8.3          | " > codelyzer@5.2.1" has incorrect peer dependency "tslint@^5.0.0". |
 
 {{PROJECT.READMEGETTINGSTARTED}}
-{{PROJECT.READMEIMPORT}}{{PROJECT.USAGE}}{{PROJECT.SERVER}}{{PROJECT.CLIENT}}{{PROJECT.DOCKER}}
+{{PROJECT.READMEIMPORT}}{{PROJECT.USAGE}}{{PROJECT.CLIENT}}{{PROJECT.SERVER}}{{PROJECT.DOCKER}}

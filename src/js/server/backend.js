@@ -76,8 +76,7 @@ function configureJavaKotlin() {
   const twoEol = os.EOL + os.EOL;
   const indentSize = backend === swConst.KOTLIN ? 2 : 4;
   const indention = `${twoEol}[logback.xml]${os.EOL}indent_size = 4${twoEol}[*.${backend}]${os.EOL}indent_size = ${indentSize}`;
-  const editorconfig = path.join(projectPath, swConst.DOT_EDITORCONFIG);
-  lightjs.replacement('(trim_trailing_whitespace = true)', `$1${indention}`, [editorconfig]);
+  lightjs.replacement('(trim_trailing_whitespace = true)', `$1${indention}`, [path.join(projectPath, swConst.DOT_EDITORCONFIG)]);
 
   lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(serverSrcMainJavaPath, `Application.${backend}`)]);
   lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(webPath, `AuthController.${backend}`)]);
