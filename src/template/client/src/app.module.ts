@@ -1,5 +1,4 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -26,7 +25,6 @@ export function getToken() {
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
-    HttpClientModule,
     MatTabsModule,
     MatToolbarModule,
     OverlayModule,

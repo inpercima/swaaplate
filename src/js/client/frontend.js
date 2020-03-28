@@ -77,7 +77,9 @@ function copyFiles() {
       }
     ]
   };
-  lightjs.writeJson(path.join(mockPath, 'db.json'), dbJsonData);
+  const dbJsonPath = path.join(mockPath, 'db.json');
+  lightjs.writeJson(dbJsonPath, dbJsonData);
+  lightjs.replacement('$', os.EOL, [dbJsonPath]);
 
   const srcPath = path.join(projectPath, swConst.SRC);
   shjs.cp(path.join(templatePath, 'src/favicon.ico'), srcPath);
@@ -116,6 +118,7 @@ function updateAngularJsonFile() {
   architectData.build.configurations.production.vendorChunk = true;
   angularJsonData.projects[projectConfig.general.name].architect = architectData;
   lightjs.writeJson(angularJsonFile, angularJsonData);
+  lightjs.replacement('$', os.EOL, [path.join(projectPath, swConst.ANGULAR_JSON)]);
 }
 
 /**
@@ -244,9 +247,8 @@ function replaceSectionsInFiles() {
   lightjs.replacement('(render )title', '$1toolbar', [specPath]);
 
   // misc
-  lightjs.replacement('$', `@import 'app/app.component.css';\n`, [path.join(projectPath, swConst.SRC, 'styles.css')]);
+  lightjs.replacement('$', `@import 'app/app.component.css';${os.EOL}`, [path.join(projectPath, swConst.SRC, 'styles.css')]);
   lightjs.replacement('$', os.EOL, [path.join(projectPath, 'tslint.json')]);
-  lightjs.replacement('$', os.EOL, [path.join(projectPath, swConst.ANGULAR_JSON)]);
 }
 
 /**
@@ -314,6 +316,7 @@ function updatePackageJsonFile() {
   packageJsonTemplateData.version = '1.0.0-SNAPSHOT';
 
   lightjs.writeJson(packageJsonFile, packageJsonTemplateData);
+  lightjs.replacement('$', os.EOL, [packageJsonFile]);
 }
 
 /**
