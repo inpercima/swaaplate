@@ -1,5 +1,4 @@
-{{PROJECT.READMEHEADER}}
-{{PROJECT.READMEGETTINGSTARTED}}
+{{PROJECT.READMEHEADER}}{{PROJECT.READMEGETTINGSTARTED}}
 Create environment files for `devMode`, `mockMode` and `prodMode`.
 
 ```bash

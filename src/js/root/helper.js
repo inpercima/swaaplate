@@ -59,11 +59,20 @@ function isJavaKotlin() {
   return serverConfig.backend === swConst.JAVA || serverConfig.backend === swConst.KOTLIN;
 }
 
+/**
+ * Checks and return yarn or npm.
+ *
+ */
+function yarnOrNpm() {
+  return projectConfig.client.useYarn ? swConst.YARN : swConst.NPM;
+}
+
 exp.configure = configure;
 exp.getBackendFolder = getBackendFolder;
 exp.isJs = isJs;
 exp.isJava = isJava;
 exp.isJavaKotlin = isJavaKotlin;
 exp.isPhp = isPhp;
+exp.yarnOrNpm = yarnOrNpm;
 
 module.exports = exp;

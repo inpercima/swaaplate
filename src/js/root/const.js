@@ -6,7 +6,8 @@ module.exports = Object.freeze({
   SRC_MAIN: 'src/main',
   SRC_TEST: 'src/test',
   KOTLIN: 'kt',
-  TEMPLATE_README: 'src/template/server/readme',
+  TEMPLATE_ROOT_README: 'src/template/root/readme/',
+  TEMPLATE_CLIENT_README: 'src/template/client/README.md',
 
   // by file or foldername
   ANGULAR_JSON: 'angular.json',

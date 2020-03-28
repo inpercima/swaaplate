@@ -8,6 +8,7 @@ const path = require('path');
 const shjs = require('shelljs');
 
 const swConst = require('./const');
+const swHelper = require('./helper');
 
 let exp = {};
 let projectConfig = {};
@@ -24,75 +25,44 @@ function configure(pConfig, pPath) {
   projectConfig = pConfig;
   projectPath = pPath;
 
-  const templatePath = 'src/template/root/readme/';
-  shjs.cp(path.join(templatePath, swConst.README_MD), projectPath);
+  shjs.cp(path.join(swConst.TEMPLATE_ROOT_README, swConst.README_MD), projectPath);
   const readmeMdPath = path.join(projectPath, swConst.README_MD);
-  const readmeHeaderMdData = fs.readFileSync(path.join(templatePath, 'README.header.md'), 'utf8');
-  lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderRoot(readmeHeaderMdData, true), [readmeMdPath]);
-  const serverConfig = projectConfig.server;
-  if (serverConfig.backend !== swConst.JS) {
-    shjs.cp(path.join('src/template/client/', swConst.README_MD), path.join(projectPath, swConst.CLIENT));
-    lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderRoot(readmeHeaderMdData, false), [path.join(projectPath, swConst.CLIENT, swConst.README_MD)]);
-  }
+  updateReadmeHeader(readmeMdPath);
+  updatePrerequisites(readmeMdPath);
 
-  let prerequisites = '';
-  if (serverConfig.backend === swConst.PHP) {
-    prerequisites += os.EOL + os.EOL + `### Apache and php
-
-* \`Apache 2.4\` or higher
-* \`php 7.3\` or higher`;
-  }
-  if (projectConfig.general.useDocker) {
-    prerequisites += os.EOL + os.EOL + `### Docker
-
-* \`docker 19.03.5\` or higher
-* \`docker-compose 1.25.0\` or higher`;
-  }
-  if (serverConfig.backend === swConst.JAVA) {
-    prerequisites += os.EOL + os.EOL + `### Java
-
-* \`jdk 11\` or higher`;
-  }
-  lightjs.replacement('{{PROJECT.PREREQUISITES}}', prerequisites, [readmeMdPath]);
   lightjs.replacement('{{PROJECT.USENPM}}', checkManager(swConst.NPM), [readmeMdPath]);
   lightjs.replacement('{{PROJECT.USEYARN}}', checkManager(swConst.YARN), [readmeMdPath]);
 
   const webpack = '| copy-webpack-plugin | 4.6.0 | 5.1.1 | "copy-webpack-plugin@5.1.1" has unmet peer dependency "webpack@^4.0.0" |';
-  lightjs.replacement('{{PROJECT.DEPCHECK}}', serverConfig.backend === swConst.PHP ? os.EOL + webpack : '', [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.DEPCHECK}}', swHelper.isPhp() ? os.EOL + webpack : '', [readmeMdPath]);
 
-  const readmeGettingStartedMdData = fs.readFileSync(path.join(templatePath, 'README.getting-started.md'), 'utf8');
-  lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', checkGettingStarted(readmeGettingStartedMdData, true), [readmeMdPath]);
-  const readmeMdClientPath = path.join(projectPath, swConst.CLIENT, swConst.README_MD);
-  if (serverConfig.backend !== swConst.JS) {
-    lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', checkGettingStarted(readmeGettingStartedMdData, false), [readmeMdClientPath]);
-  }
+  updateReadmeGettingStarted(readmeMdPath);
 
-  const readmeClientData = serverConfig.backend === swConst.JS ? fs.readFileSync(path.join('src/template/client/', swConst.README_MD), 'utf8') : '';
+  const readmeClientData = swHelper.isJs() ? fs.readFileSync(swConst.TEMPLATE_CLIENT_README, 'utf8') : os.EOL;
   lightjs.replacement('{{PROJECT.READMEIMPORT}}', readmeClientData, [readmeMdPath]);
-  if (serverConfig.backend === swConst.JS) {
+  if (swHelper.isJs()) {
     lightjs.replacement('{{PROJECT.READMEHEADER}}', '', [readmeMdPath]);
     lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', '', [readmeMdPath]);
   }
 
-  const usage = `## Usage
+  const twoEol = os.EOL + os.EOL;
+  lightjs.replacement('{{PROJECT.USAGE}}', !swHelper.isJs() ? '## Usage' + twoEol + '### Modules' + twoEol : '', [readmeMdPath]);
 
-### Modules` + os.EOL + os.EOL;
-  lightjs.replacement('{{PROJECT.USAGE}}', serverConfig.backend !== swConst.JS ? usage : '', [readmeMdPath]);
-
-  const clientLink = `For the client check [${projectConfig.general.name} - client](./client).` + os.EOL + os.EOL;
-  const serverLink = `For the server check [${projectConfig.general.name} - server](./server).` + os.EOL + os.EOL;
-  const dockerLink = `For the docker check [${projectConfig.general.name} - docker](./README_docker.md).`;
-  lightjs.replacement('{{PROJECT.CLIENT}}', serverConfig.backend !== swConst.JS ? clientLink : '', [readmeMdPath]);
-  lightjs.replacement('{{PROJECT.SERVER}}', serverConfig.backend !== swConst.JS ? serverLink : '', [readmeMdPath]);
+  const clientLink = `For the client check [${projectConfig.general.name} - client](./client).` + twoEol;
+  const serverLink = `For the server check [${projectConfig.general.name} - server](./server).`;
+  const dockerLink = twoEol + `For the docker check [${projectConfig.general.name} - docker](./README_docker.md).`;
+  lightjs.replacement('{{PROJECT.CLIENT}}', !swHelper.isJs() ? clientLink : '', [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.SERVER}}', !swHelper.isJs() ? serverLink : '', [readmeMdPath]);
   lightjs.replacement('{{PROJECT.DOCKER}}', projectConfig.general.useDocker ? dockerLink : '', [readmeMdPath]);
   lightjs.replacement('{{PROJECT.VERSION}}', packageJsonData.version, [readmeMdPath]);
 
   const clientConfig = projectConfig.client;
   const clientConfigRouting = clientConfig.routing;
-  const api = serverConfig.backend === swConst.JAVA || serverConfig.backend === swConst.KOTLIN ? 'http://localhost:8080/' : ( serverConfig.backend === swConst.PHP && serverConfig.serverAsApi ? './api/' : './');
-  const apiSuffix = serverConfig.backend === swConst.PHP && !serverConfig.htaccess ? '`.php`' : 'EMPTY';
+  const serverConfig = projectConfig.server;
+  const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && serverConfig.serverAsApi ? './api/' : './');
+  const apiSuffix = swHelper.isPhp() && !serverConfig.htaccess ? '`.php`' : 'EMPTY';
 
-  const readmeFile = serverConfig.backend === swConst.JS ? readmeMdPath : readmeMdClientPath;
+  const readmeFile = swHelper.isJs() ? readmeMdPath : path.join(projectPath, swConst.CLIENT, swConst.README_MD);
   lightjs.replacement('{{PROJECT.ACTIVATELOGIN}}', clientConfigRouting.login.activate, [readmeFile]);
   lightjs.replacement('{{PROJECT.API}}', api, [readmeFile]);
   lightjs.replacement('{{PROJECT.APISUFFIX}}', apiSuffix, [readmeFile]);
@@ -105,51 +75,153 @@ function configure(pConfig, pPath) {
   lightjs.replacement('(`themes\\.scss`\\.)\\n\\s*', '$1' + os.EOL, [readmeFile]);
 }
 
+/**
+ * Updates the header in the readme.
+ *
+ * @param {string} readmeMdPath
+ */
+function updateReadmeHeader(readmeMdPath) {
+  const readmeHeaderData = fs.readFileSync(path.join(swConst.TEMPLATE_ROOT_README, 'README.header.md'), 'utf8');
+  lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, true), [readmeMdPath]);
+  if (!swHelper.isJs()) {
+    shjs.cp(swConst.TEMPLATE_CLIENT_README, path.join(projectPath, swConst.CLIENT));
+    lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, false), [path.join(projectPath, swConst.CLIENT, swConst.README_MD)]);
+  }
+}
+
+/**
+ * Updates the header sections in the readme.
+ *
+ * @param {string} readmeMdPath
+ */
+function updateReadmeHeaderSections(readmeHeaderData, isRoot) {
+  readmeHeaderData = readmeHeaderData.replace('{{PROJECT.TITLE}}', projectConfig.general.title + (isRoot ? '' : ' - client'));
+  readmeHeaderData = readmeHeaderData.replace('{{PROJECT.LICENSE}}', checkAndCreateLicense(isRoot));
+  readmeHeaderData = readmeHeaderData.replace('{{PROJECT.DEPENDENCIES}}', checkAndCreateDependencies(isRoot));
+  readmeHeaderData = readmeHeaderData.replace('{{PROJECT.DESCRIPTION}}', checkAndCreateDescription(isRoot));
+  return readmeHeaderData;
+}
+
+/**
+ * Checks for using a license and return a link.
+ *
+ * @param {boolean} isRoot
+ */
+function checkAndCreateLicense(isRoot) {
+  return isRoot && isLicense() ? os.EOL + os.EOL + '[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)' : '';
+}
+
+/**
+ * Checks for using and creating the dependency links.
+ *
+ * @param {boolean} isRoot
+ */
+function checkAndCreateDependencies(isRoot) {
+  let result = '';
+  if (projectConfig.client.ghUser !== '' && ((isRoot && swHelper.isJs()) || (!isRoot && !swHelper.isJs()))) {
+    if (isRoot && isLicense()) {
+      result = os.EOL + createDavidDmLinks(isRoot);
+    } else if ((isRoot && !isLicense()) || !isRoot) {
+      result = os.EOL + os.EOL + createDavidDmLinks(isRoot);
+    }
+  }
+  return result;
+}
+/**
+ * Creates the david dm links.
+ *
+ * @param {boolean} isRoot
+ */
+function createDavidDmLinks(isRoot) {
+  const pathParam = isRoot ? '' : '?path=client';
+  const davidDmLink = `https://david-dm.org/${projectConfig.client.ghUser}/${projectConfig.general.name}`;
+  const dependenciesStatus = `[![dependencies Status](${davidDmLink}/status.svg${pathParam})](${davidDmLink}${pathParam})`;
+  const typeParam = isRoot ? '?' : '&';
+  const devDependenciesStatus = `[![devDependencies Status](${davidDmLink}/dev-status.svg${pathParam})](${davidDmLink}${pathParam}${typeParam}type=dev)`;
+  return dependenciesStatus + os.EOL + devDependenciesStatus;
+}
+
+/**
+ * Checks for using the description.
+ *
+ * @param {boolean} isRoot
+ */
+function checkAndCreateDescription(isRoot) {
+  return isRoot ? os.EOL + os.EOL + projectConfig.general.description : os.EOL;
+}
+
+/**
+ * Checks for using the MIT License.
+ *
+ * @param {boolean} isRoot
+ */
+function isLicense() {
+  return projectConfig.general.useMITLicense;
+}
+
+/**
+ * Checks for the used mananger.
+ *
+ * @param {string} manager
+ */
 function checkManager(manager) {
   const usedText = ', used in this repository';
   const useYarn = projectConfig.client.useYarn;
   return useYarn && manager === swConst.YARN ? usedText : !useYarn && manager === swConst.NPM ? usedText + ', ' : '';
 }
 
-function checkGettingStarted(readmeGettingStartedMdData, isRoot) {
-  const cd = `# all commands used in ./client${os.EOL}cd client`;
-  const installTools = `# install tools and frontend dependencies${os.EOL}${projectConfig.client.useYarn ? swConst.YARN : swConst.NPM}`;
-  const getttingStartet = `# clone project
-git clone ${projectConfig.client.packageJson.repository}
-cd ${projectConfig.general.name}${isRoot && projectConfig.server.backend === swConst.JS ? os.EOL + os.EOL + installTools : ''}`;
-  readmeGettingStartedMdData = readmeGettingStartedMdData.replace('{{PROJECT.GETTINGSTARTED}}', isRoot ? getttingStartet : cd + os.EOL + os.EOL + installTools);
-  return readmeGettingStartedMdData;
+/**
+ * Updates the getting started in the readme.
+ *
+ * @param {string} readmeMdPath
+ */
+function updateReadmeGettingStarted(readmeMdPath) {
+  const readmeGettingStartedData = fs.readFileSync(path.join(swConst.TEMPLATE_ROOT_README, 'README.getting-started.md'), 'utf8');
+  lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', updateReadmeGettingStartedSection(readmeGettingStartedData, true), [readmeMdPath]);
+  if (!swHelper.isJs()) {
+    const readmeMdClientPath = path.join(projectPath, swConst.CLIENT, swConst.README_MD);
+    lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', updateReadmeGettingStartedSection(readmeGettingStartedData, false), [readmeMdClientPath]);
+  }
 }
 
-function updateReadmeHeaderRoot(readmeHeaderMdData, isRoot) {
-  readmeHeaderMdData = readmeHeaderMdData.replace('{{PROJECT.TITLE}}', projectConfig.general.title + (isRoot ? '' : ' - client'));
-  readmeHeaderMdData = readmeHeaderMdData.replace('{{PROJECT.LICENSE}}', checkLicense(isRoot));
-  readmeHeaderMdData = readmeHeaderMdData.replace('{{PROJECT.DESCRIPTION}}', checkDescription(isRoot));
-  readmeHeaderMdData = readmeHeaderMdData.replace('{{PROJECT.DEPENDENCIES}}', checkDependencies(isRoot));
-  return readmeHeaderMdData;
+/**
+ * Updates the getting started section in the readme.
+ *
+ * @param {string} readmeGettingStartedData
+ * @param {string} readmeMdPath
+ */
+function updateReadmeGettingStartedSection(readmeGettingStartedData, isRoot) {
+  const cloneProcess = '# clone project' + os.EOL + 'git clone ' + projectConfig.client.packageJson.repository + os.EOL + 'cd ' + projectConfig.general.name;
+  const installTools = '# install tools and frontend dependencies' + os.EOL + swHelper.yarnOrNpm();
+  const commandsClient = '# all commands used in ./client' + os.EOL + 'cd client';
+  const twoEol = os.EOL + os.EOL;
+
+  const gettingStarted = [
+    isRoot ? cloneProcess : '',
+    isRoot && swHelper.isJs() ? twoEol + installTools : '',
+    !isRoot && !swHelper.isJs() ? commandsClient + twoEol + installTools : ''
+  ];
+  return readmeGettingStartedData.replace('{{PROJECT.GETTINGSTARTED}}', gettingStarted.join(''));
 }
 
-function checkLicense(isRoot) {
-  return isRoot && projectConfig.general.useMITLicense ? '[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)' : '';
-}
-
-function checkDescription(isRoot) {
-  return isRoot ? (projectConfig.general.useMITLicense ? os.EOL + os.EOL : '') + projectConfig.general.description : '';
-}
-
-function checkDependencies(isRoot) {
-  const serverConfig = projectConfig.server;
-  const useDavidDm = (isRoot && serverConfig.backend === swConst.JS) || (!isRoot && serverConfig.backend !== swConst.JS);
-  return projectConfig.client.ghUser !== '' && useDavidDm ? generateDavidDmLinks(isRoot) : '';
-}
-
-function generateDavidDmLinks(isRoot) {
-  const pathParam = isRoot ? '' : '?path=client';
-  const davidDmLink = `https://david-dm.org/${projectConfig.client.ghUser}/${projectConfig.general.name}`;
-  const dependenciesStatus = `[![dependencies Status](${davidDmLink}/status.svg${pathParam})](${davidDmLink}${pathParam})`;
-  const typeParam = isRoot ? '?' : '&';
-  const devDependenciesStatus = `[![devDependencies Status](${davidDmLink}/dev-status.svg${pathParam})](${davidDmLink}${pathParam}${typeParam}type=dev)`;
-  return (isRoot && projectConfig.general.useMITLicense ? os.EOL : '') + dependenciesStatus + os.EOL + devDependenciesStatus;
+/**
+ * Updates the prerequisites in the readme.
+ *
+ * @param {string} readmeMdPath
+ */
+function updatePrerequisites(readmeMdPath) {
+  let prerequisites = '';
+  const twoEol = os.EOL + os.EOL;
+  if (swHelper.isPhp()) {
+    prerequisites = twoEol + '### Apache and php' + twoEol + `* \`Apache 2.4\` or higher` + os.EOL + `* \`php 7.3\` or higher`;
+  }
+  if (projectConfig.general.useDocker) {
+    prerequisites = twoEol + '### Docker' + twoEol + `* \`docker 19.03.5\` or higher` + os.EOL + `* \`docker-compose 1.25.0\` or higher`;
+  }
+  if (swHelper.isJava()) {
+    prerequisites += twoEol + '### Java' + twoEol + `* \`jdk 11\` or higher`;
+  }
+  lightjs.replacement('{{PROJECT.PREREQUISITES}}', prerequisites, [readmeMdPath]);
 }
 
 exp.configure = configure;

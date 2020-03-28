@@ -119,7 +119,7 @@ function updateReadmeFile() {
   const readmeMd = path.join(projectPath, swHelper.getBackendFolder(), swConst.README_MD);
   lightjs.info(`* update '${readmeMd}'`);
 
-  shjs.cp(path.join(swConst.TEMPLATE_README, `README.${swHelper.isPhp() ? 'php' : 'java-kotlin'}.md`), readmeMd);
+  shjs.cp(path.join('src/template/server/readme', `README.${swHelper.isPhp() ? 'php' : 'java-kotlin'}.md`), readmeMd);
 
   lightjs.replacement('{{PROJECT.NAME}}', projectConfig.general.name, [readmeMd]);
   lightjs.replacement('{{PROJECT.TITLE}}', projectConfig.general.title, [readmeMd]);
