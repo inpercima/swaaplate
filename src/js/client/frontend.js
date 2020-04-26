@@ -9,6 +9,7 @@ const shjs = require('shelljs');
 const swFrontendModule = require('./frontend-module');
 const swHelper = require('../root/helper');
 const swConst = require('../root/const');
+const swVersion = require('../root/version');
 
 let exp = {};
 let projectConfig = {};
@@ -310,25 +311,27 @@ function updatePackageJsonFile() {
   packageJsonTemplateData.author = generalConfig.author;
   packageJsonTemplateData.contributors = clientConfig.packageJson.contributors;
   packageJsonTemplateData.dependencies = packageJsonData.dependencies;
-  packageJsonTemplateData.dependencies['@angular/cdk'] = '~9.2.1';
-  packageJsonTemplateData.dependencies['@angular/flex-layout'] = '~9.0.0-beta.29';
-  packageJsonTemplateData.dependencies['@angular/material'] = '~9.2.1';
-  packageJsonTemplateData.dependencies['@auth0/angular-jwt'] = '~4.0.0';
-  packageJsonTemplateData.dependencies['json-server'] = '~0.16.1';
-  packageJsonTemplateData.dependencies['jsonwebtoken'] = '~8.5.1';
+  packageJsonTemplateData.dependencies['@angular/cdk'] = swVersion.ANGULAR_CDK;
+  packageJsonTemplateData.dependencies['@angular/flex-layout'] = swVersion.ANGULAR_FLEX;
+  packageJsonTemplateData.dependencies['@angular/material'] = swVersion.ANGULAR_CDK;
+  packageJsonTemplateData.dependencies['@auth0/angular-jwt'] = swVersion.ANGULAR_JWT;
+  if (generalConfig.useMock) {
+    packageJsonTemplateData.dependencies['json-server'] = swVersion.JSON_SERVER;
+    packageJsonTemplateData.dependencies['jsonwebtoken'] = swVersion.JSONWEBTOKEN;
+  }
   packageJsonTemplateData.description = generalConfig.description;
   packageJsonTemplateData.devDependencies = packageJsonData.devDependencies;
   const serverConfig = projectConfig.server;
   if (serverConfig.backend === swConst.PHP) {
-    packageJsonTemplateData.devDependencies['copy-webpack-plugin'] = '4.6.0';
-    packageJsonTemplateData.devDependencies['@angular-builders/custom-webpack'] = '9.1.0';
+    packageJsonTemplateData.devDependencies['copy-webpack-plugin'] = swVersion.COPY_WEBPACK_PLUGIN;
+    packageJsonTemplateData.devDependencies['@angular-builders/custom-webpack'] = swVersion.CUSTOM_WEBPACK;
     if (generalConfig.useMock) {
       scripts['build:mock'] = updateTask(scripts, 'build:mock');
       scripts['watch:mock'] = updateTask(scripts, 'watch:mock');
     }
   }
   packageJsonTemplateData.engines = {
-    node: ">=12.16.1"
+    node: '>=' + swVersion.NODE,
   };
   packageJsonTemplateData.homepage = clientConfig.packageJson.homepage;
   if (generalConfig.useMITLicense) {

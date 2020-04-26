@@ -7,6 +7,7 @@ const shjs = require('shelljs');
 
 const swConst = require('../root/const.js');
 const swHelper = require('../root/helper.js');
+const swVersion = require('../root/version');
 
 let exp = {};
 let projectConfig = {};
@@ -67,7 +68,9 @@ function replaceInPomFile(pomXml) {
   lightjs.replacement('{{PROJECT.DESCRIPTION}}', generalConfig.description, [pomXml]);
   lightjs.replacement('{{PROJECT.DIST}}', projectConfig.client.buildDir, [pomXml]);
   lightjs.replacement('{{PROJECT.GROUPID}}', projectConfig.server.packagePath, [pomXml]);
+  lightjs.replacement('{{PROJECT.MAVENJARPLUGINVERSION}}', swVersion.MAVEN_JAR_PLUGIN, [pomXml]);
   lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [pomXml]);
+  lightjs.replacement('{{PROJECT.SPRINGBOOTVERSION}}', swVersion.SPRING_BOOT, [pomXml]);
   lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.title, [pomXml]);
 }
 

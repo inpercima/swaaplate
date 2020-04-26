@@ -5,13 +5,13 @@ This project was generated with [swaaplate](https://github.com/inpercima/swaapla
 
 ### Angular CLI
 
-* `angular-cli 9.1.3` or higher{{PROJECT.PREREQUISITES}}
+* `angular-cli {{PROJECT.ANGULARCLIVERSION}}` or higher{{PROJECT.PREREQUISITES}}
 
 ### Node, npm or yarn
 
-* `node 12.16.1` or higher in combination with
-  * `npm 6.13.4` or higher{{PROJECT.USENPM}} or
-  * `yarn 1.22.4` or higher{{PROJECT.USEYARN}}
+* `node {{PROJECT.NODEVERSION}}` or higher in combination with
+  * `npm {{PROJECT.NPMVERSION}}` or higher{{PROJECT.USENPM}} or
+  * `yarn {{PROJECT.YARNVERSION}}` or higher{{PROJECT.USEYARN}}
 
 ## Dependency check
 

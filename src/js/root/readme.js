@@ -9,6 +9,7 @@ const shjs = require('shelljs');
 
 const swConst = require('./const');
 const swHelper = require('./helper');
+const swVersion = require('./version')
 
 let exp = {};
 let projectConfig = {};
@@ -30,10 +31,14 @@ function configure(pConfig, pPath) {
   updateReadmeHeader(readmeMdPath);
   updatePrerequisites(readmeMdPath);
 
+  lightjs.replacement('{{PROJECT.ANGULARCLIVERSION}}', swVersion.ANGULAR_CLI, [readmeMdPath]);
   lightjs.replacement('{{PROJECT.USENPM}}', checkManager(swConst.NPM), [readmeMdPath]);
   lightjs.replacement('{{PROJECT.USEYARN}}', checkManager(swConst.YARN), [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.NODEVERSION}}', swVersion.NODE, [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.NPMVERSION}}', swVersion.NPM, [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.YARNVERSION}}', swVersion.YARN, [readmeMdPath]);
 
-  const webpack = '| copy-webpack-plugin | 4.6.0 | 5.1.1 | "copy-webpack-plugin@5.1.1" has unmet peer dependency "webpack@^4.0.0" |';
+  const webpack = `| copy-webpack-plugin | ${swVersion.COPY_WEBPACK_PLUGIN} | 5.1.1 | "copy-webpack-plugin@5.1.1" has unmet peer dependency "webpack@^4.0.0" |`;
   lightjs.replacement('{{PROJECT.DEPCHECK}}', swHelper.isPhp() ? os.EOL + webpack : '', [readmeMdPath]);
 
   updateReadmeGettingStarted(readmeMdPath);
@@ -240,13 +245,13 @@ function updatePrerequisites(readmeMdPath) {
   let prerequisites = '';
   const twoEol = os.EOL + os.EOL;
   if (swHelper.isPhp()) {
-    prerequisites = twoEol + '### Apache and php' + twoEol + `* \`Apache 2.4\` or higher` + os.EOL + `* \`php 7.3\` or higher`;
+    prerequisites = twoEol + '### Apache and php' + twoEol + '* `Apache ' + swVersion.APACHE + '` or higher' + os.EOL + '* `php ' + swVersion.PHP + '` or higher';
   }
   if (projectConfig.general.useDocker) {
-    prerequisites = twoEol + '### Docker' + twoEol + `* \`docker 19.03.5\` or higher` + os.EOL + `* \`docker-compose 1.25.0\` or higher`;
+    prerequisites = twoEol + '### Docker' + twoEol + '* `docker ' + swVersion.DOCKER + '` or higher' + os.EOL + '* `docker-compose ' + swVersion.DOCKER_COMPOSE + '` or higher';
   }
   if (swHelper.isJava()) {
-    prerequisites += twoEol + '### Java' + twoEol + `* \`jdk 11\` or higher`;
+    prerequisites += twoEol + '### Java' + twoEol + '* `jdk ' + swVersion.JDK + '` or higher';
   }
   lightjs.replacement('{{PROJECT.PREREQUISITES}}', prerequisites, [readmeMdPath]);
 }
