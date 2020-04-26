@@ -1,9 +1,8 @@
 {{PROJECT.READMEHEADER}}{{PROJECT.READMEGETTINGSTARTED}}
-Create environment files for `devMode`, `mockMode` and `prodMode`.
+Create environment files for `devMode`{{PROJECT.MOCKMODE}} and `prodMode`.
 
 ```bash
-cp src/environments/environment.ts src/environments/environment.dev.ts
-cp src/environments/environment.ts src/environments/environment.mock.ts
+cp src/environments/environment.ts src/environments/environment.dev.ts{{PROJECT.MOCKENV}}
 cp src/environments/environment.ts src/environments/environment.prod.ts
 ```
 
@@ -13,41 +12,27 @@ cp src/environments/environment.ts src/environments/environment.prod.ts
 
 ### Recommendation
 
-It is recommanded to use a server to get full access of all angular.
-You can do this for example with `yarn serve:mock`.
+It is recommanded to use a server to get full access of all angular.{{PROJECT.MOCKSERVER}}
 For the other options your app should run on a server which you like.
 
-### Run in devMode
-
-If you want to work with mock data, start the mock in a separate terminal, reachable on [http://localhost:3000/](http://localhost:3000/).
-
-```bash
-# mock, separate terminal
-yarn run:mock
-```
+### Run in devMode{{PROJECT.MOCKRUN}}
 
 ```bash
 # build, reachable on http://localhost/app/path/to/dist/
-yarn build:dev
-# with mock
-yarn build:mock
+{{PROJECT.USAGEYN}} build:dev{{PROJECT.MOCKBUILD}}
 
 # build and starts a server, rebuild after changes, reachable on http://localhost:4200/
-yarn serve:dev
-# with mock
-yarn serve:mock
+{{PROJECT.USAGEYN}} serve:dev{{PROJECT.MOCKSERVE}}
 
 # build, rebuild after changes, reachable on http://localhost/app/path/to/dist/
-yarn watch:dev
-# with mock
-yarn watch:mock
+{{PROJECT.USAGEYN}} watch:dev{{PROJECT.MOCKWATCH}}
 ```
 
 ### Package
 
 ```bash
 # build in prodMode, compressed
-yarn build:prod
+{{PROJECT.USAGEYN}} build:prod
 ```
 
 ### Tests
@@ -65,8 +50,8 @@ ng e2e
 ### General
 
 All options have to been set in the environment files but some of them do not need to be changed.
-All defaults refer to the development environment file (`environment.dev.ts`).
-Change for prodMode the option `production` to `true` and for mockMode the option `api` to `http://localhost:3000/`.
+All defaults refer to the environment file (`environment.ts`), they are prepared in devMode (`environment.dev.ts`).
+Change for prodMode the option `production` to `true`{{PROJECT.MOCKCONFIG}}.
 
 ### Table of contents
 

@@ -103,12 +103,22 @@ function configurePhp() {
     shjs.cp(path.join(phpTemplatePath, '.htaccess'), srcMainPath);
   }
 
+  const generalConfig = projectConfig.general;
+  const mockPlaceholder = generalConfig.useMock ? '  ' : '';
+  const copyPlugin = [
+    generalConfig.useMock ? `    process.env.NODE_ENV !== 'mock' ?` + os.EOL : '',
+    mockPlaceholder + '    new CopyWebpackPlugin([{' + os.EOL,
+    mockPlaceholder + `      from: '../${serverDir}/src/main',` + os.EOL,
+    mockPlaceholder + `      to: './${serverDir}',` + os.EOL,
+    mockPlaceholder + '    }])' + (generalConfig.useMock ? ' : {}' : ''),
+  ];
+
   const webpackConfigFile = path.join(projectPath, swConst.CLIENT, swConst.WEBPACK_CONFIG_JS);
   shjs.cp(path.join(phpTemplatePath, swConst.WEBPACK_CONFIG_JS), webpackConfigFile);
-  lightjs.replacement('{{PROJECT.SERVERDIR}}', serverDir, [webpackConfigFile]);
+  lightjs.replacement('{{PROJECT.COPYPLUGIN}}', copyPlugin.join(''), [webpackConfigFile]);
 
   const authServicePath = path.join(projectPath, serverDir, swConst.SRC_MAIN, swConst.AUTH_SERVICE_PHP);
-  lightjs.replacement('{{PROJECT.NAME}}', projectConfig.general.name, [authServicePath]);
+  lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [authServicePath]);
 }
 
 /**

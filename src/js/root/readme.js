@@ -57,12 +57,34 @@ function configure(pConfig, pPath) {
   lightjs.replacement('{{PROJECT.VERSION}}', packageJsonData.version, [readmeMdPath]);
 
   const clientConfig = projectConfig.client;
+  const genaralConfig = projectConfig.general;
   const clientConfigRouting = clientConfig.routing;
   const serverConfig = projectConfig.server;
   const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && serverConfig.serverAsApi ? './api/' : './');
   const apiSuffix = swHelper.isPhp() && !serverConfig.htaccess ? '`.php`' : 'EMPTY';
 
   const readmeFile = swHelper.isJs() ? readmeMdPath : path.join(projectPath, swConst.CLIENT, swConst.README_MD);
+
+  const useMock = genaralConfig.useMock;
+  replaceMockSection(useMock, 'MOCKMODE', ', `mockMode`', readmeFile);
+  replaceMockSection(useMock, 'MOCKENV', os.EOL + 'cp src/environments/environment.ts src/environments/environment.mock.ts', readmeFile);
+  replaceMockSection(useMock, 'MOCKSERVER', os.EOL + 'You can do this for example with `' + swHelper.yarnNpmCommand('run') + ' serve:mock`.', readmeFile);
+  const mockRun = [
+    os.EOL + os.EOL,
+    'If you want to work with mock data, start the mock in a separate terminal, reachable on [http://localhost:3000/](http://localhost:3000/).',
+    os.EOL + os.EOL,
+    '```bash' + os.EOL,
+    '# mock, separate terminal' + os.EOL,
+    swHelper.yarnNpmCommand('run') + ' run:mock' + os.EOL,
+    '```',
+  ];
+  const mockCommand = os.EOL + '# with mock' + os.EOL + swHelper.yarnNpmCommand('run');
+  replaceMockSection(useMock, 'MOCKRUN', mockRun.join(''), readmeFile);
+  replaceMockSection(useMock, 'MOCKBUILD', mockCommand + ' build:mock', readmeFile);
+  replaceMockSection(useMock, 'MOCKSERVE', mockCommand + ' serve:mock', readmeFile);
+  replaceMockSection(useMock, 'MOCKWATCH', mockCommand + ' watch:mock', readmeFile);
+  replaceMockSection(useMock, 'MOCKCONFIG', ' and for mockMode the option `api` to `http://localhost:3000/`', readmeFile);
+
   lightjs.replacement('{{PROJECT.ACTIVATELOGIN}}', clientConfigRouting.login.activate, [readmeFile]);
   lightjs.replacement('{{PROJECT.API}}', api, [readmeFile]);
   lightjs.replacement('{{PROJECT.APISUFFIX}}', apiSuffix, [readmeFile]);
@@ -73,6 +95,11 @@ function configure(pConfig, pPath) {
   lightjs.replacement('{{PROJECT.THEME}}', clientConfig.theme, [readmeFile]);
 
   lightjs.replacement('(`themes\\.scss`\\.)\\n\\s*', '$1' + os.EOL, [readmeFile]);
+  lightjs.replacement('{{PROJECT.USAGEYN}}', swHelper.yarnNpmCommand('run'), [readmeFile]);
+}
+
+function replaceMockSection(useMock, placeholder, replacement, file) {
+  lightjs.replacement(`{{PROJECT.${placeholder}}}`, useMock ? replacement : '', [file]);
 }
 
 /**
@@ -166,7 +193,7 @@ function isLicense() {
  */
 function checkManager(manager) {
   const usedText = ', used in this repository';
-  const useYarn = projectConfig.client.useYarn;
+  const useYarn = swHelper.useYarn();
   return useYarn && manager === swConst.YARN ? usedText : !useYarn && manager === swConst.NPM ? usedText + ', ' : '';
 }
 
@@ -192,7 +219,7 @@ function updateReadmeGettingStarted(readmeMdPath) {
  */
 function updateReadmeGettingStartedSection(readmeGettingStartedData, isRoot) {
   const cloneProcess = '# clone project' + os.EOL + 'git clone ' + projectConfig.client.packageJson.repository + os.EOL + 'cd ' + projectConfig.general.name;
-  const installTools = '# install tools and frontend dependencies' + os.EOL + swHelper.yarnOrNpm();
+  const installTools = '# install tools and frontend dependencies' + os.EOL + swHelper.yarnNpmCommand('install');
   const commandsClient = '# all commands used in ./client' + os.EOL + 'cd client';
   const twoEol = os.EOL + os.EOL;
 

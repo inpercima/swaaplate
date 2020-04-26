@@ -5,11 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 // workaround: https://github.com/meltedspark/angular-builders/issues/235#issuecomment-471323007
 module.exports = (config, options) => {
   config.plugins.push(
-    process.env.NODE_ENV !== 'mock' ?
-      new CopyWebpackPlugin([{
-        from: '../{{PROJECT.SERVERDIR}}/src/main',
-        to: './{{PROJECT.SERVERDIR}}',
-      }]) : {},
+{{PROJECT.COPYPLUGIN}}
   );
   return config;
 }

@@ -39,7 +39,8 @@
     "name": "hello-world",
     "title": "Hello world",
     "useDocker": false,
-    "useMITLicense": true
+    "useMITLicense": true,
+    "useMock": false
   },
   "server": {
     "backend": "js",

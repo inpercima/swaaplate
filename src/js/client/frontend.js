@@ -47,6 +47,9 @@ function configure(workspacePath, pConfig, pPath) {
 
   swFrontendModule.generateModulesAndComponents(projectConfig, projectPath);
   copyFiles();
+  if (projectConfig.general.useMock) {
+    prepareMock();
+  }
   updateAngularJsonFile();
   updateEnvironmentTsFiles();
   replaceSectionsInFiles();
@@ -55,11 +58,29 @@ function configure(workspacePath, pConfig, pPath) {
 }
 
 /**
- * Copy files.
+ * Copy client files.
  *
  */
 function copyFiles() {
   lightjs.info('copy client files');
+
+  const templatePath = 'src/template/client/';
+  const srcPath = path.join(projectPath, swConst.SRC);
+  shjs.cp(path.join(templatePath, 'src/favicon.ico'), srcPath);
+  shjs.cp(path.join(templatePath, 'src/themes.scss'), srcPath);
+
+  const coreFolder = 'core';
+  const corePath = path.join(srcPath, swConst.APP, coreFolder);
+  shjs.mkdir(corePath);
+  shjs.cp('-r', path.join(templatePath, swConst.SRC, coreFolder, '*'), corePath);
+}
+
+/**
+ * Prepares a mock.
+ *
+ */
+function prepareMock() {
+  lightjs.info('prepare mock');
 
   const templatePath = 'src/template/client/';
   const mockFolder = 'mock';
@@ -80,15 +101,6 @@ function copyFiles() {
   const dbJsonPath = path.join(mockPath, 'db.json');
   lightjs.writeJson(dbJsonPath, dbJsonData);
   lightjs.replacement('$', os.EOL, [dbJsonPath]);
-
-  const srcPath = path.join(projectPath, swConst.SRC);
-  shjs.cp(path.join(templatePath, 'src/favicon.ico'), srcPath);
-  shjs.cp(path.join(templatePath, 'src/themes.scss'), srcPath);
-
-  const coreFolder = 'core';
-  const corePath = path.join(srcPath, swConst.APP, coreFolder);
-  shjs.mkdir(corePath);
-  shjs.cp('-r', path.join(templatePath, swConst.SRC, coreFolder, '*'), corePath);
 }
 
 /**
@@ -98,7 +110,8 @@ function copyFiles() {
 function updateAngularJsonFile() {
   const angularJsonFile = path.join(projectPath, swConst.ANGULAR_JSON);
   let angularJsonData = lightjs.readJson(angularJsonFile);
-  const name = projectConfig.general.name;
+  const generalConfig = projectConfig.general;
+  const name = generalConfig.name;
   const clientConfig = projectConfig.client;
   const architectData = angularJsonData.projects[name].architect;
   architectData.build.options.outputPath = clientConfig.buildDir;
@@ -111,12 +124,16 @@ function updateAngularJsonFile() {
   }
   architectData.build.options.styles.push('src/themes.scss');
   architectData.build.configurations.dev = addFileReplacementsAndBudgets('dev');
-  architectData.build.configurations.mock = addFileReplacementsAndBudgets('mock');
+  if (generalConfig.useMock) {
+    architectData.build.configurations.mock = addFileReplacementsAndBudgets('mock');
+  }
   architectData.serve.configurations.dev = addBrowserTarget(name, 'dev');
-  architectData.serve.configurations.mock = addBrowserTarget(name, 'mock');
+  if (generalConfig.useMock) {
+    architectData.serve.configurations.mock = addBrowserTarget(name, 'mock');
+  }
   architectData.build.configurations.production.namedChunks = true;
   architectData.build.configurations.production.vendorChunk = true;
-  angularJsonData.projects[projectConfig.general.name].architect = architectData;
+  angularJsonData.projects[name].architect = architectData;
   lightjs.writeJson(angularJsonFile, angularJsonData);
   lightjs.replacement('$', os.EOL, [path.join(projectPath, swConst.ANGULAR_JSON)]);
 }
@@ -177,12 +194,16 @@ function updateEnvironmentTsFiles() {
   const environmentsPath = path.join(projectPath, swConst.SRC, 'environments');
   lightjs.replacement('production: false', environments, [path.join(environmentsPath, swConst.ENVIRONMENT_TS)]);
   shjs.cp(path.join(environmentsPath, swConst.ENVIRONMENT_TS), path.join(environmentsPath, swConst.ENVIRONMENT_DEV_TS));
-  shjs.cp(path.join(environmentsPath, swConst.ENVIRONMENT_TS), path.join(environmentsPath, swConst.ENVIRONMENT_MOCK_TS));
+  if (generalConfig.useMock) {
+    shjs.cp(path.join(environmentsPath, swConst.ENVIRONMENT_TS), path.join(environmentsPath, swConst.ENVIRONMENT_MOCK_TS));
+  }
   shjs.cp(path.join(environmentsPath, swConst.ENVIRONMENT_TS), path.join(environmentsPath, swConst.ENVIRONMENT_PROD_TS));
 
   lightjs.replacement('(production: )false', `$1true`, [path.join(environmentsPath, swConst.ENVIRONMENT_PROD_TS)]);
   replaceCommentsInEnvironmentTsFile(environmentsPath, swConst.ENVIRONMENT_DEV_TS);
-  replaceCommentsInEnvironmentTsFile(environmentsPath, swConst.ENVIRONMENT_MOCK_TS);
+  if (generalConfig.useMock) {
+    replaceCommentsInEnvironmentTsFile(environmentsPath, swConst.ENVIRONMENT_MOCK_TS);
+  }
   replaceCommentsInEnvironmentTsFile(environmentsPath, swConst.ENVIRONMENT_PROD_TS);
 }
 
@@ -266,21 +287,26 @@ function createLink(font) {
 function updatePackageJsonFile() {
   const packageJsonFile = path.join(projectPath, swConst.PACKAGE_JSON);
   let packageJsonData = lightjs.readJson(packageJsonFile);
+  const generalConfig = projectConfig.general;
 
-  let scripts = {
-    "build:dev": "ng lint && ng build --configuration=dev",
-    "serve:dev": "ng serve -o --configuration=dev",
-    "watch:dev": "ng build --watch --configuration=dev",
+  const mockScripts = {
     "build:mock": "ng lint && ng build --configuration=mock",
     "run:mock": "json-server mock/db.json --middlewares mock/middleware.js",
     "serve:mock": "ng serve -o --configuration=mock",
     "watch:mock": "ng build --watch --configuration=mock",
-    "build:prod": "ng lint && ng build --prod"
   };
+  let scripts = {
+    "build:dev": "ng lint && ng build --configuration=dev",
+    "serve:dev": "ng serve -o --configuration=dev",
+    "watch:dev": "ng build --watch --configuration=dev",
+  };
+  if (generalConfig.useMock) {
+    Object.assign(scripts, mockScripts);
+  }
+  Object.assign(scripts, { "build:prod": "ng lint && ng build --prod" });
 
   let packageJsonTemplateData = {};
   const clientConfig = projectConfig.client;
-  const generalConfig = projectConfig.general;
   packageJsonTemplateData.author = generalConfig.author;
   packageJsonTemplateData.contributors = clientConfig.packageJson.contributors;
   packageJsonTemplateData.dependencies = packageJsonData.dependencies;
@@ -296,8 +322,10 @@ function updatePackageJsonFile() {
   if (serverConfig.backend === swConst.PHP) {
     packageJsonTemplateData.devDependencies['copy-webpack-plugin'] = '4.6.0';
     packageJsonTemplateData.devDependencies['@angular-builders/custom-webpack'] = '9.1.0';
-    scripts['build:mock'] = updateTask(scripts, 'build:mock');
-    scripts['watch:mock'] = updateTask(scripts, 'watch:mock');
+    if (generalConfig.useMock) {
+      scripts['build:mock'] = updateTask(scripts, 'build:mock');
+      scripts['watch:mock'] = updateTask(scripts, 'watch:mock');
+    }
   }
   packageJsonTemplateData.engines = {
     node: ">=12.16.1"

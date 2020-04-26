@@ -60,11 +60,28 @@ function isJavaKotlin() {
 }
 
 /**
+ * Checks the manager to yarn.
+ *
+ */
+function useYarn() {
+  return projectConfig.client.useYarn;
+}
+
+/**
  * Checks and return yarn or npm.
  *
  */
 function yarnOrNpm() {
-  return projectConfig.client.useYarn ? swConst.YARN : swConst.NPM;
+  return useYarn() ? swConst.YARN : swConst.NPM;
+}
+
+/**
+ * Returns the command with yarn or npm.
+ *
+ * @param {string} command
+ */
+function yarnNpmCommand(command) {
+  return yarnOrNpm() + (!useYarn() ? ' ' + command : '');
 }
 
 exp.configure = configure;
@@ -73,6 +90,8 @@ exp.isJs = isJs;
 exp.isJava = isJava;
 exp.isJavaKotlin = isJavaKotlin;
 exp.isPhp = isPhp;
+exp.useYarn = useYarn;
 exp.yarnOrNpm = yarnOrNpm;
+exp.yarnNpmCommand = yarnNpmCommand;
 
 module.exports = exp;
