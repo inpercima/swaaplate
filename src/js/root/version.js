@@ -2,8 +2,8 @@
 
 module.exports = Object.freeze({
   ANGULAR_CDK: '~9.2.3',
-  ANGULAR_CLI: '9.1.5',
-  ANGULAR_FLEX: '~9.0.0-beta.29',
+  ANGULAR_CLI: '9.1.6',
+  ANGULAR_FLEX: '~9.0.0-beta.31',
   ANGULAR_JWT: '~4.0.0',
   APACHE: '2.4',
   COPY_WEBPACK_PLUGIN: '4.6.0',
@@ -17,6 +17,6 @@ module.exports = Object.freeze({
   NODE: '12.16.1',
   NPM: '6.13.4',
   PHP: '7.3',
-  SPRING_BOOT: '2.2.7.RELEASE',
+  SPRING_BOOT: '2.3.0.RELEASE',
   YARN: '1.22.4',
 });
