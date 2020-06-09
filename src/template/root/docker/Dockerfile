@@ -8,9 +8,10 @@ WORKDIR /home/${USER}
 
 COPY client/src/ ./src/
 COPY client/angular.json .
-COPY client/browserslist .
+COPY client/.browserslistrc .
 COPY client/package.json .
 COPY client/tsconfig.app.json .
+COPY client/tsconfig.base.json .
 COPY client/tsconfig.json .
 COPY client/tsconfig.spec.json .
 COPY client/e2e/tsconfig.json ./e2e/
