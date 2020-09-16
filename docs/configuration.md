@@ -13,35 +13,36 @@ Some of this options will be copied in the environment files of the new project 
 * [client/ghUser](#clientghUser)
 * [client/installDependencies](#clientinstallDependencies)
 * [client/language](#clientlanguage)
+* [client/modules/enabled](#clientmodulesenabled)
+* [client/modules/features](#clientmodulesfeatures)
+* [client/modules/features/defaultRoute](#clientmodulesfeaturesdefaultRoute)
+* [client/modules/features/name](#clientmodulesfeaturesname)
+* [client/modules/notFound](#clientmodulesnotfound)
+* [client/modules/notFound/enabled](#clientmodulesnotfoundenabled)
+* [client/modules/notFound/name](#clientmodulesnotfoundname)
+* [client/modules/routing](#clientmodulesrouting)
 * [client/packageJson/contributors](#clientpackageJsoncontributors)
 * [client/packageJson/homepage](#clientpackageJsonhomepage)
 * [client/packageJson/repository](#clientpackageJsonrepository)
 * [client/prefix](#clientprefix)
-* [client/routing/enabled](#clientroutingenabled)
-* [client/routing/features/default](#clientroutingfeaturesdefault)
-* [client/routing/features/name](#clientroutingfeaturesname)
-* [client/routing/features/show](#clientroutingfeaturesshow)
-* [client/routing/login/activate](#clientroutingloginactivate)
-* [client/routing/login/enabled](#clientroutingloginenabled)
-* [client/routing/login/name](#clientroutingloginname)
-* [client/routing/login/show](#clientroutingloginshow)
-* [client/routing/notFound/enabled](#clientroutingnotFoundenabled)
-* [client/routing/notFound/name](#clientroutingnotfoundname)
-* [client/routing/notFound/redirect](#clientroutingnotfoundredirect)
 * [client/theme](#clienttheme)
 * [client/useGoogleFonts](#clientuseGoogleFonts)
 * [client/useYarn](#clientuseyarn)
 * [general/author](#generalauthor)
 * [general/description](#generaldescription)
+* [general/modRewriteIndex](#generalmodRewriteIndex)
 * [general/name](#generalname)
 * [general/title](#generaltitle)
 * [general/useDocker](#generaluseDocker)
 * [general/useMITLicense](#generaluseMITLicense)
+* [general/useSecurity](#generaluseSecurity)
 * [server/backend](#serverbackend)
-* [server/htaccess](#serverhtaccess)
-* [server/management](#servermanagement)
-* [server/packagePath](#serverpackagepath)
-* [server/serverAsApi](#serverserverasapi)
+* [server/javaKt](#serverjavaKt)
+* [server/javaKt/management](#serverjavaKtmanagement)
+* [server/javaKt/packagePath](#serverjavaKtpackagePath)
+* [server/php](#serverphp)
+* [server/php/modRewritePhpExtension](#serverphpmodRewritePhpExtension)
+* [server/php/serverAsApi](#serverphpserverAsApi)
 
 ## `client/buildDir`
 
@@ -52,7 +53,7 @@ Defines the build dir for the webapp.
 
 ## `client/ghUser`
 
-Defines username for github if this project is shared on github.
+Defines the username for github if this project is shared on github.
 If the value is not EMPTY dependencies will be displayed with by [david-dm.org](https://david-dm.org).
 
 * default: EMPTY
@@ -68,10 +69,70 @@ Defines whether swaaplate should install tools and frontend dependencies or not.
 
 ## `client/language`
 
-Defines language of the app client side.
+Defines the language of the app client side.
 
 * default: `en`
 * type: `string`
+
+## `client/modules/enabled`
+
+Defines whether default modules for components should be created or not.
+On `true` a features module will be created.
+This can be used for components as pages like dashboard, contact, about or impress.
+A not found module could be created, this depends on [client/modules/notFound/enabled](#clientmodulesnotfoundenabled).
+
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
+
+## `client/modules/features`
+
+This option depends on [client/modules/enabled](#clientmodulesenabled).
+
+## `client/modules/features/defaultRoute`
+
+The main route and the redirect route.
+This option ca be changed in the environment files.
+
+* environment name: `defaultRoute`
+* default: `hello-world`
+* type: `string`
+
+## `client/modules/features/name`
+
+Defines the name of the features module.
+
+* default: `features`
+* type: `string`
+
+## `client/modules/notFound`
+
+This option depends on [client/modules/enabled](#clientmodulesenabled) and [client/modules/routing](#clientmodulesrouting) too.
+
+## `client/modules/notFound/enabled`
+
+Defines whether the notFound module will be created and used or not.
+On `true` a module and component will be created and used on routes are not existing.
+
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
+
+## `client/modules/notFound/name`
+
+The name of the 404 module and component where to redirect if a route not exists.
+
+* default: `not-found`
+* type: `string`
+
+## `client/modules/routing`
+
+Defines whether a navigation will be created and routing could be used.
+This option depends on [client/modules/enabled](#clientmodulesenabled).
+
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
 
 ## `client/packageJson/contributors`
 
@@ -100,110 +161,6 @@ A shortcut of the project, used in components like `hw-home` or `hw-app`.
 
 * default: `hw`
 * type: `string`
-
-## `client/routing/enabled`
-
-Defines whether routes will used or not.
-
-* default: `true`
-* type: `boolean`
-* values: `true`/`false`
-
-## `client/routing/features/default`
-
-The main route and the redirect route after log in if no route is stored.
-This option ca be changed in the environment files.
-This depends on `client/routing/enabled`.
-
-* environment name: `defaultRoute`
-* default: `dashboard`
-* type: `string`
-
-## `client/routing/features/name`
-
-Defines the name of the features module.
-This depends on `client/routing/enabled`.
-
-* default: `features`
-* type: `string`
-
-## `client/routing/features/show`
-
-Defines whether feature routes will be displayed or not.
-This option ca be changed in the environment files.
-This depends on `client/routing/enabled`.
-
-* environment name: `showFeatures`
-* default: `true`
-* type: `boolean`
-* values: `true`/`false`
-
-## `client/routing/login/activate`
-
-Defines whether a login will be activated or not.
-This option can be changed in the environment files.
-This depends on `client/routing/login/enabled`.
-
-* environment name: `activateLogin`
-* default: `true`
-* type: `boolean`
-* values: `true`/`false`
-
-## `client/routing/login/enabled`
-
-Defines whether a login will be used or not.
-This depends on `client/routing/enabled`.
-
-* default: `true`
-* type: `boolean`
-* values: `true`/`false`
-
-## `client/routing/login/name`
-
-Defines the name of the login route.
-This depends on `client/routing/login/enabled`.
-
-* default: `login`
-* type: `string`
-
-## `client/routing/login/show`
-
-Defines whether login route will be displayed or not.
-This option ca be changed in the environment files.
-This depends on `client/routing/login/enabled`.
-
-* environment name: `showLogin`
-* default: `false`
-* type: `boolean`
-* values: `true`/`false`
-
-## `client/routing/notFound/enabled`
-
-Defines whether notFound route will be used or not.
-This depends on `client/routing/enabled`.
-
-* default: `true`
-* type: `boolean`
-* values: `true`/`false`
-
-## `client/routing/notFound/name`
-
-The name of the 404 route where to redirect if a route not exists.
-This depends on `client/routing/notFound/enabled`.
-
-* default: `not-found`
-* type: `string`
-
-## `client/routing/notFound/redirect`
-
-Defines whether the 404 route will redirect to the default route or not.
-This option ca be changed in the environment files.
-This depends on `client/routing/notFound/enabled`.
-
-* environment name: `redirectNotFound`
-* default: `false`
-* type: `boolean`
-* values: `true`/`false`
 
 ## `client/theme`
 
@@ -246,6 +203,14 @@ A description.
 * default: EMPTY
 * type: `string`
 
+## `general/modRewriteIndex`
+
+Defines whether the mode rewriting in Apache should be set up in a .htaccess file or not.
+
+* default: `false`
+* type: `boolean`
+* values: `true`/`false`
+
 ## `general/name`
 
 The name and foldername of the project in the workspace.
@@ -279,6 +244,16 @@ Defines whether the project should be initialized with a MIT License.
 * type: `boolean`
 * values: `true`/`false`
 
+## `general/useSecurity`
+
+Defines whether the project should be initialized with security and authentication options.
+On `true` a login module and component and authentication services will be created.
+For backends like `php` or `java` special components will be created too.
+
+* default: `false`
+* type: `boolean`
+* values: `true`/`false`
+
 ## `server/backend`
 
 Defines the backend of the app.
@@ -287,38 +262,42 @@ Defines the backend of the app.
 * type: `string`
 * values: `java`/`kt`/`js`/`php`
 
-## `server/htaccess`
+## `server/javaKt`
+
+This option depends on [server/backend](#serverbackend) with `java` or `kt`.
+
+## `server/javaKt/management`
+
+Defines the management tool of the app.
+
+* default: `maven`
+* type: `string`
+* values: `maven`/`gradle`/
+
+## `server/javaKt/packagePath`
+
+The package structure.
+
+* default: EMPTY
+* type: `string`
+
+## `server/php`
+
+This option depends on [server/backend](#serverbackend) with `php`.
+
+## `server/php/modRewritePhpExtension`
 
 Defines whether a .htaccess file should used or not.
 This predefines no ending for php files.
-This will work for php only.
 
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
 
-## `server/management`
-
-Defines the management tool of the app.
-This will work for java or kotlin only.
-
-* default: EMPTY
-* type: `string`
-* values: EMPTY/`maven`/`gradle`/
-
-## `server/packagePath`
-
-The package structure.
-This will work for java or kotlin only.
-
-* default: EMPTY
-* type: `string`
-
-## `server/serverAsApi`
+## `server/php/serverAsApi`
 
 Defines that the server is used as a api reference or not.
 The api URL in environment.ts and environment.prod.ts will be set to `./api/`.
-This will work for php only.
 
 * default: `true`
 * type: `boolean`
