@@ -42,5 +42,4 @@ export class AuthService {
       return false;
     }
   }
-
 }
