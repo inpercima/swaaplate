@@ -11,8 +11,8 @@
         "name": "features"
       },
       "notFound": {
-        "name": "not-found",
-        "redirect": false
+        "enabled": true,
+        "name": "not-found"
       },
       "routing": true
     },

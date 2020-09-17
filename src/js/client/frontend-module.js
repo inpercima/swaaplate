@@ -8,6 +8,7 @@ const shjs = require('shelljs');
 const uppercamelcase = require('uppercamelcase');
 
 const swConst = require('../root/const');
+const swHelper = require('../root/helper');
 
 let exp = {};
 let projectConfig = {};
@@ -23,22 +24,19 @@ function generateModulesAndComponents(pConfig, pPath) {
   projectConfig = pConfig;
   projectPath = pPath;
 
-  const clientConfigRouting = projectConfig.client.routing;
-  if (clientConfigRouting.enabled) {
-    lightjs.info('routing is activated ...');
-    generateModuleAndComponent(true, clientConfigRouting.features.name, clientConfigRouting.features.default);
-    const clientConfigLogin = clientConfigRouting.login;
-    const login = clientConfigLogin.name;
-    generateModuleAndComponent(clientConfigLogin.enabled, login, login);
-    const clientConfigNotFound = clientConfigRouting.notFound;
-    const notFound = clientConfigNotFound.name;
-    generateModuleAndComponent(clientConfigNotFound.enabled, notFound, notFound);
+  const modulesConfig = projectConfig.client.modules;
+  if (swHelper.isRouting()) {
+    lightjs.info('      option routing is activated, modules, components and routing will be generated');
+    generateModuleAndComponent(true, modulesConfig.features.name, modulesConfig.features.defaultRoute);
+    const notFoundConfig = modulesConfig.notFound;
+    const notFoundName = notFoundConfig.name;
+    generateModuleAndComponent(notFoundConfig.enabled, notFoundName, notFoundName);
 
     copyModuleFiles(swConst.APP);
     addRouteInformation(swConst.APP, null);
     replaceLinesInModule(swConst.APP, null);
   } else {
-    lightjs.info('routing is deactivated, no modules and components will be generated');
+    lightjs.info('      option routing is deactivated, noting todo');
   }
 }
 
@@ -97,9 +95,9 @@ function replaceLinesInModule(module, component) {
   lightjs.replacement('\\n\\n\\n', os.EOL + os.EOL, [path.join(appPath, appDir, moduleFile)]);
   lightjs.replacement('\\n\\n\\n', os.EOL + os.EOL, [path.join(appPath, appDir, moduleRoutingFile)]);
 
-  const componentName = module === projectConfig.client.routing.features.name ? uppercamelcase(component) : uppercamelcase(module);
+  const componentName = module === projectConfig.client.modules.features.name ? uppercamelcase(component) : uppercamelcase(module);
   lightjs.replacement(`\\[(${componentName}Component)\\]`, '[ $1 ]', [path.join(appPath, appDir, moduleFile)]);
-  if (module === swConst.APP || module === projectConfig.client.routing.login.name) {
+  if (module === swConst.APP) {
     lightjs.replacement('{{PROJECT.PREFIX}}', projectConfig.client.prefix, [path.join(appPath, appDir, `${module}.component.ts`)]);
   }
 }
@@ -117,19 +115,20 @@ function addRouteInformation(module, component) {
   const moduleName = uppercamelcase(module);
   const routingModuleFile = path.join(projectPath, swConst.SRC, module === swConst.APP ? '' : swConst.APP, module, `${module}-routing.module.ts`);
 
-  const clientConfigRouting = projectConfig.client.routing;
-  const componentName = module === clientConfigRouting.features.name ? uppercamelcase(component) : moduleName;
+  const modulesConfig = projectConfig.client.modules;
+  const featuresName = modulesConfig.features.name;
+  const notFoundConfig = modulesConfig.notFound;
+  const componentName = module === featuresName ? uppercamelcase(component) : moduleName;
   const routes = addRoute(module, componentName);
   lightjs.replacement('(Routes = \\[)', `$1${routes}`, [routingModuleFile]);
 
-  const authGuardImport = module === clientConfigRouting.features.name ? `${twoEol}import { AuthGuard } from '../core/auth-guard.service';` : '';
-  const lineBreakComponent = module === clientConfigRouting.features.name ? os.EOL : twoEol;
-  const componentFolder = module === clientConfigRouting.features.name ? `${component}/` : '';
-  const componentImport = module === swConst.APP ? '' : `${lineBreakComponent}import { ${componentName}Component } from './${componentFolder}${component}.component';`;
-  const lineBreakEnvironment = module === swConst.APP ? twoEol : os.EOL;
+  const authGuardImport = module === featuresName && projectConfig.general.useSecurity ? `import { AuthGuard } from '../core/auth-guard.service';` : '';
+  const componentFolder = module === featuresName ? `${component}/` : '';
+  const componentImport = module === swConst.APP ? '' : `import { ${componentName}Component } from './${componentFolder}${component}.component';`;
   const environmentFolder = module === swConst.APP ? '' : '../';
-  const environmentImport = module === clientConfigRouting.login.name ? '' : `${lineBreakEnvironment}import { environment } from '../${environmentFolder}environments/environment';`;
-  lightjs.replacement(`(router';)`, `$1${authGuardImport}${componentImport}${environmentImport}`, [routingModuleFile]);
+  console.log(module, notFoundConfig.name);
+  const environmentImport = module === notFoundConfig.name && notFoundConfig.enabled ? '' : `${os.EOL}import { environment } from '../${environmentFolder}environments/environment';`;
+  lightjs.replacement(`(router';)`, `$1${twoEol}${authGuardImport}${componentImport}${environmentImport}`, [routingModuleFile]);
 
   const routingModule = `${moduleName}RoutingModule`;
   const typeRoutes = module === swConst.APP ? ': Routes' : '';
@@ -146,24 +145,16 @@ function addRouteInformation(module, component) {
  * @param {string} componentName
  */
 function addRoute(module, componentName) {
-  const clientConfigRouting = projectConfig.client.routing;
+  const clientConfigModules = projectConfig.client.modules;
+  const clientConfigNotFound = clientConfigModules.notFound;
   let routes = '';
-  if (module === clientConfigRouting.login.name) {
+  if (module === clientConfigNotFound.name && clientConfigNotFound.enabled) {
     routes = `{
-  component: ${componentName}Component,
-  path: '${module}',
-}`;
-  } else if (module === clientConfigRouting.notFound.name) {
-    routes = `environment.redirectNotFound ? {
-  path: '**',
-  redirectTo: environment.defaultRoute
-} : {
   component: ${componentName}Component,
   path: '**',
 }`;
-  } else if (module === clientConfigRouting.features.name) {
-    routes = `{
-  canActivate: [AuthGuard],
+  } else if (module === clientConfigModules.features.name) {
+    routes = `{` + (projectConfig.general.useSecurity ? os.EOL + `  canActivate: [AuthGuard],` : '') + `
   component: ${componentName}Component,
   path: environment.defaultRoute,
 }`;

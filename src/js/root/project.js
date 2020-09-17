@@ -25,11 +25,12 @@ let projectPath = '';
  */
 function create(workspacePath) {
   projectConfig = lightjs.readJson(swConst.SWAAPLATE_JSON);
+  swHelper.configure(projectConfig);
+
   const projectName = projectConfig.general.name;
   projectPath = path.join(workspacePath, projectName);
-  lightjs.info(`create project '${projectName}' in '${workspacePath}'`);
+  lightjs.info(`task: create project '${projectName}' in '${workspacePath}'`);
 
-  swHelper.configure(projectConfig);
   swFrontend.configure(workspacePath, projectConfig, projectPath);
   swBackend.configure(projectConfig, projectPath);
   swManagement.configure(projectConfig, projectPath);
@@ -45,7 +46,7 @@ function create(workspacePath) {
  *
  */
 function configure() {
-  lightjs.info('configures and copy root files');
+  lightjs.info('taks: configures and copy root files');
 
   const generalConfig = projectConfig.general;
   const templatePath = 'src/template/root';

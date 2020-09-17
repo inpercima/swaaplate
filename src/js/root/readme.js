@@ -26,7 +26,7 @@ function configure(pConfig, pPath) {
   projectConfig = pConfig;
   projectPath = pPath;
 
-  shjs.cp(path.join(swConst.TEMPLATE_ROOT_README, swConst.README_MD), projectPath);
+  shjs.cp(path.join(swConst.SRC_TEMPLATE_ROOT_README, swConst.README_MD), projectPath);
   const readmeMdPath = path.join(projectPath, swConst.README_MD);
   updateReadmeHeader(readmeMdPath);
   updatePrerequisites(readmeMdPath);
@@ -43,7 +43,7 @@ function configure(pConfig, pPath) {
 
   updateReadmeGettingStarted(readmeMdPath);
 
-  const readmeClientData = swHelper.isJs() ? fs.readFileSync(swConst.TEMPLATE_CLIENT_README, 'utf8') : os.EOL;
+  const readmeClientData = swHelper.isJs() ? fs.readFileSync(swConst.SRC_TEMPLATE_CLIENT_README, 'utf8') : os.EOL;
   lightjs.replacement('{{PROJECT.READMEIMPORT}}', readmeClientData, [readmeMdPath]);
   if (swHelper.isJs()) {
     lightjs.replacement('{{PROJECT.READMEHEADER}}', '', [readmeMdPath]);
@@ -63,7 +63,7 @@ function configure(pConfig, pPath) {
 
   const clientConfig = projectConfig.client;
   const genaralConfig = projectConfig.general;
-  const clientConfigRouting = clientConfig.routing;
+  const clientConfigModules = clientConfig.modules;
   const serverConfig = projectConfig.server;
   const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && serverConfig.serverAsApi ? './api/' : './');
   const apiSuffix = swHelper.isPhp() && !serverConfig.htaccess ? '`.php`' : 'EMPTY';
@@ -90,13 +90,9 @@ function configure(pConfig, pPath) {
   replaceMockSection(useMock, 'MOCKWATCH', mockCommand + ' watch:mock', readmeFile);
   replaceMockSection(useMock, 'MOCKCONFIG', ' and for mockMode the option `api` to `http://localhost:3000/`', readmeFile);
 
-  lightjs.replacement('{{PROJECT.ACTIVATELOGIN}}', clientConfigRouting.login.activate, [readmeFile]);
   lightjs.replacement('{{PROJECT.API}}', api, [readmeFile]);
   lightjs.replacement('{{PROJECT.APISUFFIX}}', apiSuffix, [readmeFile]);
-  lightjs.replacement('{{PROJECT.DEFAULTROUTE}}', clientConfigRouting.features.default, [readmeFile]);
-  lightjs.replacement('{{PROJECT.REDIRECTNOTFOUND}}', clientConfigRouting.notFound.redirect, [readmeFile]);
-  lightjs.replacement('{{PROJECT.SHOWFEATURES}}', clientConfigRouting.features.show, [readmeFile]);
-  lightjs.replacement('{{PROJECT.SHOWLOGIN}}', clientConfigRouting.login.show, [readmeFile]);
+  lightjs.replacement('{{PROJECT.DEFAULTROUTE}}', clientConfigModules.features.defaultRoute, [readmeFile]);
   lightjs.replacement('{{PROJECT.THEME}}', clientConfig.theme, [readmeFile]);
 
   lightjs.replacement('(`themes\\.scss`\\.)\\n\\s*', '$1' + os.EOL, [readmeFile]);
@@ -113,10 +109,10 @@ function replaceMockSection(useMock, placeholder, replacement, file) {
  * @param {string} readmeMdPath
  */
 function updateReadmeHeader(readmeMdPath) {
-  const readmeHeaderData = fs.readFileSync(path.join(swConst.TEMPLATE_ROOT_README, 'README.header.md'), 'utf8');
+  const readmeHeaderData = fs.readFileSync(path.join(swConst.SRC_TEMPLATE_ROOT_README, 'README.header.md'), 'utf8');
   lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, true), [readmeMdPath]);
   if (!swHelper.isJs()) {
-    shjs.cp(swConst.TEMPLATE_CLIENT_README, path.join(projectPath, swConst.CLIENT));
+    shjs.cp(swConst.SRC_TEMPLATE_CLIENT_README, path.join(projectPath, swConst.CLIENT));
     lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, false), [path.join(projectPath, swConst.CLIENT, swConst.README_MD)]);
   }
 }
@@ -198,7 +194,7 @@ function isLicense() {
  */
 function checkManager(manager) {
   const usedText = ', used in this repository';
-  const useYarn = swHelper.useYarn();
+  const useYarn = swHelper.isYarn();
   return useYarn && manager === swConst.YARN ? usedText : !useYarn && manager === swConst.NPM ? usedText + ', ' : '';
 }
 
@@ -208,7 +204,7 @@ function checkManager(manager) {
  * @param {string} readmeMdPath
  */
 function updateReadmeGettingStarted(readmeMdPath) {
-  const readmeGettingStartedData = fs.readFileSync(path.join(swConst.TEMPLATE_ROOT_README, 'README.getting-started.md'), 'utf8');
+  const readmeGettingStartedData = fs.readFileSync(path.join(swConst.SRC_TEMPLATE_ROOT_README, 'README.getting-started.md'), 'utf8');
   lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', updateReadmeGettingStartedSection(readmeGettingStartedData, true), [readmeMdPath]);
   if (!swHelper.isJs()) {
     const readmeMdClientPath = path.join(projectPath, swConst.CLIENT, swConst.README_MD);

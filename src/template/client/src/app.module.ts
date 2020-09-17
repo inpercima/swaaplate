@@ -1,43 +1,20 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { NgModule } from '@angular/core';
-import { MatTabsModule } from '@angular/material/tabs';
+import { NgModule } from '@angular/core';{{PROJECT.MATERIALTABSMODULE}}
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { JwtModule } from '@auth0/angular-jwt';
 
-import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
-import { AppRoutingPipe } from './app-routing.pipe';
-import { FeaturesModule } from './features/features.module';
-import { LoginModule } from './login/login.module';
-import { NotFoundModule } from './not-found/not-found.module';
-
-export function getToken() {
-  return localStorage.getItem('access_token');
-}
+import { AppComponent } from './app.component';{{PROJECT.APPROUTING}}{{PROJECT.MODULES}}
 
 @NgModule({
   declarations: [
-    AppComponent,
-    AppRoutingPipe
+    AppComponent,{{PROJECT.APPROUTINGPIPENAME}}
   ],
   imports: [
     BrowserAnimationsModule,
-    BrowserModule,
-    MatTabsModule,
+    BrowserModule,{{PROJECT.MATERIALTABSMODULENAME}}
     MatToolbarModule,
-    OverlayModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: getToken,
-        whitelistedDomains: ['localhost'],
-      }
-    }),
-    AppRoutingModule,
-    FeaturesModule,
-    LoginModule,
-    NotFoundModule
+    OverlayModule,{{PROJECT.APPROUTINGMODULENAME}}{{PROJECT.MODULENAMES}}
   ],
   providers: [],
   bootstrap: [AppComponent]

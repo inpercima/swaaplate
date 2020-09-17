@@ -1,12 +1,8 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, HostBinding } from '@angular/core';
-import { Routes } from '@angular/router';
+import { Component, HostBinding } from '@angular/core';{{PROJECT.ROUTESMODULE}}
 import { Title } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
-import { FeaturesRoutingModule } from './features/features-routing.module';
-import { LoginRoutingModule } from './login/login-routing.module';
-import { environment } from '../environments/environment';
+{{PROJECT.APPROUTINGMODULE}}{{PROJECT.FEATURESROUTINGMODULE}}import { environment } from '../environments/environment';
 
 @Component({
   selector: '{{PROJECT.PREFIX}}-root',
@@ -15,9 +11,7 @@ import { environment } from '../environments/environment';
 })
 export class AppComponent {
 
-  public routes: Routes;
-
-  public appname: string;
+  public appname: string;{{PROJECT.ROUTESDECLARATION}}
 
   /**
    * Adds the custom theme to the app root.
@@ -30,17 +24,8 @@ export class AppComponent {
   @HostBinding('class') class = `${environment.theme}-theme`;
 
   public constructor(private titleService: Title, public overlayContainer: OverlayContainer) {
-    this.appname = environment.appname;
-    this.routes = AppRoutingModule.ROUTES;
-    if (environment.showFeatures) {
-      this.routes = this.routes.concat(FeaturesRoutingModule.ROUTES);
-    }
-    // should a login will be used the login route could be added
-    if (environment.activateLogin && environment.showLogin) {
-      this.routes = this.routes.concat(LoginRoutingModule.ROUTES);
-    }
+    this.appname = environment.appname;{{PROJECT.ROUTESALLOCATION}}
     this.titleService.setTitle(this.appname);
     this.overlayContainer.getContainerElement().classList.add(`${environment.theme}-theme`);
   }
-
 }

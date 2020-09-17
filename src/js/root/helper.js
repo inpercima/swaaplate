@@ -21,8 +21,8 @@ function configure(pConfig) {
  */
 function getBackendFolder() {
   const serverConfig = projectConfig.server;
-  const serverAsApi = isPhp() && serverConfig.serverAsApi;
-  return serverAsApi ? 'api' : swConst.SERVER;
+  const serverAsApi = isPhp() && serverConfig.php.serverAsApi;
+  return serverAsApi ? swConst.API : swConst.SERVER;
 }
 
 /**
@@ -41,6 +41,13 @@ function isJava() {
   return projectConfig.server.backend === swConst.JAVA;
 }
 
+/**
+ * Checks for mock.
+ *
+ */
+function isMock() {
+  return projectConfig.general.useMock;
+}
 
 /**
  * Checks for php.
@@ -60,10 +67,18 @@ function isJavaKotlin() {
 }
 
 /**
+ * Checks if routing is enabeld.
+ */
+function isRouting() {
+  const modulesConfig = projectConfig.client.modules;
+  return modulesConfig.enabled && modulesConfig.routing;
+}
+
+/**
  * Checks the manager to yarn.
  *
  */
-function useYarn() {
+function isYarn() {
   return projectConfig.client.useYarn;
 }
 
@@ -72,7 +87,7 @@ function useYarn() {
  *
  */
 function yarnOrNpm() {
-  return useYarn() ? swConst.YARN : swConst.NPM;
+  return isYarn() ? swConst.YARN : swConst.NPM;
 }
 
 /**
@@ -81,16 +96,18 @@ function yarnOrNpm() {
  * @param {string} command
  */
 function yarnNpmCommand(command) {
-  return yarnOrNpm() + (!useYarn() ? ' ' + command : '');
+  return yarnOrNpm() + (!isYarn() ? ' ' + command : '');
 }
 
 exp.configure = configure;
 exp.getBackendFolder = getBackendFolder;
 exp.isJs = isJs;
 exp.isJava = isJava;
+exp.isMock = isMock;
 exp.isJavaKotlin = isJavaKotlin;
 exp.isPhp = isPhp;
-exp.useYarn = useYarn;
+exp.isRouting = isRouting;
+exp.isYarn = isYarn;
 exp.yarnOrNpm = yarnOrNpm;
 exp.yarnNpmCommand = yarnNpmCommand;
 

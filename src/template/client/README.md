@@ -55,24 +55,12 @@ Change for prodMode the option `production` to `true`{{PROJECT.MOCKCONFIG}}.
 
 ### Table of contents
 
-* [activateLogin](#activateLogin)
 * [api](#api)
 * [apiSuffix](#apiSuffix)
 * [appname](#appname)
 * [defaultRoute](#defaultRoute)
 * [production](#production)
-* [redirectNotFound](#redirectNotFound)
-* [showFeatures](#showFeatures)
-* [showLogin](#showLogin)
 * [theme](#theme)
-
-### `activateLogin`
-
-Defines whether the login module will be used or not.
-
-* default: `{{PROJECT.ACTIVATELOGIN}}`
-* type: `boolean`
-* values: `true`/`false`
 
 ### `api`
 
@@ -107,30 +95,6 @@ The default route and the route to be redirected after a login if no route is st
 Defines whether the app is in production or not.
 
 * default: `false`
-* type: `boolean`
-* values: `true`/`false`
-
-### `redirectNotFound`
-
-Defines whether the 404 route will redirect to the default route or not.
-
-* default: `{{PROJECT.REDIRECTNOTFOUND}}`
-* type: `boolean`
-* values: `true`/`false`
-
-### `showFeatures`
-
-Defines whether the feature routes will be displayed in navigation or not.
-
-* default: `{{PROJECT.SHOWFEATURES}}`
-* type: `boolean`
-* values: `true`/`false`
-
-### `showLogin`
-
-Defines whether the login route will be displayed in navigation or not.
-
-* default: `{{PROJECT.SHOWLOGIN}}`
 * type: `boolean`
 * values: `true`/`false`
 
