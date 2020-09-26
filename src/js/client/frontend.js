@@ -164,7 +164,7 @@ function addFileReplacementsAndBudgets(mode) {
       },
       {
         type: 'anyComponentStyle',
-        maximumWarning: '2kb',
+        maximumWarning: '6kb',
         maximumError: '4kb'
       }
     ]
