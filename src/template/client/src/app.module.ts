@@ -4,7 +4,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { AppComponent } from './app.component';{{PROJECT.APPROUTING}}{{PROJECT.MODULES}}
+import { AppComponent } from './app.component';{{PROJECT.APPROUTING}}{{PROJECT.FEATURESMODULE}}{{PROJECT.NOTFOUNDMODULE}}
 
 @NgModule({
   declarations: [
@@ -14,7 +14,7 @@ import { AppComponent } from './app.component';{{PROJECT.APPROUTING}}{{PROJECT.M
     BrowserAnimationsModule,
     BrowserModule,{{PROJECT.MATERIALTABSMODULENAME}}
     MatToolbarModule,
-    OverlayModule,{{PROJECT.APPROUTINGMODULENAME}}{{PROJECT.MODULENAMES}}
+    OverlayModule,{{PROJECT.APPROUTINGMODULENAME}}{{PROJECT.FEATURESMODULENAME}}{{PROJECT.NOTFOUNDMODULENAME}}
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -267,9 +267,13 @@ function replaceSectionsInFiles() {
   const specPath = path.join(projectPath, swConst.SRC, swConst.APP, 'app.component.spec.ts');
   const tabsModule = swHelper.isRouting() ? `${os.EOL}        MatTabsModule,` : '';
   const routingPipe = swHelper.isRouting() ? `${os.EOL}        AppRoutingPipe` : '';
-  lightjs.replacement(`(router/testing';)`, `$1${os.EOL}${tabsImport}${toolbarImport}${os.EOL}`, [specPath]);
+  lightjs.replacement(`(core/testing';)`, `$1${os.EOL}${tabsImport}${toolbarImport}${os.EOL}`, [specPath]);
   lightjs.replacement(`(component';)`, `$1${pipeImport}`, [specPath]);
-  lightjs.replacement('(imports: \\[)', `$1${tabsModule}${os.EOL}        MatToolbarModule,`, [specPath]);
+  if (swHelper.isRouting()) {
+    lightjs.replacement('(imports: \\[)', `$1${tabsModule}${os.EOL}        MatToolbarModule,`, [specPath]);
+  } else {
+    lightjs.replacement('(configureTestingModule\\({)', `$1${os.EOL}      imports: [${os.EOL}        MatToolbarModule,${os.EOL}      ],`, [specPath]);
+  }
   lightjs.replacement('(declarations: \\[\\n        AppComponent)', `$1,${routingPipe}`, [specPath]);
 
   lightjs.replacement(generalConfig.name, generalConfig.title, [specPath]);
@@ -291,17 +295,22 @@ function replaceSectionsInFiles() {
 function replaceTemplatesInFiles() {
   // replace in app.module.ts
   const appModuleTsPath = path.join(projectPath, swConst.SRC, swConst.APP, 'app.module.ts');
+  const clientConfig = projectConfig.client;
+  const modulesConfig = clientConfig.modules;
   lightjs.replacement('{{PROJECT.MATERIALTABSMODULE}}', swHelper.isRouting() ? os.EOL + swConst.IMPORT_MATERIAL_TABS_MODULE : '', [appModuleTsPath]);
-  lightjs.replacement('{{PROJECT.APPROUTING}}', swHelper.isRouting() ? os.EOL + swConst.IMPORT_APP_ROUTING_MODULE + os.EOL + swConst.IMPORT_APP_ROUTING_PIPE + os.EOL : '', [appModuleTsPath]);
-  lightjs.replacement('{{PROJECT.MODULES}}', swHelper.isRouting() ? swConst.IMPORT_FEATURES_MODULE + os.EOL + swConst.IMPORT_NOT_FOUND_MODULE + os.EOL : '', [appModuleTsPath]);
+  lightjs.replacement('{{PROJECT.APPROUTING}}', swHelper.isRouting() ? os.EOL + swConst.IMPORT_APP_ROUTING_MODULE + os.EOL + swConst.IMPORT_APP_ROUTING_PIPE : '', [appModuleTsPath]);
+  lightjs.replacement('{{PROJECT.FEATURESMODULE}}', swHelper.isRouting() || modulesConfig.enabled ? os.EOL + swConst.IMPORT_FEATURES_MODULE : '', [appModuleTsPath]);
+  lightjs.replacement('{{PROJECT.NOTFOUNDMODULE}}', swHelper.isRouting() && modulesConfig.notFound.enabled ? os.EOL + swConst.IMPORT_NOT_FOUND_MODULE : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.APPROUTINGPIPENAME}}', swHelper.isRouting() ? os.EOL + '    AppRoutingPipe,' : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.MATERIALTABSMODULENAME}}', swHelper.isRouting() ? os.EOL + '    MatTabsModule,' : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.APPROUTINGMODULENAME}}', swHelper.isRouting() ? os.EOL + '    AppRoutingModule,' : '', [appModuleTsPath]);
-  lightjs.replacement('{{PROJECT.MODULENAMES}}', swHelper.isRouting() ? os.EOL + '    FeaturesModule,' + os.EOL + '    NotFoundModule,' : '', [appModuleTsPath]);
+  lightjs.replacement('{{PROJECT.FEATURESMODULENAME}}', swHelper.isRouting() || modulesConfig.enabled ? os.EOL + '    FeaturesModule,' : '', [appModuleTsPath]);
+  lightjs.replacement('{{PROJECT.NOTFOUNDMODULENAME}}', swHelper.isRouting() && modulesConfig.notFound.enabled ? os.EOL + '    NotFoundModule,' : '', [appModuleTsPath]);
 
   // replace in app.component.html
   const appComponentHtmlPath = path.join(projectPath, swConst.SRC, swConst.APP, 'app.component.html');
-  lightjs.replacement('{{PROJECT.NAVIGATION}}', swHelper.isRouting() ? os.EOL + swConst.NAVIGATION : '', [appComponentHtmlPath]);
+  const component = clientConfig.prefix + '-' + modulesConfig.features.defaultRoute;
+  lightjs.replacement('{{PROJECT.NAVIGATION}}', os.EOL + (swHelper.isRouting() ? swConst.NAVIGATION : `  <${component}></${component}>`), [appComponentHtmlPath]);
 
   // replace in app.component.ts
   const appComponentTsPath = path.join(projectPath, swConst.SRC, swConst.APP, 'app.component.ts');

@@ -25,18 +25,26 @@ function generateModulesAndComponents(pConfig, pPath) {
   projectPath = pPath;
 
   const modulesConfig = projectConfig.client.modules;
-  if (swHelper.isRouting()) {
-    lightjs.info('      option routing is activated, modules, components and routing will be generated');
-    generateModuleAndComponent(true, modulesConfig.features.name, modulesConfig.features.defaultRoute);
+  if (modulesConfig.enabled) {
+    lightjs.info('      option modules is activated, modules, components will be generated');
+    if (swHelper.isRouting()) {
+      lightjs.info('      option routing is activated, routing will be generated');
+    } else {
+      lightjs.info('      option routing is deactivated, noting todo');
+    }
+    const featuresConfig = modulesConfig.features;
+    generateModuleAndComponent(true, featuresConfig.name, featuresConfig.defaultRoute);
     const notFoundConfig = modulesConfig.notFound;
     const notFoundName = notFoundConfig.name;
-    generateModuleAndComponent(notFoundConfig.enabled, notFoundName, notFoundName);
+    generateModuleAndComponent(swHelper.isRouting() && notFoundConfig.enabled, notFoundName, notFoundName);
 
     copyModuleFiles(swConst.APP);
-    addRouteInformation(swConst.APP, null);
+    if (swHelper.isRouting()) {
+      addRouteInformation(swConst.APP, null);
+    }
     replaceLinesInModule(swConst.APP, null);
   } else {
-    lightjs.info('      option routing is deactivated, noting todo');
+    lightjs.info('      option modules is deactivated, noting todo');
   }
 }
 
@@ -53,7 +61,7 @@ function generateModuleAndComponent(generate, module, component) {
     shjs.cd(projectPath);
 
     lightjs.info(`... generate module '${module}'`);
-    shjs.exec(`ng g m ${module} --routing=true`);
+    shjs.exec(`ng g m ${module} --routing=${swHelper.isRouting()}`);
     lightjs.info(`... generate component '${component}'`);
     const moduleComponent = module === component ? module : `${module}/${component}`;
     shjs.exec(`ng g c ${moduleComponent}`);
@@ -61,7 +69,9 @@ function generateModuleAndComponent(generate, module, component) {
     shjs.cd(pwd);
 
     copyModuleFiles(module);
-    addRouteInformation(module, component);
+    if (swHelper.isRouting()) {
+      addRouteInformation(module, component);
+    }
     replaceLinesInModule(module, component);
   }
 }
@@ -77,9 +87,15 @@ function copyModuleFiles(module) {
   const templatePath = 'src/template/client/src';
   const appPath = path.join(projectPath, swConst.SRC, swConst.APP);
   if (module === swConst.APP) {
-    shjs.cp('-r', path.join(templatePath, `${swConst.APP}*`), appPath);
+    shjs.cp('-r', path.join(templatePath, `${swConst.APP}.*`), appPath);
+    if (swHelper.isRouting()) {
+      shjs.cp('-r', path.join(templatePath, `${swConst.APP}-routing*`), appPath);
+    }
   } else {
-    shjs.cp('-r', path.join(templatePath, module, '*'), path.join(appPath, module));
+    shjs.cp('-r', path.join(templatePath, module, `${module}.*`), path.join(appPath, module));
+    if (swHelper.isRouting()) {
+      shjs.cp('-r', path.join(templatePath, module, `${module}-routing*`), path.join(appPath, module));
+    }
   }
 }
 
@@ -89,16 +105,29 @@ function copyModuleFiles(module) {
  */
 function replaceLinesInModule(module, component) {
   const appPath = path.join(projectPath, swConst.SRC, swConst.APP);
-  const moduleRoutingFile = `${module}-routing.module.ts`;
   const moduleFile = `${module}.module.ts`;
   const appDir =  module == swConst.APP ? '' : module;
-  lightjs.replacement('\\n\\n\\n', os.EOL + os.EOL, [path.join(appPath, appDir, moduleFile)]);
-  lightjs.replacement('\\n\\n\\n', os.EOL + os.EOL, [path.join(appPath, appDir, moduleRoutingFile)]);
+  const moduleFilePath = path.join(appPath, appDir, moduleFile);
+  lightjs.replacement('\\n\\n\\n', os.EOL + os.EOL, [moduleFilePath]);
+  if (!swHelper.isRouting()) {
+    lightjs.replacement('(    CommonModule)', '$1,', [moduleFilePath]);
+    lightjs.replacement(`(common';)`, `$1${os.EOL}`, [moduleFilePath]);
+  }
 
-  const componentName = module === projectConfig.client.modules.features.name ? uppercamelcase(component) : uppercamelcase(module);
-  lightjs.replacement(`\\[(${componentName}Component)\\]`, '[ $1 ]', [path.join(appPath, appDir, moduleFile)]);
+  if (swHelper.isRouting()) {
+    const moduleRoutingFile = `${module}-routing.module.ts`;
+    lightjs.replacement('\\n\\n\\n', os.EOL + os.EOL, [path.join(appPath, appDir, moduleRoutingFile)]);
+  }
+
+  const clientConfig = projectConfig.client;
+  const featuresName = clientConfig.modules.features.name;
+  const componentName = module === featuresName ? uppercamelcase(component) : uppercamelcase(module);
+  lightjs.replacement(`\\[(${componentName}Component)\\]`, '[ $1 ]', [moduleFilePath]);
+  if (!swHelper.isRouting() && module === featuresName) {
+    lightjs.replacement(`(  \\])`, `$1,${os.EOL}  exports: [ ${componentName}Component ],`, [moduleFilePath]);
+  }
   if (module === swConst.APP) {
-    lightjs.replacement('{{PROJECT.PREFIX}}', projectConfig.client.prefix, [path.join(appPath, appDir, `${module}.component.ts`)]);
+    lightjs.replacement('{{PROJECT.PREFIX}}', clientConfig.prefix, [path.join(appPath, appDir, `${module}.component.ts`)]);
   }
 }
 
@@ -126,7 +155,6 @@ function addRouteInformation(module, component) {
   const componentFolder = module === featuresName ? `${component}/` : '';
   const componentImport = module === swConst.APP ? '' : `import { ${componentName}Component } from './${componentFolder}${component}.component';`;
   const environmentFolder = module === swConst.APP ? '' : '../';
-  console.log(module, notFoundConfig.name);
   const environmentImport = module === notFoundConfig.name && notFoundConfig.enabled ? '' : `${os.EOL}import { environment } from '../${environmentFolder}environments/environment';`;
   lightjs.replacement(`(router';)`, `$1${twoEol}${authGuardImport}${componentImport}${environmentImport}`, [routingModuleFile]);
 
