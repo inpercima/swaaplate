@@ -28,7 +28,7 @@ function configure(pConfig, pPath) {
   const serverConfig = projectConfig.server;
   if (swHelper.isJavaKotlin()) {
     const serverPath = path.join(projectPath, swConst.SERVER);
-    const management = serverConfig.management;
+    const management = serverConfig.javaKt.management;
     const managementPath = path.join('src/template/server/management', management);
 
     shjs.mkdir('-p', serverPath);
@@ -67,7 +67,7 @@ function replaceInPomFile(pomXml) {
   const generalConfig = projectConfig.general;
   lightjs.replacement('{{PROJECT.DESCRIPTION}}', generalConfig.description, [pomXml]);
   lightjs.replacement('{{PROJECT.DIST}}', projectConfig.client.buildDir, [pomXml]);
-  lightjs.replacement('{{PROJECT.GROUPID}}', projectConfig.server.packagePath, [pomXml]);
+  lightjs.replacement('{{PROJECT.GROUPID}}', projectConfig.server.javaKt.packagePath, [pomXml]);
   lightjs.replacement('{{PROJECT.MAVENJARPLUGINVERSION}}', swVersion.MAVEN_JAR_PLUGIN, [pomXml]);
   lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [pomXml]);
   lightjs.replacement('{{PROJECT.SPRINGBOOTVERSION}}', swVersion.SPRING_BOOT, [pomXml]);

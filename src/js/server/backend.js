@@ -55,7 +55,8 @@ function configureJavaKotlin() {
   const serverSrcTest = path.join(swConst.SERVER, swConst.SRC_TEST);
   lightjs.info(`* configure backend '${backend}', create '${serverSrcMain}' and '${serverSrcTest}'`);
 
-  const backendPath = path.join(backend, serverConfig.packagePath.replace(/\./g, '/'));
+  const packagePath = serverConfig.javaKt.packagePath;
+  const backendPath = path.join(backend, packagePath.replace(/\./g, '/'));
   const serverSrcMainJavaPath = path.join(projectPath, serverSrcMain, backendPath);
   shjs.mkdir('-p', serverSrcMainJavaPath);
 
@@ -80,9 +81,9 @@ function configureJavaKotlin() {
 
   lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(serverSrcMainJavaPath, `Application.${backend}`)]);
   lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(webPath, `AuthController.${backend}`)]);
-  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', serverConfig.packagePath, [path.join(serverSrcMainJavaPath, `Application.${backend}`)]);
-  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', serverConfig.packagePath, [path.join(webPath, `AuthController.${backend}`)]);
-  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', serverConfig.packagePath, [path.join(serverSrcMainResourcesPath, 'logback.xml')]);
+  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(serverSrcMainJavaPath, `Application.${backend}`)]);
+  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(webPath, `AuthController.${backend}`)]);
+  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(serverSrcMainResourcesPath, 'logback.xml')]);
 }
 
 /**
