@@ -9,6 +9,7 @@ module.exports = Object.freeze({
   EMPTY: '',
   EOL: '$',
   EOL_EXPRESSION: '\\r?\\n\\s*\\n',
+  GITIGNORE_URL: 'https://www.gitignore.io/api/node,angular,eclipse,intellij+all',
 
   // src
   SRC: 'src',

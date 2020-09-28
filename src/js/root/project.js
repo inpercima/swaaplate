@@ -91,17 +91,11 @@ function updateGitignoreFile() {
     `# ignore all in \'.vscode\' b/c some vsc config files contain user specific content${os.EOL}.vscode/*${os.EOL}`,
     `# end project specific`
   ];
-  const gitignoreUrl = 'https://www.gitignore.io/api/node,angular,eclipse,intellij+all';
+  const gitignoreUrl = swConst.GITIGNORE_URL + (isJavaKotlin() ? `,${backend},${serverConfig.javaKt.management}` : '');
   const gitignoreFilePath = path.join(projectPath, gitignoreFile);
-  if (isJavaKotlin()) {
-    axios.get(`${gitignoreUrl},${backend},${serverConfig.management}`).then(function (response) {
-      lightjs.writeFile(gitignoreFilePath, `${content.join(os.EOL)}${os.EOL}${response.data}`);
-    });
-  } else {
-    axios.get(gitignoreUrl).then(function (response) {
-      lightjs.writeFile(gitignoreFilePath, `${content.join(os.EOL)}${os.EOL}${response.data}`);
-    });
-  }
+  axios.get(gitignoreUrl).then(function (response) {
+    lightjs.writeFile(gitignoreFilePath, `${content.join(os.EOL)}${os.EOL}${response.data}`);
+  });
 }
 
 /**
