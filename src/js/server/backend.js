@@ -98,13 +98,18 @@ function configurePhp() {
   const srcMainPath = path.join(projectPath, serverDir, swConst.SRC_MAIN);
   shjs.mkdir('-p', srcMainPath);
   const phpTemplatePath = 'src/template/server/backend/php';
-  shjs.cp(path.join(phpTemplatePath, 'auth.php'), srcMainPath);
-  shjs.cp(path.join(phpTemplatePath, swConst.AUTH_SERVICE_PHP), srcMainPath);
-  if (serverConfig.htaccess) {
+  const generalConfig = projectConfig.general;
+  if (generalConfig.useSecurity) {
+    shjs.cp(path.join(phpTemplatePath, 'auth.php'), srcMainPath);
+    shjs.cp(path.join(phpTemplatePath, swConst.AUTH_SERVICE_PHP), srcMainPath);
+
+    const authServicePath = path.join(projectPath, serverDir, swConst.SRC_MAIN, swConst.AUTH_SERVICE_PHP);
+    lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [authServicePath]);
+  }
+  if (serverConfig.php.modRewritePhpExtension) {
     shjs.cp(path.join(phpTemplatePath, '.htaccess'), srcMainPath);
   }
 
-  const generalConfig = projectConfig.general;
   const mockPlaceholder = generalConfig.useMock ? '  ' : '';
   const copyPlugin = [
     generalConfig.useMock ? `    process.env.NODE_ENV !== 'mock' ?` + os.EOL : '',
@@ -117,9 +122,6 @@ function configurePhp() {
   const webpackConfigFile = path.join(projectPath, swConst.CLIENT, swConst.WEBPACK_CONFIG_JS);
   shjs.cp(path.join(phpTemplatePath, swConst.WEBPACK_CONFIG_JS), webpackConfigFile);
   lightjs.replacement('{{PROJECT.COPYPLUGIN}}', copyPlugin.join(''), [webpackConfigFile]);
-
-  const authServicePath = path.join(projectPath, serverDir, swConst.SRC_MAIN, swConst.AUTH_SERVICE_PHP);
-  lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [authServicePath]);
 }
 
 /**

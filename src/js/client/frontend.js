@@ -68,6 +68,7 @@ function copyFiles() {
   shjs.cp(path.join(swConst.SRC_TEMPLATE_CLIENT, 'src/favicon.ico'), srcPath);
   shjs.cp(path.join(swConst.SRC_TEMPLATE_CLIENT, 'src/themes.scss'), srcPath);
 
+  const generalConfig = projectConfig.general;
   if (projectConfig.general.useSecurity) {
     lightjs.info('      option useSecurity is activated: copy authentication files');
     const corePath = path.join(srcPath, swConst.APP, swConst.CORE);
@@ -75,6 +76,10 @@ function copyFiles() {
     shjs.cp('-r', path.join(swConst.SRC_TEMPLATE_CLIENT, swConst.SRC, swConst.CORE, '*'), corePath);
   } else {
     lightjs.info('      option useSecurity is deactivated: nothing todo');
+  }
+
+  if (generalConfig.modRewriteIndex) {
+    shjs.cp(path.join(swConst.SRC_TEMPLATE_CLIENT, 'src/.htaccess'), srcPath);
   }
 }
 
@@ -362,6 +367,9 @@ function updatePackageJsonFile() {
   packageJsonTemplateData.dependencies['@angular/cdk'] = swVersion.ANGULAR_CDK;
   packageJsonTemplateData.dependencies['@angular/flex-layout'] = swVersion.ANGULAR_FLEX;
   packageJsonTemplateData.dependencies['@angular/material'] = swVersion.ANGULAR_CDK;
+  if (!swHelper.isRouting()) {
+    packageJsonTemplateData.dependencies['@angular/router'] = undefined;
+  }
   if (projectConfig.general.useSecurity) {
     packageJsonTemplateData.dependencies['@auth0/angular-jwt'] = swVersion.ANGULAR_JWT;
   }
