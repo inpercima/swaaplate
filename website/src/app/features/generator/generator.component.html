@@ -1,1 +1,75 @@
-<p>generator works!</p>
+<div fxLayout="row" fxLayoutAlign="center">
+  <mat-card fxFlex="60">
+    <mat-card-header>
+      <div mat-card-avatar>
+        <mat-icon>settings</mat-icon>
+      </div>
+      <mat-card-title>Generator</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <h3>General</h3>
+      <mat-divider></mat-divider>
+      <form [formGroup]="generatorForm" novalidate>
+        <div fxLayout="row wrap" fxLayoutGap="20px">
+          <mat-form-field fxFlex>
+            <input matInput placeholder="name" formControlName="name">
+          </mat-form-field>
+          <mat-form-field fxFlex>
+            <input matInput placeholder="title" formControlName="title">
+          </mat-form-field>
+        </div>
+        <div fxLayout="row wrap" fxLayoutGap="20px">
+          <mat-form-field fxFlex>
+            <input matInput placeholder="author name" formControlName="author">
+          </mat-form-field>
+          <mat-form-field fxFlex>
+            <input matInput placeholder="author mail" formControlName="mail">
+          </mat-form-field>
+          <mat-form-field fxFlex="50">
+            <input matInput placeholder="description" formControlName="description">
+          </mat-form-field>
+        </div>
+        <div fxLayout="row wrap" fxLayoutGap="20px">
+          <mat-slide-toggle fxFlex formControlName="useDocker">Use docker</mat-slide-toggle>
+          <mat-slide-toggle fxFlex formControlName="useMITLicense">Use MIT License</mat-slide-toggle>
+          <mat-slide-toggle fxFlex formControlName="useMock">Use mock</mat-slide-toggle>
+          <mat-slide-toggle fxFlex formControlName="useSecurity">Use Security</mat-slide-toggle>
+          <mat-slide-toggle fxFlex formControlName="modRewriteIndex">Use modRewriteIndex</mat-slide-toggle>
+        </div>
+        <h3>Client</h3>
+        <mat-divider></mat-divider>
+        <div fxLayout="row wrap" fxLayoutGap="20px">
+          <mat-form-field fxFlex>
+            <input matInput placeholder="buildDir" formControlName="buildDir">
+          </mat-form-field>
+          <mat-form-field fxFlex>
+            <input matInput placeholder="ghUser" formControlName="ghUser">
+          </mat-form-field>
+          <mat-form-field fxFlex>
+            <input matInput placeholder="language" formControlName="language">
+          </mat-form-field>
+          <mat-form-field fxFlex>
+            <input matInput placeholder="prefix" formControlName="prefix">
+          </mat-form-field>
+          <mat-form-field fxFlex>
+            <mat-select placeholder="theme" formControlName="theme">
+              <mat-option *ngFor="let theme of themes" [value]="theme">
+                {{ theme }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row wrap" fxLayoutGap="20px">
+          <mat-slide-toggle fxFlex formControlName="installDependencies">install dependencies</mat-slide-toggle>
+          <mat-slide-toggle fxFlex formControlName="useGoogleFonts">Use Google fonts</mat-slide-toggle>
+          <mat-radio-group fxFlex formControlName="useYarn">
+            <mat-radio-button value="yarn">Yarn</mat-radio-button>
+            <mat-radio-button value="npm">NPM</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <h3>Server</h3>
+        <mat-divider></mat-divider>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
