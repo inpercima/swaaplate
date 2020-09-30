@@ -26,6 +26,7 @@ Some libraries could not be updated b/c of peer dependencies or knowing issues.
 
 | library    | current version | wanted version | reason |
 | ---------- | --------------- | -------------- | ------ |
+| zone.js | 0.10.3 | 0.11.1 | "@angular/core@10.1.4" has incorrect peer dependency "zone.js@~0.10.3" |
 
 ## Getting started
 

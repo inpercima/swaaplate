@@ -6,6 +6,8 @@ environment.prod.ts
 # ignore all in '.vscode' b/c some vsc config files contain user specific content
 .vscode/*
 
+!swaaplate.json
+
 # end project specific
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,angular,eclipse,intellij+all
