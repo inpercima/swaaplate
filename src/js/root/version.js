@@ -18,6 +18,6 @@ module.exports = Object.freeze({
   NODE: '12.16.1',
   NPM: '6.13.4',
   PHP: '7.3',
-  SPRING_BOOT: '2.3.3.RELEASE',
+  SPRING_BOOT: '2.3.4.RELEASE',
   YARN: '1.22.5',
 });
