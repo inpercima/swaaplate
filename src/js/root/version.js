@@ -2,7 +2,7 @@
 
 module.exports = Object.freeze({
   ANGULAR_CDK: '10.2.4',
-  ANGULAR_CLI: '10.1.4',
+  ANGULAR_CLI: '10.1.6',
   ANGULAR_FLEX: '10.0.0-beta.32',
   ANGULAR_JWT: '5.0.1',
   APACHE: '2.4',
