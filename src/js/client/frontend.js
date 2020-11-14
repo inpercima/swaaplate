@@ -258,7 +258,7 @@ function replaceSectionsInFiles() {
   lightjs.replacement(swConst.EOL_EXPRESSION, os.EOL, [indexHtmlPath]);
 
   if (clientConfig.useGoogleFonts) {
-    const fonts = `${createLink('icon?family=Material+Icons')}${os.EOL}${createLink('css?family=Roboto+Mono')}`;
+    const fonts = `${createLink('Material+Icons')}${os.EOL}${createLink('Roboto:wght@400;700&display=swap')}`;
     lightjs.replacement('(  <link rel="icon")', `${fonts}${os.EOL}$1`, [indexHtmlPath]);
   }
 
@@ -331,7 +331,7 @@ function replaceTemplatesInFiles() {
  *
  */
 function createLink(font) {
-  return `  <link href="https://fonts.googleapis.com/${font}" rel="stylesheet">`;
+  return `  <link href="https://fonts.googleapis.com/css2?family=${font}" rel="stylesheet">`;
 }
 
 /**

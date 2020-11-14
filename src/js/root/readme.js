@@ -38,8 +38,8 @@ function configure(pConfig, pPath) {
   lightjs.replacement('{{PROJECT.NPMVERSION}}', swVersion.NPM, [readmeMdPath]);
   lightjs.replacement('{{PROJECT.YARNVERSION}}', swVersion.YARN, [readmeMdPath]);
 
-  const currentCheck = os.EOL + '| zone.js | 0.10.3 | 0.11.1 | "@angular/core@10.1.3" has incorrect peer dependency "zone.js@~0.10.3" |';
-  const webpack = `| copy-webpack-plugin | ${swVersion.COPY_WEBPACK_PLUGIN} | 6.1.1 | "copy-webpack-plugin@6.1.1" has unmet peer dependency "webpack@^4.0.0 \|\| ^5.0.0" |`;
+  const currentCheck = os.EOL + '| zone.js | 0.10.3 | 0.11.1 | "@angular/core@10.1.4" has incorrect peer dependency "zone.js@~0.10.3" |';
+  const webpack = `| copy-webpack-plugin | ${swVersion.COPY_WEBPACK_PLUGIN} | 6.2.0 | "copy-webpack-plugin@6.2.0" has unmet peer dependency "webpack@^4.0.0 \|\| ^5.0.0" |`;
   const depCheck = currentCheck + (swHelper.isPhp() ? os.EOL + webpack : '');
   lightjs.replacement('{{PROJECT.DEPCHECK}}', depCheck, [readmeMdPath]);
 
