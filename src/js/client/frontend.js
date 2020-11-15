@@ -142,6 +142,13 @@ function updateAngularJsonFile() {
   if (swHelper.isMock()) {
     architectData.serve.configurations.mock = addBrowserTarget(name, 'mock');
   }
+
+  if (generalConfig.modRewriteIndex) {
+    const assets = architectData.build.options.assets;
+    assets.unshift("src/.htaccess");
+    architectData.build.options.assets = assets;
+  }
+
   architectData.build.configurations.production.namedChunks = true;
   architectData.build.configurations.production.vendorChunk = true;
   angularJsonData.projects[name].architect = architectData;
