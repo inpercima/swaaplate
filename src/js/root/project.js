@@ -37,6 +37,7 @@ function create(workspacePath) {
   swReadme.configure(projectConfig, projectPath);
 
   configure();
+  updateEditorConfigFile();
   updateGitignoreFile();
   updateFiles();
 }
@@ -70,6 +71,20 @@ function configure() {
     const email = contributors[0].name ? contributors[0].email : '';
     lightjs.replacement('{{PROJECT.AUTHOR}}', name, [path.join(projectPath, swConst.DOCKERFILE)]);
     lightjs.replacement('{{PROJECT.FIRSTCONTRIBUTORSMAIL}}', email, [path.join(projectPath, swConst.DOCKERFILE)]);
+  }
+}
+
+/**
+ * Updates the editorconfig file with some data.
+ *
+ */
+function updateEditorConfigFile() {
+  if (isJavaKotlin()) {
+    const backend = projectConfig.server.backend;
+    const twoEol = os.EOL + os.EOL;
+    const indentSize = backend === swConst.KOTLIN ? 2 : 4;
+    const indention = `${twoEol}[*.${backend}]${os.EOL}indent_size = ${indentSize}`;
+    lightjs.replacement('(trim_trailing_whitespace = true)', `$1${indention}`, [path.join(projectPath, swConst.DOT_EDITORCONFIG)]);
   }
 }
 
