@@ -23,12 +23,12 @@ You can choose between `js` (means angular only), `php`, `java` or `kt` as backe
 
 ### Angular cli
 
-* `angular-cli 10.1.6` or higher
+* `angular-cli 11.0.1` or higher
 
 ### Node, npm or yarn
 
-* `node 12.16.1` or higher in combination with
-  * `npm 6.13.4` or higher or
+* `node 12.19.0` or higher in combination with
+  * `npm 6.14.8` or higher or
   * `yarn 1.22.5` or higher, used in this repository
 
 ## Getting started

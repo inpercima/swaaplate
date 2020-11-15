@@ -32,7 +32,7 @@ function configure(workspacePath, pConfig, pPath) {
   if (shjs.which('ng')) {
     shjs.cd(workspacePath);
     const params = [
-      '--interactive=false --skipInstall=true --style=css',
+      '--interactive=false --skipInstall=true --style=css --strict=true',
       `--packageManager=${swHelper.isYarn() ? swConst.YARN : swConst.NPM}`,
       `--directory=${projectName}`,
       `--prefix=${clientConfig.prefix}`,
@@ -169,7 +169,7 @@ function addFileReplacementsAndBudgets(mode) {
       },
       {
         type: 'anyComponentStyle',
-        maximumWarning: '6kb',
+        maximumWarning: '2kb',
         maximumError: '4kb'
       }
     ]
