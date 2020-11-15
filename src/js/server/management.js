@@ -72,6 +72,7 @@ function replaceInPomFile(pomXml) {
   lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [pomXml]);
   lightjs.replacement('{{PROJECT.SPRINGBOOTVERSION}}', swVersion.SPRING_BOOT, [pomXml]);
   lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.title, [pomXml]);
+  lightjs.replacement('{{PROJECT.JDK}}', swVersion.JDK, [pomXml]);
 }
 
 exp.configure = configure;
