@@ -122,7 +122,8 @@ function prepareMock() {
 function updateAngularJsonFile() {
   const angularJsonFile = path.join(projectPath, swConst.ANGULAR_JSON);
   let angularJsonData = lightjs.readJson(angularJsonFile);
-  const name = projectConfig.general.name;
+  const generalConfig = projectConfig.general;
+  const name = generalConfig.name;
   const clientConfig = projectConfig.client;
   const architectData = angularJsonData.projects[name].architect;
   architectData.build.options.outputPath = clientConfig.buildDir;
@@ -237,7 +238,7 @@ function replaceCommentsInEnvironmentTsFile(environmentsPath, environmentTsFile)
   // remove last lines in environment.prod.ts files
   if (environmentTsFile === swConst.ENVIRONMENT_PROD_TS) {
     lightjs.replacement('\\/\\*.*|\\s\\*.*|\\/\\/.*', '', [environmentFile]);
-    lightjs.replacement(`(};)${swConst.EOL_EXPRESSION}`, `$1${os.EOL}${os.EOL}`, [environmentFile]);
+    lightjs.replacement(`(};)${swConst.EOL_EXPRESSION}`, `$1${os.EOL}`, [environmentFile]);
   }
 }
 
