@@ -213,19 +213,21 @@ function updateEnvironmentTsFiles() {
   theme: '${clientConfig.theme}',`;
 
   const environmentsPath = path.join(projectPath, swConst.SRC, 'environments');
-  lightjs.replacement('production: false', environments, [path.join(environmentsPath, swConst.ENVIRONMENT_TS)]);
-  shjs.cp(path.join(environmentsPath, swConst.ENVIRONMENT_TS), path.join(environmentsPath, swConst.ENVIRONMENT_DEV_TS));
-  if (swHelper.isMock()) {
-    shjs.cp(path.join(environmentsPath, swConst.ENVIRONMENT_TS), path.join(environmentsPath, swConst.ENVIRONMENT_MOCK_TS));
-  }
-  shjs.cp(path.join(environmentsPath, swConst.ENVIRONMENT_TS), path.join(environmentsPath, swConst.ENVIRONMENT_PROD_TS));
 
-  lightjs.replacement('(production: )false', `$1true`, [path.join(environmentsPath, swConst.ENVIRONMENT_PROD_TS)]);
-  replaceCommentsInEnvironmentTsFile(environmentsPath, swConst.ENVIRONMENT_DEV_TS);
+  createEnvironmentTsFile(environments, environmentsPath, swConst.ENVIRONMENT_DEV_TS);
   if (swHelper.isMock()) {
-    replaceCommentsInEnvironmentTsFile(environmentsPath, swConst.ENVIRONMENT_MOCK_TS);
+    createEnvironmentTsFile(environments, environmentsPath, swConst.ENVIRONMENT_MOCK_TS);
   }
-  replaceCommentsInEnvironmentTsFile(environmentsPath, swConst.ENVIRONMENT_PROD_TS);
+  createEnvironmentTsFile(environments, environmentsPath, swConst.ENVIRONMENT_PROD_TS);
+
+  lightjs.replacement('production: false', environments, [path.join(environmentsPath, swConst.ENVIRONMENT_TS)]);
+  lightjs.replacement('(production: )false', `$1true`, [path.join(environmentsPath, swConst.ENVIRONMENT_PROD_TS)]);
+}
+
+function createEnvironmentTsFile(environments, environmentsPath, environmentTsFile) {
+  shjs.cp(path.join(environmentsPath, swConst.ENVIRONMENT_TS), path.join(environmentsPath, environmentTsFile));
+  replaceCommentsInEnvironmentTsFile(environmentsPath, environmentTsFile);
+  lightjs.replacement('production: false', environments, [path.join(environmentsPath, environmentTsFile)]);
 }
 
 function replaceCommentsInEnvironmentTsFile(environmentsPath, environmentTsFile) {
