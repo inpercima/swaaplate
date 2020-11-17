@@ -95,6 +95,10 @@ function configurePhp() {
   shjs.mkdir('-p', srcMainPath);
   const phpTemplatePath = 'src/template/server/backend/php';
   const generalConfig = projectConfig.general;
+
+  shjs.cp(path.join(phpTemplatePath, 'config.default.php'), srcMainPath);
+  shjs.cp(path.join(phpTemplatePath, 'config.default.php'), path.join(srcMainPath, 'config.dev.php'));
+  shjs.cp(path.join(phpTemplatePath, 'config.default.php'), path.join(srcMainPath, 'config.prod.php'));
   if (generalConfig.useSecurity) {
     shjs.cp(path.join(phpTemplatePath, 'auth.php'), srcMainPath);
     shjs.cp(path.join(phpTemplatePath, swConst.AUTH_SERVICE_PHP), srcMainPath);
@@ -106,17 +110,19 @@ function configurePhp() {
     shjs.cp(path.join(phpTemplatePath, '.htaccess'), srcMainPath);
   }
 
-  const mockPlaceholder = generalConfig.useMock ? '  ' : '';
+  const placeholder = generalConfig.useMock ? '  ' : '';
   const copyPlugin = [
     generalConfig.useMock ? `    process.env.NODE_ENV !== 'mock' ?` + os.EOL : '',
-    mockPlaceholder + '    new CopyWebpackPlugin([{' + os.EOL,
-    mockPlaceholder + `      from: '../${serverDir}/src/main',` + os.EOL,
-    mockPlaceholder + `      to: './${serverDir}',` + os.EOL,
-    mockPlaceholder + '    }])' + (generalConfig.useMock ? ' : {}' : ''),
+    placeholder + '    new CopyWebpackPlugin([{' + os.EOL,
+    placeholder + `      from: '../${serverDir}/src/main',` + os.EOL,
+    placeholder + `      to: './${serverDir}',` + os.EOL,
+    placeholder + "      ignore: ['config.default.php', `config.${invertedMode}.php`]," + os.EOL,
+    placeholder + '    }])' + (generalConfig.useMock ? ' : {}' : ''),
   ];
 
   const webpackConfigFile = path.join(projectPath, swConst.CLIENT, swConst.WEBPACK_CONFIG_JS);
   shjs.cp(path.join(phpTemplatePath, swConst.WEBPACK_CONFIG_JS), webpackConfigFile);
+  lightjs.replacement('{{PROJECT.CONFIGMODE}}', `const invertedMode = process.env.NODE_ENV === 'prod' ? 'dev' : 'prod';`, [webpackConfigFile]);
   lightjs.replacement('{{PROJECT.COPYPLUGIN}}', copyPlugin.join(''), [webpackConfigFile]);
 }
 

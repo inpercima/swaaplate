@@ -98,11 +98,12 @@ function updateGitignoreFile() {
 
   const serverConfig = projectConfig.server;
   const backend = serverConfig.backend;
-  const javaKotlinContent = 'application-dev.yml' + os.EOL + 'application-prod.yml' + os.EOL;
-  const useMock = projectConfig.general.useMock ? 'environment.mock.ts' + os.EOL : '';
+  const phpContent = swHelper.isPhp() ? 'config.dev.php' + os.EOL + 'config.prod.php' + os.EOL : '';
+  const javaKotlinContent = isJavaKotlin() ? 'application-dev.yml' + os.EOL + 'application-prod.yml' + os.EOL : '';
+  const mockContent = projectConfig.general.useMock ? 'environment.mock.ts' + os.EOL : '';
   const content = [
     `# begin project specific${os.EOL}`,
-    `environment.dev.ts${os.EOL}${useMock}environment.prod.ts${os.EOL}${isJavaKotlin() ? javaKotlinContent : ''}`,
+    `environment.dev.ts${os.EOL}${mockContent}environment.prod.ts${os.EOL}${phpContent}${javaKotlinContent}`,
     `# ignore all in \'.vscode\' b/c some vsc config files contain user specific content${os.EOL}.vscode/*${os.EOL}`,
     `# end project specific`
   ];

@@ -391,13 +391,16 @@ function updatePackageJsonFile() {
   }
   packageJsonTemplateData.description = generalConfig.description;
   packageJsonTemplateData.devDependencies = packageJsonData.devDependencies;
-  const serverConfig = projectConfig.server;
   if (swHelper.isPhp()) {
     packageJsonTemplateData.devDependencies['copy-webpack-plugin'] = swVersion.COPY_WEBPACK_PLUGIN;
     packageJsonTemplateData.devDependencies['@angular-builders/custom-webpack'] = swVersion.CUSTOM_WEBPACK;
+
+    scripts['build:dev'] = updateTask(scripts, 'build:dev', 'dev');
+    scripts['watch:dev'] = updateTask(scripts, 'watch:dev', 'dev');
+    scripts['build:prod'] = updateTask(scripts, 'build:prod', 'prod');
     if (swHelper.isMock()) {
-      scripts['build:mock'] = updateTask(scripts, 'build:mock');
-      scripts['watch:mock'] = updateTask(scripts, 'watch:mock');
+      scripts['build:mock'] = updateTask(scripts, 'build:mock', 'mock');
+      scripts['watch:mock'] = updateTask(scripts, 'watch:mock', 'mock');
     }
   }
   packageJsonTemplateData.engines = {
@@ -421,10 +424,11 @@ function updatePackageJsonFile() {
  * Updates a task in package.json.
  *
  * @param {object} packageJsonData
- * @param {string} mockTask
+ * @param {string} task
+ * @param {mode} mode
  */
-function updateTask(packageJsonData, mockTask) {
-  return `export NODE_ENV='mock' && ${packageJsonData[mockTask]}`;
+function updateTask(packageJsonData, task, mode) {
+  return `export NODE_ENV='${mode}' && ${packageJsonData[task]}`;
 }
 
 /**
