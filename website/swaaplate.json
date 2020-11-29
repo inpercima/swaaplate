@@ -12,7 +12,7 @@
       },
       "notFound": {
         "enabled": false,
-        "name": "not-found"
+        "name": ""
       },
       "routing": false
     },
@@ -21,8 +21,8 @@
         "name": "Marcel Jänicke",
         "email": "inpercima@gmail.com"
       }],
-      "homepage": "https://inpercima.github.io/swaaplate",
-      "repository": "https://github.com/inpercima/swaaplate"
+      "homepage": "https://inpercima.github.io/swaaplate/",
+      "repository": "https://github.com/inpercima/swaaplate/"
     },
     "prefix": "swg",
     "theme": "indigo-pink",
@@ -32,7 +32,7 @@
   "general": {
     "author": "Marcel Jänicke",
     "description": "The generation tool for swaaplate to create the configuration (json) file.",
-    "modRewriteIndex": true,
+    "modRewriteIndex": false,
     "name": "swaaplate",
     "title": "Swaaplate",
     "useDocker": false,
@@ -47,8 +47,8 @@
       "packagePath": ""
     },
     "php": {
-      "modRewritePhpExtension": true,
-      "serverAsApi": true
+      "modRewritePhpExtension": false,
+      "serverAsApi": false
     }
   }
 }

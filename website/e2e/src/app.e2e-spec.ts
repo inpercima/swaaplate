@@ -8,9 +8,9 @@ describe('workspace-project App', () => {
     page = new AppPage();
   });
 
-  it('should display title in toolbar', () => {
-    page.navigateTo();
-    expect(page.getTitleText()).toEqual('Swaaplate');
+  it('should display title in toolbar', async () => {
+    await page.navigateTo();
+    expect(await page.getTitleText()).toEqual('Swaaplate');
   });
 
   afterEach(async () => {
