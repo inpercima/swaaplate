@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = Object.freeze({
-  ANGULAR_CDK: '11.0.0',
-  ANGULAR_CLI: '11.0.1',
+  ANGULAR_CDK: '11.0.4',
+  ANGULAR_CLI: '11.0.7',
   ANGULAR_FLEX: '11.0.0-beta.33',
   ANGULAR_JWT: '5.0.1',
   APACHE: '2.4',
@@ -18,6 +18,6 @@ module.exports = Object.freeze({
   NODE: '12.19.0',
   NPM: '6.14.8',
   PHP: '7.3',
-  SPRING_BOOT: '2.4.0',
+  SPRING_BOOT: '2.4.1',
   YARN: '1.22.5',
 });
