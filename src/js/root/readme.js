@@ -69,7 +69,6 @@ function configure(pConfig, pPath) {
   const clientConfigModules = clientConfig.modules;
   const serverConfig = projectConfig.server;
   const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && serverConfig.serverAsApi ? './api/' : './');
-  const apiSuffix = swHelper.isPhp() && !serverConfig.htaccess ? '`.php`' : 'EMPTY';
 
   const readmeFile = swHelper.isJs() ? readmeMdPath : path.join(projectPath, swConst.CLIENT, swConst.README_MD);
 
@@ -94,7 +93,6 @@ function configure(pConfig, pPath) {
   replaceMockSection(useMock, 'MOCKCONFIG', ' and for mockMode the option `api` to `http://localhost:3000/`', readmeFile);
 
   lightjs.replacement('{{PROJECT.API}}', api, [readmeFile]);
-  lightjs.replacement('{{PROJECT.APISUFFIX}}', apiSuffix, [readmeFile]);
   lightjs.replacement('{{PROJECT.DEFAULTROUTE}}', clientConfigModules.features.defaultRoute, [readmeFile]);
   lightjs.replacement('{{PROJECT.THEME}}', clientConfig.theme, [readmeFile]);
 
