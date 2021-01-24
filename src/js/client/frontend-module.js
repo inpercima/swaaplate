@@ -160,10 +160,10 @@ function addRouteInformation(module, component) {
 
   const routingModule = `${moduleName}RoutingModule`;
   const typeRoutes = module === swConst.APP ? ': Routes' : '';
-  const staticRoutes = `public static ROUTES${typeRoutes} = routes;`;
-  lightjs.replacement(`(${routingModule} {) }`, `$1${twoEol}  ${staticRoutes}${twoEol}}`, [routingModuleFile]);
+  const staticRoutes = `static ROUTES${typeRoutes} = routes;`;
+  lightjs.replacement(`(${routingModule} {) }`, `$1${twoEol}  ${staticRoutes}${os.EOL}}`, [routingModuleFile]);
 
-  lightjs.replacement(`\\[(RouterModule.*)\\]`, '[ $1 ]', [routingModuleFile]);
+  lightjs.replacement(`\\[(RouterModule.*)\\].*`, `[${os.EOL}    $1,${os.EOL}  ],`, [routingModuleFile]);
 }
 
 /**
