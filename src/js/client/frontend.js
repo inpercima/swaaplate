@@ -372,9 +372,9 @@ function updatePackageJsonFile() {
   packageJsonTemplateData.author = generalConfig.author;
   packageJsonTemplateData.contributors = clientConfig.packageJson.contributors;
   packageJsonTemplateData.dependencies = packageJsonData.dependencies;
-  packageJsonTemplateData.dependencies['@angular/cdk'] = swVersion.ANGULAR_CDK;
+  packageJsonTemplateData.dependencies['@angular/cdk'] = swVersion.ANGULAR_CDK_MATERIAL;
   packageJsonTemplateData.dependencies['@angular/flex-layout'] = swVersion.ANGULAR_FLEX;
-  packageJsonTemplateData.dependencies['@angular/material'] = swVersion.ANGULAR_CDK;
+  packageJsonTemplateData.dependencies['@angular/material'] = swVersion.ANGULAR_CDK_MATERIAL;
   if (!swHelper.isRouting()) {
     packageJsonTemplateData.dependencies['@angular/router'] = undefined;
   }
