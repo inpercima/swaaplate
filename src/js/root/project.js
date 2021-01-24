@@ -105,12 +105,16 @@ function updateGitignoreFile() {
     `# begin project specific${os.EOL}`,
     `environment.dev.ts${os.EOL}${mockContent}environment.prod.ts${os.EOL}${phpContent}${javaKotlinContent}`,
     `# ignore all in \'.vscode\' b/c some vsc config files contain user specific content${os.EOL}.vscode/*${os.EOL}`,
+    `.classpath${os.EOL}`,
     `# end project specific`
   ];
   const gitignoreUrl = swConst.GITIGNORE_URL + (isJavaKotlin() ? `,${backend},${serverConfig.javaKt.management}` : '');
   const gitignoreFilePath = path.join(projectPath, gitignoreFile);
   axios.get(gitignoreUrl).then(function (response) {
     lightjs.writeFile(gitignoreFilePath, `${content.join(os.EOL)}${os.EOL}${response.data}`);
+
+    lightjs.replacement('#\\.project', '.project', [gitignoreFilePath]);
+    lightjs.replacement(`(# e2e)(\\r\\n|\\n|\\r)e2e\\/\\*\\.js`, '$1', [gitignoreFilePath]);
   });
 }
 
