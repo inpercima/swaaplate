@@ -91,23 +91,26 @@ function configurePhp() {
   const serverDir = swHelper.getBackendFolder();
   lightjs.info(`* configure backend 'php', create 'webpack config' and '${serverDir}' as server folder`);
 
-  const srcMainPath = path.join(projectPath, serverDir, swConst.SRC_MAIN);
-  shjs.mkdir('-p', srcMainPath);
+  const srcPath = path.join(projectPath, serverDir);
+  shjs.mkdir('-p', srcPath);
   const phpTemplatePath = 'src/template/server/backend/php';
   const generalConfig = projectConfig.general;
 
-  shjs.cp(path.join(phpTemplatePath, 'config.default.php'), srcMainPath);
-  shjs.cp(path.join(phpTemplatePath, 'config.default.php'), path.join(srcMainPath, 'config.dev.php'));
-  shjs.cp(path.join(phpTemplatePath, 'config.default.php'), path.join(srcMainPath, 'config.prod.php'));
-  if (generalConfig.useSecurity) {
-    shjs.cp(path.join(phpTemplatePath, 'auth.php'), srcMainPath);
-    shjs.cp(path.join(phpTemplatePath, swConst.AUTH_SERVICE_PHP), srcMainPath);
+  shjs.cp('-r', path.join(phpTemplatePath, swConst.CONFIG), srcPath);
+  shjs.cp('-r', path.join(phpTemplatePath, 'rest'), srcPath);
+  shjs.cp('-r', path.join(phpTemplatePath, 'service'), srcPath);
 
-    const authServicePath = path.join(projectPath, serverDir, swConst.SRC_MAIN, swConst.AUTH_SERVICE_PHP);
+  shjs.cp(path.join(srcPath, swConst.CONFIG, 'config.default.php'), path.join(srcPath, swConst.CONFIG, 'config.dev.php'));
+  shjs.cp(path.join(srcPath, swConst.CONFIG, 'config.default.php'), path.join(srcPath, swConst.CONFIG, 'config.prod.php'));
+  if (generalConfig.useSecurity) {
+    shjs.cp(path.join(phpTemplatePath, 'auth.php'), path.join(srcPath, 'rest'));
+    shjs.cp(path.join(phpTemplatePath, swConst.AUTH_SERVICE_PHP), path.join(srcPath, 'service'));
+
+    const authServicePath = path.join(srcPath, 'service', swConst.AUTH_SERVICE_PHP);
     lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [authServicePath]);
   }
   if (serverConfig.php.modRewritePhpExtension) {
-    shjs.cp(path.join(phpTemplatePath, '.htaccess'), srcMainPath);
+    shjs.cp(path.join(phpTemplatePath, '.htaccess'), srcPath);
   }
 
   const placeholder = generalConfig.useMock ? '  ' : '';

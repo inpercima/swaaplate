@@ -23,6 +23,7 @@ module.exports = Object.freeze({
   ANGULAR_JSON: 'angular.json',
   AUTH_SERVICE_PHP: 'auth.service.php',
   APP_E2E_SPEC_TS: 'app.e2e-spec.ts',
+  CONFIG: 'config',
   DOCKER: 'docker',
   DOCKERFILE: 'Dockerfile',
   DOCKER_COMPOSE_YML: 'docker-compose.yml',
