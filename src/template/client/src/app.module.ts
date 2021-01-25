@@ -17,6 +17,8 @@ import { AppComponent } from './app.component';{{PROJECT.APPROUTING}}{{PROJECT.F
     OverlayModule,{{PROJECT.APPROUTINGMODULENAME}}{{PROJECT.FEATURESMODULENAME}}{{PROJECT.NOTFOUNDMODULENAME}}
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent,
+  ],
 })
 export class AppModule { }

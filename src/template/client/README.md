@@ -56,7 +56,6 @@ Change for prodMode the option `production` to `true`{{PROJECT.MOCKCONFIG}}.
 ### Table of contents
 
 * [api](#api)
-* [apiSuffix](#apiSuffix)
 * [appname](#appname)
 * [defaultRoute](#defaultRoute)
 * [production](#production)
@@ -67,13 +66,6 @@ Change for prodMode the option `production` to `true`{{PROJECT.MOCKCONFIG}}.
 Defines the URL to the backend.
 
 * default: `{{PROJECT.API}}`
-* type: `string`
-
-### `apiSuffix`
-
-Defines a suffix for the api to the backend.
-
-* default: {{PROJECT.APISUFFIX}}
 * type: `string`
 
 ### `appname`

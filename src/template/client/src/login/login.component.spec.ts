@@ -19,7 +19,9 @@ describe('LoginComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoginComponent ],
+      declarations: [
+        LoginComponent,
+      ],
       imports: [
         HttpClientModule,
         JwtModule.forRoot({
@@ -37,7 +39,9 @@ describe('LoginComponent', () => {
         ReactiveFormsModule,
         RouterTestingModule,
       ],
-      providers: [ JwtHelperService ]
+      providers: [
+        JwtHelperService,
+      ],
     })
     .compileComponents();
   }));
