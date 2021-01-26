@@ -79,7 +79,7 @@ function configureJavaKotlin() {
   lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(webPath, `AuthController.${backend}`)]);
   lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(serverSrcMainJavaPath, `Application.${backend}`)]);
   lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(webPath, `AuthController.${backend}`)]);
-  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(serverSrcMainResourcesPath, 'logback.xml')]);
+  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(serverSrcMainResourcesPath, 'logback-spring.xml')]);
 }
 
 /**
