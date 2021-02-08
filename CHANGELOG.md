@@ -5,7 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.0.3-SNAPSHOT (unreleased)
+## 2.2.1-SNAPSHOT (unreleased)
+
+## 2.2.0 (2021-xx-xx)
+
+fixed: [Update client templates and syntax](https://github.com/inpercima/swaaplate/commit/4cb92aa1ad117e5ea53ecf5d7d15b0982d8a3c12)
+fixed: [Ignore ".classpath", ".project" and "e2e/*js"](https://github.com/inpercima/swaaplate/commit/e307f2aeb9bf19d2a961134af9cbdd907f070198)
+changed: [Update logging with spring boot and remove mysql connection not needed in default](https://github.com/inpercima/swaaplate/commit/f287c9006d04791103816ca98e07dca06119ffcf)
+changed: [Update angular-cli to 11.1.4 and angular-material to 11.1.2](https://github.com/inpercima/swaaplate/commit/ab5f906c61b8103eded78d41a9a0e12fecba6ebd)
+changed: [Update readme for docker with infos from other readmes](https://github.com/inpercima/swaaplate/commit/0047a8bb45eeb8866db899c837a5535db1181d8a)
+changed: [Remove unessaccary environment apiSuffix in client](https://github.com/inpercima/swaaplate/commit/e93f1fe6a82f805c725ad02d2365250a0368be4b)
+added: [Create backend folders config, rest and service and short src/main path to empty](https://github.com/inpercima/swaaplate/commit/8c00d8219755f40120eeffaf342d28427ebd1298)
+added: [Include dev and prod config](https://github.com/inpercima/swaaplate/commit/5ce6082b319f73a54bdbe92196d8aa06908380a0)
+
+## 2.1.0 (2020-11-18)
+
+* changed: [Update version to 2.1.0](https://github.com/inpercima/swaaplate/commit/282de6c757cab82a51de4ed23533c28b1998569a)
 
 ## 2.0.2 (2020-11-18)
 
