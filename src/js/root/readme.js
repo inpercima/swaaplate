@@ -163,10 +163,11 @@ function checkAndCreateDependencies(isRoot) {
  */
 function createDavidDmLinks(isRoot) {
   const pathParam = isRoot ? '' : '?path=client';
+  const davidDmStatusLink = `https://status.david-dm.org/gh/${projectConfig.client.ghUser}/${projectConfig.general.name}`;
   const davidDmLink = `https://david-dm.org/${projectConfig.client.ghUser}/${projectConfig.general.name}`;
-  const dependenciesStatus = `[![dependencies Status](${davidDmLink}/status.svg${pathParam})](${davidDmLink}${pathParam})`;
+  const dependenciesStatus = `[![dependencies Status](${davidDmStatusLink}${pathParam})](${davidDmLink}${pathParam})`;
   const typeParam = isRoot ? '?' : '&';
-  const devDependenciesStatus = `[![devDependencies Status](${davidDmLink}/dev-status.svg${pathParam})](${davidDmLink}${pathParam}${typeParam}type=dev)`;
+  const devDependenciesStatus = `[![devDependencies Status](${davidDmStatusLink}${pathParam}${typeParam}type=dev)](${davidDmLink}${pathParam}${typeParam}type=dev)`;
   return dependenciesStatus + os.EOL + devDependenciesStatus;
 }
 
