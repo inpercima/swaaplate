@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.2.1-SNAPSHOT (unreleased)
 
-## 2.2.0 (2021-xx-xx)
+## 2.2.0 (2021-02-12)
 
 fixed: [Update client templates and syntax](https://github.com/inpercima/swaaplate/commit/4cb92aa1ad117e5ea53ecf5d7d15b0982d8a3c12)
 fixed: [Ignore ".classpath", ".project" and "e2e/*js"](https://github.com/inpercima/swaaplate/commit/e307f2aeb9bf19d2a961134af9cbdd907f070198)
