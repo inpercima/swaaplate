@@ -117,9 +117,9 @@ function configurePhp() {
   const copyPlugin = [
     generalConfig.useMock ? `    process.env.NODE_ENV !== 'mock' ?` + os.EOL : '',
     placeholder + '    new CopyWebpackPlugin([{' + os.EOL,
-    placeholder + `      from: '../${serverDir}/src/main',` + os.EOL,
+    placeholder + `      from: '../${serverDir}',` + os.EOL,
     placeholder + `      to: './${serverDir}',` + os.EOL,
-    placeholder + "      ignore: ['config.default.php', `config.${invertedMode}.php`]," + os.EOL,
+    placeholder + "      ignore: ['config.default.php', `config.${invertedMode}.php`, 'README.md']," + os.EOL,
     placeholder + '    }])' + (generalConfig.useMock ? ' : {}' : ''),
   ];
 
