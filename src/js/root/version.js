@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = Object.freeze({
-  ANGULAR_CDK_MATERIAL: '11.1.2',
-  ANGULAR_CLI: '11.1.4',
+  ANGULAR_CDK_MATERIAL: '11.2.0',
+  ANGULAR_CLI: '11.2.0',
   ANGULAR_FLEX: '11.0.0-beta.33',
   ANGULAR_JWT: '5.0.1',
   APACHE: '2.4',
