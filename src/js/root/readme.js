@@ -40,7 +40,7 @@ function configure(pConfig, pPath) {
 
   // currently no check
   const currentCheck = '';
-  const webpack = `| copy-webpack-plugin | ${swVersion.COPY_WEBPACK_PLUGIN} | 6.2.0 | "copy-webpack-plugin@6.2.0" has unmet peer dependency "webpack@^4.0.0 \|\| ^5.0.0" |`;
+  const webpack = `| copy-webpack-plugin | ${swVersion.COPY_WEBPACK_PLUGIN} | 7.0.0 | "copy-webpack-plugin@7.0.0" has unmet peer dependency "webpack@^5.1.0" |`;
   const depCheck = currentCheck + (swHelper.isPhp() ? os.EOL + webpack : '');
   lightjs.replacement('{{PROJECT.DEPCHECK}}', depCheck, [readmeMdPath]);
 
