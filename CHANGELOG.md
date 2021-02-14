@@ -5,7 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.2.1-SNAPSHOT (unreleased)
+## 2.2.2-SNAPSHOT (unreleased)
+
+## 2.2.1 (2021-02-14)
+
+fixed: [Add missing svg extension](https://github.com/inpercima/swaaplate/commit/ad26c3b32e5b84a89e6610ee10b1d85e256ffb84)
+fixed: [Fix api or server link](https://github.com/inpercima/swaaplate/commit/439af3713647fcb9a6696e80f79c03fc8d7bddb6)
+fixed: [Fix path from api/src/main to api/](https://github.com/inpercima/swaaplate/commit/c218f26c489ddda35238cbeb15dee9bac99a8ec1)
+changed: [Update angular-cli and angular-material to 11.2.0](https://github.com/inpercima/swaaplate/commit/46cac94420d4edf51d9812d3bdbbafc1fec92f88)
+changed: [Update webpack version info](https://github.com/inpercima/swaaplate/commit/1ad03ab80ed41a36eaa1cc39c77869039ac4f387)
 
 ## 2.2.0 (2021-02-12)
 
