@@ -57,7 +57,8 @@ function configure(pConfig, pPath) {
   lightjs.replacement('{{PROJECT.USAGE}}', !swHelper.isJs() ? '## Usage' + twoEol + '### Modules' + twoEol : '', [readmeMdPath]);
 
   const clientLink = `For the client check [${projectConfig.general.name} - client](./client).` + twoEol;
-  const serverLink = `For the server check [${projectConfig.general.name} - server](./server).`;
+  const apiOrServer = swHelper.isPhp() ? swConst.API : swConst.SERVER;
+  const serverLink = `For the server check [${projectConfig.general.name} - ${apiOrServer}](./${apiOrServer}).`;
   const dockerLink = twoEol + `For the docker check [${projectConfig.general.name} - docker](./README_docker.md).`;
   lightjs.replacement('{{PROJECT.CLIENT}}', !swHelper.isJs() ? clientLink : '', [readmeMdPath]);
   lightjs.replacement('{{PROJECT.SERVER}}', !swHelper.isJs() ? serverLink : '', [readmeMdPath]);
