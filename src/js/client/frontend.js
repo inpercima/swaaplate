@@ -32,8 +32,8 @@ function configure(workspacePath, pConfig, pPath) {
   if (shjs.which('ng')) {
     shjs.cd(workspacePath);
     const params = [
-      '--interactive=false --skipInstall=true --style=css --strict=true',
-      `--packageManager=${swHelper.isYarn() ? swConst.YARN : swConst.NPM}`,
+      '--interactive=false --skip-install=true --style=css',
+      `--package-manager=${swHelper.isYarn() ? swConst.YARN : swConst.NPM}`,
       `--directory=${projectName}`,
       `--prefix=${clientConfig.prefix}`,
       `--routing=${swHelper.isRouting()}`
@@ -365,7 +365,7 @@ function updatePackageJsonFile() {
     };
     Object.assign(scripts, mockScripts);
   }
-  Object.assign(scripts, { "build:prod": "ng lint && ng build --prod" });
+  Object.assign(scripts, { "build:prod": "ng lint && ng build" });
 
   let packageJsonTemplateData = {};
   const clientConfig = projectConfig.client;
