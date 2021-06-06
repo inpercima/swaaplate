@@ -27,8 +27,8 @@ You can choose between `js` (means angular only), `php`, `java` or `kt` as backe
 
 ### Node, npm or yarn
 
-* `node 12.19.0` or higher in combination with
-  * `npm 6.14.8` or higher or
+* `node 14.16.1` or higher in combination with
+  * `npm 6.14.12` or higher or
   * `yarn 1.22.5` or higher, used in this repository
 
 ## Getting started
@@ -50,7 +50,7 @@ yarn
 
 ## Documentation
 
-You can find all the documentation [./docs](./docs/index.md).
+You can find all the documentation under [./docs](./docs/index.md).
 
 ## Changelog
 
