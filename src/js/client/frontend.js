@@ -40,6 +40,11 @@ function configure(workspacePath, pConfig, pPath) {
     ];
     lightjs.info(`run 'ng new ${projectName} ${params.join(" ")}'`);
     shjs.exec(`ng new ${projectName} ${params.join(" ")}`);
+
+    shjs.cd(path.join(workspacePath, projectName));
+    const esLint = 'ng add @angular-eslint/schematics --skip-confirmation=true';
+    lightjs.info(`run '${esLint}'`);
+    shjs.exec(`${esLint}`);
   } else {
     lightjs.error(`sorry, this script requires 'ng'`);
     shjs.exit(1);
@@ -298,7 +303,6 @@ function replaceSectionsInFiles() {
 
   // misc
   lightjs.replacement(swConst.EOL, `@import 'app/app.component.css';${os.EOL}`, [path.join(projectPath, swConst.SRC, 'styles.css')]);
-  lightjs.replacement(swConst.EOL, os.EOL, [path.join(projectPath, 'tslint.json')]);
 }
 
 /**
