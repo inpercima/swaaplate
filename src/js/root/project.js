@@ -114,7 +114,6 @@ function updateGitignoreFile() {
     lightjs.writeFile(gitignoreFilePath, `${content.join(os.EOL)}${os.EOL}${response.data}`);
 
     lightjs.replacement('#\\.project', '.project', [gitignoreFilePath]);
-    lightjs.replacement(`(# e2e)(\\r\\n|\\n|\\r)e2e\\/\\*\\.js`, '$1', [gitignoreFilePath]);
   });
 }
 

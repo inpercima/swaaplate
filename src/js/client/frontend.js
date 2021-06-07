@@ -42,6 +42,9 @@ function configure(workspacePath, pConfig, pPath) {
     shjs.exec(`ng new ${projectName} ${params.join(" ")}`);
 
     shjs.cd(path.join(workspacePath, projectName));
+    const addCypress = 'ng add @cypress/schematic --skip-confirmation=true';
+    lightjs.info(`run '${addCypress}'`);
+    shjs.exec(`${addCypress}`);
     const esLint = 'ng add @angular-eslint/schematics --skip-confirmation=true';
     lightjs.info(`run '${esLint}'`);
     shjs.exec(`${esLint}`);
@@ -253,14 +256,11 @@ function replaceCommentsInEnvironmentTsFile(environmentsPath, environmentTsFile)
  */
 function replaceSectionsInFiles() {
   const generalConfig = projectConfig.general;
-  // replace in e2e/
-  const e2e = path.join(projectPath, swConst.E2E);
-  const appE2eSpecTsPath = path.join(e2e, swConst.SRC, swConst.APP_E2E_SPEC_TS);
-  lightjs.replacement('welcome message', 'title in toolbar', [appE2eSpecTsPath]);
-  lightjs.replacement(swConst.APP_RUNNING, swConst.EMPTY, [appE2eSpecTsPath]);
-  lightjs.replacement(swConst.CONTENT_SPAN, swConst.CONTENT_SPAN_REP, [path.join(e2e, swConst.SRC, 'app.po.ts')]);
-  lightjs.replacement(generalConfig.name, generalConfig.title, [appE2eSpecTsPath]);
-  lightjs.replacement(swConst.EOL, os.EOL, [path.join(e2e, 'protractor.conf.js')]);
+  // replace in cypress/
+  const cypress = path.join(projectPath, swConst.CYPRESS);
+  const cypressIntegrationSpec = path.join(cypress, 'integration', 'spec.ts');
+  lightjs.replacement('Welcome', 'Hello world', [cypressIntegrationSpec]);
+  lightjs.replacement('sandbox app is running!', 'hello-world works!', [cypressIntegrationSpec]);
 
   const clientConfig = projectConfig.client;
   const srcPath = path.join(projectPath, swConst.SRC);
