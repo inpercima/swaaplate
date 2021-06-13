@@ -12,7 +12,7 @@ module.exports = Object.freeze({
   DOCKER_COMPOSE: '1.26.0',
   DOCKER: '19.03.12',
   JDK: '11',
-  JSON_SERVER: '0.16.2',
+  JSON_SERVER: '0.16.3',
   JSONWEBTOKEN: '8.5.1',
   MAVEN_JAR_PLUGIN: '3.2.0',
   NODE: '14.16.1',
