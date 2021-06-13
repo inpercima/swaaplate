@@ -29,6 +29,7 @@ function configure(pConfig, pPath) {
     shjs.mkdir(path.join(projectPath, swConst.CLIENT));
     shjs.mv(path.join(projectPath, `!(${swConst.CLIENT})`), path.join(projectPath, swConst.CLIENT));
     shjs.mv(path.join(projectPath, '.browserslistrc'), path.join(projectPath, swConst.CLIENT));
+    shjs.mv(path.join(projectPath, '.eslintrc.json'), path.join(projectPath, swConst.CLIENT));
     shjs.mkdir(path.join(projectPath, swHelper.getBackendFolder()));
 
     if (swHelper.isJavaKotlin()) {
