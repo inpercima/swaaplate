@@ -143,11 +143,10 @@ function updateAngularJsonFile() {
     architectData.serve.builder = '@angular-builders/custom-webpack:dev-server';
   }
   architectData.build.options.styles.push('src/themes.scss');
-  architectData.build.configurations.dev = addFileReplacementsAndBudgets('dev');
+  architectData.build.configurations.development.budgets = addBudgets();
   if (swHelper.isMock()) {
     architectData.build.configurations.mock = addFileReplacementsAndBudgets('mock');
   }
-  architectData.serve.configurations.dev = addBrowserTarget(name, 'dev');
   if (swHelper.isMock()) {
     architectData.serve.configurations.mock = addBrowserTarget(name, 'mock');
   }
@@ -180,19 +179,27 @@ function addFileReplacementsAndBudgets(mode) {
         with: `src/environments/environment.${mode}.ts`
       }
     ],
-    budgets: [
-      {
-        type: 'initial',
-        maximumWarning: '500kb',
-        maximumError: '1mb'
-      },
-      {
-        type: 'anyComponentStyle',
-        maximumWarning: '2kb',
-        maximumError: '4kb'
-      }
-    ]
+    budgets: addBudgets(),
   };
+}
+
+/**
+ * Add budgets.
+ *
+ */
+function addBudgets() {
+  return [
+    {
+      type: 'initial',
+      maximumWarning: '500kb',
+      maximumError: '1mb'
+    },
+    {
+      type: 'anyComponentStyle',
+      maximumWarning: '2kb',
+      maximumError: '4kb'
+    }
+  ];
 }
 
 /**
