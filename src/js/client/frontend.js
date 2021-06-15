@@ -158,6 +158,9 @@ function updateAngularJsonFile() {
     architectData.build.options.assets = assets;
   }
 
+  /**
+   * For production also add namedChunks and vendorChunk.
+   */
   architectData.build.configurations.production.namedChunks = true;
   architectData.build.configurations.production.vendorChunk = true;
   angularJsonData.projects[name].architect = architectData;
