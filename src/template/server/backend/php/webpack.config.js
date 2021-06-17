@@ -1,12 +1,16 @@
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+{{PROJECT.CONFIGMODE}}const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-// issue: https://github.com/meltedspark/angular-builders/issues/235
-// explanation: https://github.com/meltedspark/angular-builders/issues/235#issuecomment-464393504
-// workaround: https://github.com/meltedspark/angular-builders/issues/235#issuecomment-471323007
-module.exports = (config, options) => {
-  {{PROJECT.CONFIGMODE}}
-  config.plugins.push(
-{{PROJECT.COPYPLUGIN}}
-  );
-  return config;
-}
+{{PROJECT.INDENTATION}}const invertedMode = process.env.NODE_ENV === 'prod' ? 'dev' : 'prod';
+{{PROJECT.INDENTATION}}module.exports = {
+{{PROJECT.INDENTATION}}  plugins: [
+{{PROJECT.INDENTATION}}    new CopyWebpackPlugin({
+{{PROJECT.INDENTATION}}      patterns: [{
+{{PROJECT.INDENTATION}}        from: '../{{PROJECT.SERVERDIR}}',
+{{PROJECT.INDENTATION}}        to: './{{PROJECT.SERVERDIR}}',
+{{PROJECT.INDENTATION}}        globOptions: {
+{{PROJECT.INDENTATION}}          ignore: ['**/config.default.php', `**/config.${invertedMode}.php`, '**/README.md'],
+{{PROJECT.INDENTATION}}        },
+{{PROJECT.INDENTATION}}      }],
+{{PROJECT.INDENTATION}}    }),
+{{PROJECT.INDENTATION}}  ],
+{{PROJECT.INDENTATION}}}{{PROJECT.CONFIGMODEEND}}

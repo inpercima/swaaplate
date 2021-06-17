@@ -22,7 +22,6 @@ module.exports = Object.freeze({
   // by filename or foldername
   ANGULAR_JSON: 'angular.json',
   AUTH_SERVICE_PHP: 'auth.service.php',
-  APP_E2E_SPEC_TS: 'app.e2e-spec.ts',
   CONFIG: 'config',
   DOCKER: 'docker',
   DOCKERFILE: 'Dockerfile',
@@ -46,7 +45,7 @@ module.exports = Object.freeze({
   CLIENT: 'client',
   CORE: 'core',
   DIST: 'dist',
-  E2E: 'e2e',
+  CYPRESS: 'cypress',
   JAVA: 'java',
   JS: 'js',
   MAVEN: 'maven',

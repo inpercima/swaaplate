@@ -32,14 +32,22 @@ function configure(workspacePath, pConfig, pPath) {
   if (shjs.which('ng')) {
     shjs.cd(workspacePath);
     const params = [
-      '--interactive=false --skipInstall=true --style=css --strict=true',
-      `--packageManager=${swHelper.isYarn() ? swConst.YARN : swConst.NPM}`,
+      '--interactive=false --skip-install=true --style=css',
+      `--package-manager=${swHelper.isYarn() ? swConst.YARN : swConst.NPM}`,
       `--directory=${projectName}`,
       `--prefix=${clientConfig.prefix}`,
       `--routing=${swHelper.isRouting()}`
     ];
     lightjs.info(`run 'ng new ${projectName} ${params.join(" ")}'`);
     shjs.exec(`ng new ${projectName} ${params.join(" ")}`);
+
+    shjs.cd(path.join(workspacePath, projectName));
+    const addCypress = 'ng add @cypress/schematic --skip-confirmation=true';
+    lightjs.info(`run '${addCypress}'`);
+    shjs.exec(`${addCypress}`);
+    const esLint = 'ng add @angular-eslint/schematics --skip-confirmation=true';
+    lightjs.info(`run '${esLint}'`);
+    shjs.exec(`${esLint}`);
   } else {
     lightjs.error(`sorry, this script requires 'ng'`);
     shjs.exit(1);
@@ -135,11 +143,10 @@ function updateAngularJsonFile() {
     architectData.serve.builder = '@angular-builders/custom-webpack:dev-server';
   }
   architectData.build.options.styles.push('src/themes.scss');
-  architectData.build.configurations.dev = addFileReplacementsAndBudgets('dev');
+  architectData.build.configurations.development.budgets = addBudgets();
   if (swHelper.isMock()) {
     architectData.build.configurations.mock = addFileReplacementsAndBudgets('mock');
   }
-  architectData.serve.configurations.dev = addBrowserTarget(name, 'dev');
   if (swHelper.isMock()) {
     architectData.serve.configurations.mock = addBrowserTarget(name, 'mock');
   }
@@ -150,6 +157,9 @@ function updateAngularJsonFile() {
     architectData.build.options.assets = assets;
   }
 
+  /**
+   * For production also add namedChunks and vendorChunk.
+   */
   architectData.build.configurations.production.namedChunks = true;
   architectData.build.configurations.production.vendorChunk = true;
   angularJsonData.projects[name].architect = architectData;
@@ -169,19 +179,27 @@ function addFileReplacementsAndBudgets(mode) {
         with: `src/environments/environment.${mode}.ts`
       }
     ],
-    budgets: [
-      {
-        type: 'initial',
-        maximumWarning: '500kb',
-        maximumError: '1mb'
-      },
-      {
-        type: 'anyComponentStyle',
-        maximumWarning: '2kb',
-        maximumError: '4kb'
-      }
-    ]
+    budgets: addBudgets(),
   };
+}
+
+/**
+ * Add budgets.
+ *
+ */
+function addBudgets() {
+  return [
+    {
+      type: 'initial',
+      maximumWarning: '500kb',
+      maximumError: '1mb'
+    },
+    {
+      type: 'anyComponentStyle',
+      maximumWarning: '2kb',
+      maximumError: '4kb'
+    }
+  ];
 }
 
 /**
@@ -248,14 +266,11 @@ function replaceCommentsInEnvironmentTsFile(environmentsPath, environmentTsFile)
  */
 function replaceSectionsInFiles() {
   const generalConfig = projectConfig.general;
-  // replace in e2e/
-  const e2e = path.join(projectPath, swConst.E2E);
-  const appE2eSpecTsPath = path.join(e2e, swConst.SRC, swConst.APP_E2E_SPEC_TS);
-  lightjs.replacement('welcome message', 'title in toolbar', [appE2eSpecTsPath]);
-  lightjs.replacement(swConst.APP_RUNNING, swConst.EMPTY, [appE2eSpecTsPath]);
-  lightjs.replacement(swConst.CONTENT_SPAN, swConst.CONTENT_SPAN_REP, [path.join(e2e, swConst.SRC, 'app.po.ts')]);
-  lightjs.replacement(generalConfig.name, generalConfig.title, [appE2eSpecTsPath]);
-  lightjs.replacement(swConst.EOL, os.EOL, [path.join(e2e, 'protractor.conf.js')]);
+  // replace in cypress/
+  const cypress = path.join(projectPath, swConst.CYPRESS);
+  const cypressIntegrationSpec = path.join(cypress, 'integration', 'spec.ts');
+  lightjs.replacement('Welcome', 'Hello world', [cypressIntegrationSpec]);
+  lightjs.replacement('sandbox app is running!', 'hello-world works!', [cypressIntegrationSpec]);
 
   const clientConfig = projectConfig.client;
   const srcPath = path.join(projectPath, swConst.SRC);
@@ -298,7 +313,6 @@ function replaceSectionsInFiles() {
 
   // misc
   lightjs.replacement(swConst.EOL, `@import 'app/app.component.css';${os.EOL}`, [path.join(projectPath, swConst.SRC, 'styles.css')]);
-  lightjs.replacement(swConst.EOL, os.EOL, [path.join(projectPath, 'tslint.json')]);
 }
 
 /**
@@ -365,7 +379,7 @@ function updatePackageJsonFile() {
     };
     Object.assign(scripts, mockScripts);
   }
-  Object.assign(scripts, { "build:prod": "ng lint && ng build --prod" });
+  Object.assign(scripts, { "build:prod": "ng lint && ng build" });
 
   let packageJsonTemplateData = {};
   const clientConfig = projectConfig.client;

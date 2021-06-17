@@ -21,7 +21,7 @@ fixed: [Update client templates and syntax](https://github.com/inpercima/swaapla
 fixed: [Ignore ".classpath", ".project" and "e2e/*js"](https://github.com/inpercima/swaaplate/commit/e307f2aeb9bf19d2a961134af9cbdd907f070198)
 changed: [Update logging with spring boot and remove mysql connection not needed in default](https://github.com/inpercima/swaaplate/commit/f287c9006d04791103816ca98e07dca06119ffcf)
 changed: [Update angular-cli to 11.1.4 and angular-material to 11.1.2](https://github.com/inpercima/swaaplate/commit/ab5f906c61b8103eded78d41a9a0e12fecba6ebd)
-changed: [Update readme for docker with infos from other readmes](https://github.com/inpercima/swaaplate/commit/0047a8bb45eeb8866db899c837a5535db1181d8a)
+changed: [Update readme for docker with infos from other readme files](https://github.com/inpercima/swaaplate/commit/0047a8bb45eeb8866db899c837a5535db1181d8a)
 changed: [Remove unessaccary environment apiSuffix in client](https://github.com/inpercima/swaaplate/commit/e93f1fe6a82f805c725ad02d2365250a0368be4b)
 added: [Create backend folders config, rest and service and short src/main path to empty](https://github.com/inpercima/swaaplate/commit/8c00d8219755f40120eeffaf342d28427ebd1298)
 added: [Include dev and prod config](https://github.com/inpercima/swaaplate/commit/5ce6082b319f73a54bdbe92196d8aa06908380a0)
