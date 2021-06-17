@@ -6,9 +6,8 @@ module.exports = Object.freeze({
   ANGULAR_FLEX: '12.0.0-beta.34',
   ANGULAR_JWT: '5.0.2',
   APACHE: '2.4',
-  // angular uses webpack 4, so plugin on 4.6.0
-  COPY_WEBPACK_PLUGIN: '4.6.0',
-  CUSTOM_WEBPACK: '11.0.0',
+  COPY_WEBPACK_PLUGIN: '9.0.0',
+  CUSTOM_WEBPACK: '12.1.0',
   DOCKER_COMPOSE: '1.26.0',
   DOCKER: '19.03.12',
   JDK: '11',

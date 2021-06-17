@@ -40,7 +40,7 @@ function configure(pConfig, pPath) {
 
   // currently no check
   const currentCheck = '';
-  const webpack = `| copy-webpack-plugin | ${swVersion.COPY_WEBPACK_PLUGIN} | 7.0.0 | "copy-webpack-plugin@7.0.0" has unmet peer dependency "webpack@^5.1.0" |`;
+  const webpack = `| copy-webpack-plugin | ${swVersion.COPY_WEBPACK_PLUGIN} | 9.0.0 | "copy-webpack-plugin@9.0.0" has unmet peer dependency "webpack@^5.1.0 |`;
   const depCheck = currentCheck + (swHelper.isPhp() ? os.EOL + webpack : '');
   lightjs.replacement('{{PROJECT.DEPCHECK}}', depCheck, [readmeMdPath]);
 
@@ -56,20 +56,21 @@ function configure(pConfig, pPath) {
   const twoEol = os.EOL + os.EOL;
   lightjs.replacement('{{PROJECT.USAGE}}', !swHelper.isJs() ? '## Usage' + twoEol + '### Modules' + twoEol : '', [readmeMdPath]);
 
-  const clientLink = `For the client check [${projectConfig.general.name} - client](./client).` + twoEol;
-  const apiOrServer = swHelper.isPhp() ? swConst.API : swConst.SERVER;
-  const serverLink = `For the server check [${projectConfig.general.name} - ${apiOrServer}](./${apiOrServer}).`;
-  const dockerLink = twoEol + `For the docker check [${projectConfig.general.name} - docker](./README_docker.md).`;
+  const genaralConfig = projectConfig.general;
+  const serverConfig = projectConfig.server;
+  const name = genaralConfig.name;
+  const clientLink = `For the client check [${name} - client](./client).` + twoEol;
+  const apiOrServer = swHelper.isPhp() && serverConfig.php.serverAsApi ? swConst.API : swConst.SERVER;
+  const serverLink = `For the server check [${name} - ${apiOrServer}](./${apiOrServer}).`;
+  const dockerLink = twoEol + `For the docker check [${name} - docker](./README_docker.md).`;
   lightjs.replacement('{{PROJECT.CLIENT}}', !swHelper.isJs() ? clientLink : '', [readmeMdPath]);
   lightjs.replacement('{{PROJECT.SERVER}}', !swHelper.isJs() ? serverLink : '', [readmeMdPath]);
-  lightjs.replacement('{{PROJECT.DOCKER}}', projectConfig.general.useDocker ? dockerLink : '', [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.DOCKER}}', genaralConfig.useDocker ? dockerLink : '', [readmeMdPath]);
   lightjs.replacement('{{PROJECT.VERSION}}', packageJsonData.version, [readmeMdPath]);
 
   const clientConfig = projectConfig.client;
-  const genaralConfig = projectConfig.general;
   const clientConfigModules = clientConfig.modules;
-  const serverConfig = projectConfig.server;
-  const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && serverConfig.serverAsApi ? './api/' : './');
+  const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && serverConfig.php.serverAsApi ? './api/' : './');
 
   const readmeFile = swHelper.isJs() ? readmeMdPath : path.join(projectPath, swConst.CLIENT, swConst.README_MD);
 

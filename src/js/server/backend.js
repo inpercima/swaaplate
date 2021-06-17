@@ -114,20 +114,13 @@ function configurePhp() {
     shjs.cp(path.join(phpTemplatePath, '.htaccess'), srcPath);
   }
 
-  const placeholder = generalConfig.useMock ? '  ' : '';
-  const copyPlugin = [
-    generalConfig.useMock ? `    process.env.NODE_ENV !== 'mock' ?` + os.EOL : '',
-    placeholder + '    new CopyWebpackPlugin([{' + os.EOL,
-    placeholder + `      from: '../${serverDir}',` + os.EOL,
-    placeholder + `      to: './${serverDir}',` + os.EOL,
-    placeholder + "      ignore: ['config.default.php', `config.${invertedMode}.php`, 'README.md']," + os.EOL,
-    placeholder + '    }])' + (generalConfig.useMock ? ' : {}' : ''),
-  ];
-
+  const configMode = generalConfig.useMock ? `if (process.env.NODE_ENV !== 'mock') {` + os.EOL + '  ' : '';
   const webpackConfigFile = path.join(projectPath, swConst.CLIENT, swConst.WEBPACK_CONFIG_JS);
   shjs.cp(path.join(phpTemplatePath, swConst.WEBPACK_CONFIG_JS), webpackConfigFile);
-  lightjs.replacement('{{PROJECT.CONFIGMODE}}', `const invertedMode = process.env.NODE_ENV === 'prod' ? 'dev' : 'prod';`, [webpackConfigFile]);
-  lightjs.replacement('{{PROJECT.COPYPLUGIN}}', copyPlugin.join(''), [webpackConfigFile]);
+  lightjs.replacement('{{PROJECT.INDENTATION}}', generalConfig.useMock ? '  ' : '', [webpackConfigFile]);
+  lightjs.replacement('{{PROJECT.CONFIGMODE}}', configMode, [webpackConfigFile]);
+  lightjs.replacement('{{PROJECT.SERVERDIR}}', serverDir, [webpackConfigFile]);
+  lightjs.replacement('{{PROJECT.CONFIGMODEEND}}', generalConfig.useMock ? os.EOL + '}' : '', [webpackConfigFile]);
 }
 
 /**
