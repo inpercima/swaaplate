@@ -17,7 +17,7 @@ This project was generated with [swaaplate](https://github.com/inpercima/swaapla
 
 Some libraries could not be updated b/c of peer dependencies or knowing issues.
 
-| library    | current version | wanted version | reason |
-| ---------- | --------------- | -------------- | ------ |{{PROJECT.DEPCHECK}}
+| library    | current version | last version | reason |
+| ---------- | --------------- | ------------ | ------ |{{PROJECT.DEPCHECK}}
 
 {{PROJECT.READMEGETTINGSTARTED}}{{PROJECT.READMEIMPORT}}{{PROJECT.USAGE}}{{PROJECT.CLIENT}}{{PROJECT.SERVER}}{{PROJECT.DOCKER}}
