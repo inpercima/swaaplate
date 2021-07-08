@@ -129,7 +129,11 @@ function replaceLinesInModule(module, component) {
   lightjs.replacement('(AppComponent),,', '$1,', [moduleFilePath]);
 
   if (!swHelper.isRouting() && module === featuresName) {
-    lightjs.replacement(`(  \\])`, `$1,${os.EOL}  exports: [ ${componentName}Component ],`, [moduleFilePath]);
+    lightjs.replacement(`(imports)`, `exports: [${os.EOL}    ${componentName}Component,${os.EOL}  ],${os.EOL}  $1`, [moduleFilePath]);
+    // add a comma at the end of square bracket
+    lightjs.replacement(`]`, '],', [moduleFilePath]);
+    // the command above will also change exiting square brackets with comma so rechange it
+    lightjs.replacement('],,', '],', [moduleFilePath]);
   }
   if (module === swConst.APP) {
     lightjs.replacement('{{PROJECT.PREFIX}}', clientConfig.prefix, [path.join(appPath, appDir, `${module}.component.ts`)]);
