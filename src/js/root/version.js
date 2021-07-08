@@ -10,7 +10,7 @@ module.exports = Object.freeze({
   CUSTOM_WEBPACK: '12.1.0',
   DOCKER_COMPOSE: '1.26.0',
   DOCKER: '19.03.12',
-  JDK: '11',
+  JDK: '16',
   JSON_SERVER: '0.16.3',
   JSONWEBTOKEN: '8.5.1',
   MAVEN_JAR_PLUGIN: '3.2.0',
