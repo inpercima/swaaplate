@@ -100,7 +100,7 @@ function copyModuleFiles(module) {
 }
 
 /**
- * Replace lines with double empty lines or add missing whitespaces.
+ * Replace lines with double empty lines or add missing whitespaces generate by ng in module file.
  *
  */
 function replaceLinesInModule(module, component) {
@@ -122,7 +122,12 @@ function replaceLinesInModule(module, component) {
   const clientConfig = projectConfig.client;
   const featuresName = clientConfig.modules.features.name;
   const componentName = module === featuresName ? uppercamelcase(component) : uppercamelcase(module);
-  lightjs.replacement(`\\[(${componentName}Component)\\]`, '[ $1 ]', [moduleFilePath]);
+
+  // add a comma at the end of component name
+  lightjs.replacement(`(    ${componentName}Component)`, '$1,', [moduleFilePath]);
+  // the command above will also change AppModule so just simple remove double comma
+  lightjs.replacement('(AppComponent),,', '$1,', [moduleFilePath]);
+
   if (!swHelper.isRouting() && module === featuresName) {
     lightjs.replacement(`(  \\])`, `$1,${os.EOL}  exports: [ ${componentName}Component ],`, [moduleFilePath]);
   }
