@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.3.1-SNAPSHOT (unreleased)
 
+* fixed: [Fix syntax error in generated module file](0a5da5c02967e7cfe8de92e3c2f60599884ed157)
+
 ## 2.3.0 (2021-07-08)
 
 * fixed: [Fix plural for readme](https://github.com/inpercima/swaaplate/commit/c13c387c5b08d70d17d31d0c914e041253b7aec6)
