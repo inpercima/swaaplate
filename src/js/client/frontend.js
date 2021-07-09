@@ -144,6 +144,7 @@ function updateAngularJsonFile() {
   }
   architectData.build.options.styles.push('src/themes.scss');
   architectData.build.configurations.development.budgets = addBudgets();
+  architectData.build.configurations.development.fileReplacements = addFileReplacements('dev');
   if (swHelper.isMock()) {
     architectData.build.configurations.mock = addFileReplacementsAndBudgets('mock');
   }
@@ -173,14 +174,22 @@ function updateAngularJsonFile() {
  */
 function addFileReplacementsAndBudgets(mode) {
   return {
-    fileReplacements: [
-      {
-        replace: 'src/environments/environment.ts',
-        with: `src/environments/environment.${mode}.ts`
-      }
-    ],
+    fileReplacements: addFileReplacements(mode),
     budgets: addBudgets(),
   };
+}
+
+/**
+ * Add file replacements.
+ *
+ */
+function addFileReplacements(mode) {
+  return [
+    {
+      replace: 'src/environments/environment.ts',
+      with: `src/environments/environment.${mode}.ts`
+    }
+  ];
 }
 
 /**
@@ -366,9 +375,9 @@ function updatePackageJsonFile() {
   const generalConfig = projectConfig.general;
 
   let scripts = {
-    "build:dev": "ng lint && ng build --configuration=dev",
-    "serve:dev": "ng serve -o --configuration=dev",
-    "watch:dev": "ng build --watch --configuration=dev",
+    "build:dev": "ng lint && ng build --configuration=development",
+    "serve:dev": "ng serve -o --configuration=development",
+    "watch:dev": "ng build --watch --configuration=development",
   };
   if (swHelper.isMock()) {
     const mockScripts = {
