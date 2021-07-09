@@ -5,9 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.3.1-SNAPSHOT (unreleased)
+## 2.3.2-SNAPSHOT (unreleased)
 
-* fixed: [Fix syntax error in generated module file](0a5da5c02967e7cfe8de92e3c2f60599884ed157)
+## 2.3.1-SNAPSHOT (2021-07-09)
+
+* fixed: [Fix syntax error in generated module file](https://github.com/inpercima/swaaplate/commit/0a5da5c02967e7cfe8de92e3c2f60599884ed157)
+* fixed: [Fix build configurations and file replacements](https://github.com/inpercima/swaaplate/commit/0ca88049bf2292975b0dce33bd954264771dffc6)
 
 ## 2.3.0 (2021-07-08)
 
