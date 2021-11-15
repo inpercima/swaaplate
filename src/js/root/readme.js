@@ -38,12 +38,6 @@ function configure(pConfig, pPath) {
   lightjs.replacement('{{PROJECT.NPMVERSION}}', swVersion.NPM, [readmeMdPath]);
   lightjs.replacement('{{PROJECT.YARNVERSION}}', swVersion.YARN, [readmeMdPath]);
 
-  // currently no check
-  const currentCheck = os.EOL + '| rxjs       | 6.6.0           | 7.2.0        | "@angular/common@12.1.1" has incorrect peer dependency "rxjs@^6.5.3" |';
-  const webpack = `| copy-webpack-plugin | ${swVersion.COPY_WEBPACK_PLUGIN} | 9.0.0 | "copy-webpack-plugin@9.0.0" has unmet peer dependency "webpack@^5.1.0 |`;
-  const depCheck = currentCheck + (swHelper.isPhp() ? os.EOL + webpack : '');
-  lightjs.replacement('{{PROJECT.DEPCHECK}}', depCheck, [readmeMdPath]);
-
   updateReadmeGettingStarted(readmeMdPath);
 
   const readmeClientData = swHelper.isJs() ? fs.readFileSync(swConst.SRC_TEMPLATE_CLIENT_README, 'utf8') : os.EOL;
