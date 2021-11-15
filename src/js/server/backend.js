@@ -98,13 +98,11 @@ function configurePhp() {
   const generalConfig = projectConfig.general;
 
   shjs.cp('-r', path.join(phpTemplatePath, swConst.CONFIG), srcPath);
-  shjs.cp('-r', path.join(phpTemplatePath, 'rest'), srcPath);
   shjs.cp('-r', path.join(phpTemplatePath, 'service'), srcPath);
 
   shjs.cp(path.join(srcPath, swConst.CONFIG, 'config.default.php'), path.join(srcPath, swConst.CONFIG, 'config.dev.php'));
   shjs.cp(path.join(srcPath, swConst.CONFIG, 'config.default.php'), path.join(srcPath, swConst.CONFIG, 'config.prod.php'));
   if (generalConfig.useSecurity) {
-    shjs.cp(path.join(phpTemplatePath, 'auth.php'), path.join(srcPath, 'rest'));
     shjs.cp(path.join(phpTemplatePath, swConst.AUTH_SERVICE_PHP), path.join(srcPath, 'service'));
 
     const authServicePath = path.join(srcPath, 'service', swConst.AUTH_SERVICE_PHP);
