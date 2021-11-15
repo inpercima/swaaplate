@@ -5,6 +5,8 @@ module.exports = Object.freeze({
   ANGULAR_CDK_MATERIAL: '13.0.0',
   // https://www.npmjs.com/package/@angular/cli
   ANGULAR_CLI: '13.0.2',
+  // https://www.npmjs.com/package/@angular-eslint/schematics
+  ANGULAR_ESLINT_SCHEMATICS: '12.6.1',
   // https://www.npmjs.com/package/@angular/flex-layout
   ANGULAR_FLEX: '12.0.0-beta.35',
   // https://www.npmjs.com/package/@auth0/angular-jwt

@@ -45,7 +45,7 @@ function configure(workspacePath, pConfig, pPath) {
     const addCypress = 'ng add @cypress/schematic --skip-confirmation=true';
     lightjs.info(`run '${addCypress}'`);
     shjs.exec(`${addCypress}`);
-    const esLint = 'ng add @angular-eslint/schematics --skip-confirmation=true';
+    const esLint = `ng add @angular-eslint/schematics@${swVersion.ANGULAR_ESLINT_SCHEMATICS} --skip-confirmation=true`;
     lightjs.info(`run '${esLint}'`);
     shjs.exec(`${esLint}`);
   } else {
