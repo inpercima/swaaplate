@@ -5,9 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.3.2-SNAPSHOT (unreleased)
+## 2.3.3-SNAPSHOT (unreleased)
 
-## 2.3.1-SNAPSHOT (2021-07-09)
+## 2.3.2 (2022-01-03)
+
+* changed: [Update angular to 13.x](https://github.com/inpercima/swaaplate/commit/860cc39430fd650179894515f6e011d5d286c034)
+* changed: [Remove dependency check as default](https://github.com/inpercima/swaaplate/commit/8507286d5ab6d6fd0bac6d00e9274f18ae6465dc)
+* fixed: [Remove copy files from rest, which does not exist anymore](https://github.com/inpercima/swaaplate/commit/f482cc421e21401ad30a9665ec9a3b350902a881)
+
+## 2.3.1 (2021-07-09)
 
 * fixed: [Fix syntax error in generated module file](https://github.com/inpercima/swaaplate/commit/0a5da5c02967e7cfe8de92e3c2f60599884ed157)
 * fixed: [Fix build configurations and file replacements](https://github.com/inpercima/swaaplate/commit/0ca88049bf2292975b0dce33bd954264771dffc6)

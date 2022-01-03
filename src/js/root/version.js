@@ -12,7 +12,9 @@ module.exports = Object.freeze({
   // https://www.npmjs.com/package/@auth0/angular-jwt
   ANGULAR_JWT: '5.0.2',
   APACHE: '2.4',
-  COPY_WEBPACK_PLUGIN: '9.0.1',
+  // https://www.npmjs.com/package/copy-webpack-plugin
+  COPY_WEBPACK_PLUGIN: '10.2.0',
+  // https://www.npmjs.com/package/@angular-builders/custom-webpack
   CUSTOM_WEBPACK: '13.0.0',
   DOCKER_COMPOSE: '1.27.0',
   DOCKER: '20.10.11',
