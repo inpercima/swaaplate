@@ -2,6 +2,18 @@
 
 All necessary changes that have to be made if projects are to be changed.
 
+## 2.3.3 to 2.3.4
+
+* remove status badge for david.dm from readme
+
+## 2.0.1 to 2.0.2 to 2.1.0 to 2.2.0 to 2.2.1 to 2.3.0 to 2.3.1 to 2.3.2 to 2.3.3
+
+* not documented
+
+## 2.0.0 to 2.0.1
+
+* :tada: nothing todo
+
 ## 1.1.1 to 2.0.0
 
 * update the projects `swaaplate.json` file described in [Changelog 2.0.0](../CHANGELOG.md#200)

@@ -67,12 +67,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.0.2 (2020-11-18)
 
-* fixed: [With java, editorconfig is missing java section](https://github.com/inpercima/swaaplate/issues/86)
-* fixed: [Check bahaviour of htaccess with and without php](https://github.com/inpercima/swaaplate/issues/84)
-* fixed: [File preparation: environment.prod.ts - remove double empty line](https://github.com/inpercima/swaaplate/issues/85)
+* fixed: [With java, editorconfig is missing java section](https://github.com/inpercima/swaaplate/commit/2c3f9bf2a7ad03b14bc0528e78673a41381d4c3f)
+* fixed: [Check bahaviour of htaccess with and without php](https://github.com/inpercima/swaaplate/commit/9679e3668b87a284625cc2c44f75304bcfe3287c)
+* fixed: [File preparation: environment.prod.ts - remove double empty line](https://github.com/inpercima/swaaplate/commit/76bc1d77347ec5f071e1eda4b6fe7a8aa0aa0103)
 * changed: [Update dependencies for angular-cli 11.0.1 and spring-boot 2.4.0](https://github.com/inpercima/swaaplate/commit/69696ab2b77d125eed77e278c96cc86d817891bf)
-* changed: [With java, set version of java to 11 in pom and readme](https://github.com/inpercima/swaaplate/issues/87)
-* added: [Php: add dev and prod config](https://github.com/inpercima/swaaplate/issues/88)
+* changed: [With java, set version of java to 11 in pom and readme](https://github.com/inpercima/swaaplate/commit/e259325651f54e25cb6c08be91ef77a7b455149f)
+* added: [Php: add dev and prod config](https://github.com/inpercima/swaaplate/commit/5fdb932af2d2d3a0c9a8d92fddc512bdf3812feb)
 
 ## 2.0.1 (2020-10-07)
 
