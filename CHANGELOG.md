@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.3.3-SNAPSHOT (unreleased)
+## 2.3.4-SNAPSHOT (unreleased)
+
+## 2.3.3 (2022-02-22)
+
+* changed: [Update angular dependencies](https://github.com/inpercima/swaaplate/commit/6f54245ef48feb6d3eacdd493d2fca3aa4d50c3f)
+* removed: [Removed david.dm dependency checks](https://github.com/inpercima/swaaplate/commit/979bbb1e3549c88d9e37f3275f041173162c450f)
 
 ## 2.3.2 (2022-01-03)
 
