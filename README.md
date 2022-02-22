@@ -1,7 +1,6 @@
 # swaaplate
 
 [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)
-[![devDependencies Status](https://status.david-dm.org/gh/inpercima/swaaplate.svg?type=dev)](https://david-dm.org/inpercima/swaaplate?type=dev)
 
 [s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple template generator for angular webapps with different backends.
 

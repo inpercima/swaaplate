@@ -122,7 +122,6 @@ function updateReadmeHeader(readmeMdPath) {
 function updateReadmeHeaderSections(readmeHeaderData, isRoot) {
   readmeHeaderData = readmeHeaderData.replace('{{PROJECT.TITLE}}', projectConfig.general.title + (isRoot ? '' : ' - client'));
   readmeHeaderData = readmeHeaderData.replace('{{PROJECT.LICENSE}}', checkAndCreateLicense(isRoot));
-  readmeHeaderData = readmeHeaderData.replace('{{PROJECT.DEPENDENCIES}}', checkAndCreateDependencies(isRoot));
   readmeHeaderData = readmeHeaderData.replace('{{PROJECT.DESCRIPTION}}', checkAndCreateDescription(isRoot));
   return readmeHeaderData;
 }
@@ -134,37 +133,6 @@ function updateReadmeHeaderSections(readmeHeaderData, isRoot) {
  */
 function checkAndCreateLicense(isRoot) {
   return isRoot && isLicense() ? os.EOL + os.EOL + '[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE.md)' : '';
-}
-
-/**
- * Checks for using and creating the dependency links.
- *
- * @param {boolean} isRoot
- */
-function checkAndCreateDependencies(isRoot) {
-  let result = '';
-  if (projectConfig.client.ghUser !== '' && ((isRoot && swHelper.isJs()) || (!isRoot && !swHelper.isJs()))) {
-    if (isRoot && isLicense()) {
-      result = os.EOL + createDavidDmLinks(isRoot);
-    } else if ((isRoot && !isLicense()) || !isRoot) {
-      result = os.EOL + os.EOL + createDavidDmLinks(isRoot);
-    }
-  }
-  return result;
-}
-/**
- * Creates the david dm links.
- *
- * @param {boolean} isRoot
- */
-function createDavidDmLinks(isRoot) {
-  const pathParam = isRoot ? '' : '?path=client';
-  const davidDmStatusLink = `https://status.david-dm.org/gh/${projectConfig.client.ghUser}/${projectConfig.general.name}.svg`;
-  const davidDmLink = `https://david-dm.org/${projectConfig.client.ghUser}/${projectConfig.general.name}`;
-  const dependenciesStatus = `[![dependencies Status](${davidDmStatusLink}${pathParam})](${davidDmLink}${pathParam})`;
-  const typeParam = isRoot ? '?' : '&';
-  const devDependenciesStatus = `[![devDependencies Status](${davidDmStatusLink}${pathParam}${typeParam}type=dev)](${davidDmLink}${pathParam}${typeParam}type=dev)`;
-  return dependenciesStatus + os.EOL + devDependenciesStatus;
 }
 
 /**

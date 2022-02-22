@@ -54,7 +54,6 @@ Defines the build dir for the webapp.
 ## `client/ghUser`
 
 Defines the username for github if this project is shared on github.
-If the value is not EMPTY dependencies will be displayed with by [david-dm.org](https://david-dm.org).
 
 * default: EMPTY
 * type: `string`
