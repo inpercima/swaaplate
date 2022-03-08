@@ -17,7 +17,7 @@ module.exports = Object.freeze({
   // https://www.npmjs.com/package/@angular-builders/custom-webpack
   CUSTOM_WEBPACK: '13.1.0',
   DOCKER_COMPOSE: '1.27.0',
-  DOCKER: '20.10.11',
+  DOCKER: '20.10.12',
   JDK: '16',
   // https://www.npmjs.com/package/json-server
   JSON_SERVER: '0.17.0',
