@@ -2,9 +2,9 @@
 
 module.exports = Object.freeze({
   // https://www.npmjs.com/package/@angular/material
-  ANGULAR_CDK_MATERIAL: '13.2.3',
+  ANGULAR_CDK_MATERIAL: '13.2.5',
   // https://www.npmjs.com/package/@angular/cli
-  ANGULAR_CLI: '13.2.4',
+  ANGULAR_CLI: '13.2.5',
   // https://www.npmjs.com/package/@angular-eslint/schematics
   ANGULAR_ESLINT_SCHEMATICS: '13.1.0',
   // https://www.npmjs.com/package/@angular/flex-layout
@@ -18,7 +18,7 @@ module.exports = Object.freeze({
   CUSTOM_WEBPACK: '13.1.0',
   DOCKER_COMPOSE: '1.27.0',
   DOCKER: '20.10.12',
-  JDK: '16',
+  JDK: '17',
   // https://www.npmjs.com/package/json-server
   JSON_SERVER: '0.17.0',
   // https://www.npmjs.com/package/jsonwebtoken
