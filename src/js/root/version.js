@@ -2,11 +2,11 @@
 
 module.exports = Object.freeze({
   // https://www.npmjs.com/package/@angular/material
-  ANGULAR_CDK_MATERIAL: '13.3.0',
+  ANGULAR_CDK_MATERIAL: '13.3.2',
   // https://www.npmjs.com/package/@angular/cli
-  ANGULAR_CLI: '13.3.0',
+  ANGULAR_CLI: '13.3.2',
   // https://www.npmjs.com/package/@angular-eslint/schematics
-  ANGULAR_ESLINT_SCHEMATICS: '13.1.0',
+  ANGULAR_ESLINT_SCHEMATICS: '13.2.0',
   // https://www.npmjs.com/package/@angular/flex-layout
   ANGULAR_FLEX: '13.0.0-beta.38',
   // https://www.npmjs.com/package/@auth0/angular-jwt
@@ -29,6 +29,6 @@ module.exports = Object.freeze({
   NPM: '8.1.0',
   PHP: '7.4',
   // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
-  SPRING_BOOT: '2.6.3',
+  SPRING_BOOT: '2.6.6',
   YARN: '1.22.17',
 });
