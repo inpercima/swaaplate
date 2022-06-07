@@ -8,7 +8,7 @@
   ],
   "description": "[s]imple [w]eb [a]pp [a]ngular tem[plate]. A very simple template generator for angular webapps with different backends.",
   "devDependencies": {
-    "axios": "0.26.1",
+    "axios": "0.27.2",
     "light-js": "inpercima/light-js#v1.1.4",
     "shelljs": "0.8.5",
     "uppercamelcase": "3.0.0"
