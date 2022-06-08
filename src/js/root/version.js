@@ -12,6 +12,8 @@ module.exports = Object.freeze({
   // https://www.npmjs.com/package/@auth0/angular-jwt
   ANGULAR_JWT: '5.0.2',
   APACHE: '2.4',
+  // https://www.npmjs.com/package/cypress
+  CYPRESS_SCHEMATIC: '2.0.0',
   // https://www.npmjs.com/package/copy-webpack-plugin
   COPY_WEBPACK_PLUGIN: '11.0.0',
   // https://www.npmjs.com/package/@angular-builders/custom-webpack

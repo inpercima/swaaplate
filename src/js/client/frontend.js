@@ -42,7 +42,7 @@ function configure(workspacePath, pConfig, pPath) {
     shjs.exec(`ng new ${projectName} ${params.join(" ")}`);
 
     shjs.cd(path.join(workspacePath, projectName));
-    const addCypress = 'ng add @cypress/schematic --skip-confirmation=true';
+    const addCypress = `ng add @cypress/schematic@${swVersion.CYPRESS_SCHEMATIC} --skip-confirmation=true`;
     lightjs.info(`run '${addCypress}'`);
     shjs.exec(`${addCypress}`);
     const esLint = `ng add @angular-eslint/schematics@${swVersion.ANGULAR_ESLINT_SCHEMATICS} --skip-confirmation=true`;
@@ -277,9 +277,9 @@ function replaceSectionsInFiles() {
   const generalConfig = projectConfig.general;
   // replace in cypress/
   const cypress = path.join(projectPath, swConst.CYPRESS);
-  const cypressIntegrationSpec = path.join(cypress, 'integration', 'spec.ts');
-  lightjs.replacement('Welcome', 'Hello world', [cypressIntegrationSpec]);
-  lightjs.replacement('sandbox app is running!', 'hello-world works!', [cypressIntegrationSpec]);
+  const cypressE2eSpec = path.join(cypress, 'e2e', 'spec.cy.ts');
+  lightjs.replacement(`(cy\\.visit\\('\\/'\\))\\n    cy\\.contains\\('Welcome'\\)\\n    `, `$1${os.EOL}    `, [cypressE2eSpec]);
+  lightjs.replacement('sandbox app is running!', generalConfig.title, [cypressE2eSpec]);
 
   const clientConfig = projectConfig.client;
   const srcPath = path.join(projectPath, swConst.SRC);
