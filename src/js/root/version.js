@@ -18,8 +18,8 @@ module.exports = Object.freeze({
   COPY_WEBPACK_PLUGIN: '11.0.0',
   // https://www.npmjs.com/package/@angular-builders/custom-webpack
   CUSTOM_WEBPACK: '14.0.0',
-  DOCKER_COMPOSE: '1.27.0',
-  DOCKER: '20.10.12',
+  DOCKER_COMPOSE: '2.3.3',
+  DOCKER: '20.10.14',
   JDK: '17',
   // https://www.npmjs.com/package/json-server
   JSON_SERVER: '0.17.0',

@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.3.4-SNAPSHOT (unreleased)
+## 2.3.4-SNAPSHOT (2022-06-21)
+
+* changed: [Update angular dependencies](https://github.com/inpercima/swaaplate/commit/c36426ab4f81293b145a8833f14cc6523f4c9e90)
+* changed: [Add migration for cypress](https://github.com/inpercima/swaaplate/commit/5d800453e3419852d23543e3b0522ba57985abcb)
+* changed: [Update angular-dependencies and spring-boot to 2.7.0](https://github.com/inpercima/swaaplate/commit/88752cbabb98f3f9e472e3525771daa05ecc9b20)
 
 ## 2.3.3 (2022-02-22)
 
