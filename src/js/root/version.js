@@ -2,22 +2,22 @@
 
 module.exports = Object.freeze({
   // https://www.npmjs.com/package/@angular/material
-  ANGULAR_CDK_MATERIAL: '14.0.0',
+  ANGULAR_CDK_MATERIAL: '14.0.2',
   // https://www.npmjs.com/package/@angular/cli
-  ANGULAR_CLI: '14.0.0',
+  ANGULAR_CLI: '14.0.2',
   // https://www.npmjs.com/package/@angular-eslint/schematics
-  ANGULAR_ESLINT_SCHEMATICS: '13.2.1',
+  ANGULAR_ESLINT_SCHEMATICS: '13.5.0',
   // https://www.npmjs.com/package/@angular/flex-layout
   ANGULAR_FLEX: '13.0.0-beta.38',
   // https://www.npmjs.com/package/@auth0/angular-jwt
   ANGULAR_JWT: '5.0.2',
   APACHE: '2.4',
-  // https://www.npmjs.com/package/cypress
+  // https://www.npmjs.com/package/@cypress/schematic
   CYPRESS_SCHEMATIC: '2.0.0',
   // https://www.npmjs.com/package/copy-webpack-plugin
   COPY_WEBPACK_PLUGIN: '11.0.0',
   // https://www.npmjs.com/package/@angular-builders/custom-webpack
-  CUSTOM_WEBPACK: '13.1.0',
+  CUSTOM_WEBPACK: '14.0.0',
   DOCKER_COMPOSE: '1.27.0',
   DOCKER: '20.10.12',
   JDK: '17',
