@@ -161,7 +161,7 @@ function isLicense() {
 function checkManager(manager) {
   const usedText = ', used in this repository';
   const useYarn = swHelper.isYarn();
-  return useYarn && manager === swConst.YARN ? usedText : !useYarn && manager === swConst.NPM ? usedText + ', ' : '';
+  return useYarn && manager === swConst.YARN ? usedText : !useYarn && manager === swConst.NPM ? usedText + ',' : '';
 }
 
 /**
