@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 2.3.5 (2022-07-15)
+
+### Changed
+
+- [Update changelog to align common changelog style](https://github.com/inpercima/swaaplate/commit/6286759a50e1163bc1920e1739cfcb447dbc12a9)
+- [Update angular-dependencies and spring-boot to 2.7.1](https://github.com/inpercima/swaaplate/commit/f9bd4bdad1365831112e72501cff357c0b547fdb)
+
+### Fixed
+
+- [Fix creating ignore file with emtpy line](https://github.com/inpercima/swaaplate/commit/7b25262a241bc35b6c500047df57383ef8ea1c30)
+- [Fix double empty char in README](https://github.com/inpercima/swaaplate/commit/bdb9a5832e9eafe90120559bb5f8f70861d424d0)
+
 ## 2.3.4 (2022-06-21)
 
 ### Changed
