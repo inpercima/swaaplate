@@ -61,6 +61,7 @@ function configure(workspacePath, pConfig, pPath) {
   updateEnvironmentTsFiles();
   replaceSectionsInFiles();
   replaceTemplatesInFiles();
+  updateTsConfigJsonFile();
   updatePackageJsonFile();
   installDependencies();
 }
@@ -355,6 +356,23 @@ function replaceTemplatesInFiles() {
   lightjs.replacement('{{PROJECT.ROUTESMODULE}}', swHelper.isRouting() ? os.EOL + swConst.IMPORT_ANGULAR_ROUTER : '', [appComponentTsPath]);
   lightjs.replacement('{{PROJECT.ROUTESDECLARATION}}', swHelper.isRouting() ? os.EOL + os.EOL + swConst.ROUTES_DECLARATION : '', [appComponentTsPath]);
   lightjs.replacement('{{PROJECT.ROUTESALLOCATION}}', swHelper.isRouting() ? os.EOL + swConst.ROUTES_ALLOCATION : '', [appComponentTsPath]);
+}
+
+/**
+ * Updates tsconfig.json file.
+ * 
+ * This fix Cypress causing type errors in assertions.
+ * Check: https://stackoverflow.com/questions/58999086/cypress-causing-type-errors-in-jest-assertions
+ * Answer: https://stackoverflow.com/a/61839618
+ */
+function updateTsConfigJsonFile() {
+  const tsConfigJsonFile = path.join(projectPath, 'tsconfig.json');
+  const include = `  },
+  "include": [
+    "src/**/*"
+  ]
+}`;
+  lightjs.replacement('  }\\r?\\n\\s*}', include, [tsConfigJsonFile]);
 }
 
 /**
