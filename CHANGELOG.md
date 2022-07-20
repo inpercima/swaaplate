@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## 2.3.5 (2022-07-15)
+## [2.3.6] - 2022-07-20
+
+### Changed
+
+- [Update @angular/material to 14.1.0](https://github.com/inpercima/swaaplate/commit/092bd4777f1ab9cf68eddddd334bde4e5e6198a4)
+
+### Fixed
+
+[Fix Cypress causing type errors in assertions](https://github.com/inpercima/swaaplate/commit/94b3eaa60550f4e2001be39cf77c27441230d229)
+
+## [2.3.5] - 2022-07-15
 
 ### Changed
 
@@ -19,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Fix creating ignore file with emtpy line](https://github.com/inpercima/swaaplate/commit/7b25262a241bc35b6c500047df57383ef8ea1c30)
 - [Fix double empty char in README](https://github.com/inpercima/swaaplate/commit/bdb9a5832e9eafe90120559bb5f8f70861d424d0)
 
-## 2.3.4 (2022-06-21)
+## [2.3.4] - 2022-06-21
 
 ### Changed
 
