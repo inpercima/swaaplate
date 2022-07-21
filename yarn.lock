@@ -227,9 +227,9 @@ is-fullwidth-code-point@^3.0.0:
   resolved "https://registry.yarnpkg.com/is-fullwidth-code-point/-/is-fullwidth-code-point-3.0.0.tgz#f116f8064fe90b3f7844a38997c0b75051269f1d"
   integrity sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==
 
-light-js@inpercima/light-js#v1.1.4:
-  version "1.1.4"
-  resolved "https://codeload.github.com/inpercima/light-js/tar.gz/2f531844e573ba8ed2ad235a6bb9a67325aba72e"
+light-js@inpercima/light-js#v1.1.5:
+  version "1.1.5"
+  resolved "https://codeload.github.com/inpercima/light-js/tar.gz/77870e92b7ab733c38befdc2cc7309471901d2bc"
   dependencies:
     colors "1.4.0"
     replace "1.2.1"
