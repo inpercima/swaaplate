@@ -31,6 +31,6 @@ module.exports = Object.freeze({
   NPM: '8.12.2',
   PHP: '7.4',
   // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
-  SPRING_BOOT: '2.7.1',
+  SPRING_BOOT: '2.7.2',
   YARN: '1.22.19',
 });
