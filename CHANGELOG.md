@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- [Update spring-boot to 2.7.2](https://github.com/inpercima/swaaplate/commit/dfe9452b4aea51dad3d60b45dcdf5f6a8091dc5b)
+
+### Changed
+
+- [Update light-js to 1.1.6](https://github.com/inpercima/swaaplate/commit/205500cbd4b9cbb7c9816b8d977f6095e78c5754)
+
+## [2.3.7] - 2022-07-24
+
+### Changed
+
+- [Update light-js to 1.1.6](https://github.com/inpercima/swaaplate/commit/205500cbd4b9cbb7c9816b8d977f6095e78c5754)
+- [Update @angular/cli to 14.1.0](https://github.com/inpercima/swaaplate/commit/f10917b0e3d242d0f36764145b12240c98e28a44)
+
 ## [2.3.6] - 2022-07-20
 
 ### Changed
