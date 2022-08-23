@@ -210,7 +210,7 @@ function updatePrerequisites(readmeMdPath) {
     prerequisites = twoEol + '### Apache and php' + twoEol + '* `Apache ' + swVersion.APACHE + '` or higher' + os.EOL + '* `php ' + swVersion.PHP + '` or higher';
   }
   if (projectConfig.general.useDocker) {
-    prerequisites = twoEol + '### Docker' + twoEol + '* `docker ' + swVersion.DOCKER + '` or higher' + os.EOL + '* `docker-compose ' + swVersion.DOCKER_COMPOSE + '` or higher';
+    prerequisites = twoEol + '### Docker' + twoEol + '* `docker ' + swVersion.DOCKER + '` or higher' + os.EOL + '* `docker compose ' + swVersion.DOCKER_COMPOSE + '` or higher';
   }
   if (swHelper.isJava()) {
     prerequisites += twoEol + '### Java' + twoEol + '* `jdk ' + swVersion.JDK + '` or higher';

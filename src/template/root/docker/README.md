@@ -4,7 +4,7 @@
 
 Normally the docker version is used to build and run the productive version, so it is prepared as productive.
 
-Create environment file for `docker` and `docker-compose` and check the [configuration](#configuration).
+Create environment file for `docker` and `docker compose` and check the [configuration](#configuration).
 
 ```bash
 cp default.env .env
@@ -20,16 +20,16 @@ Check for the existence of `application-prod.yml` as described in [{{PROJECT.TIT
 
 ```bash
 # build the image and container
-docker-compose build
+docker compose build
 
 # run the container
-docker-compose up -d
+docker compose up -d
 
 # run the container and rebuild
-docker-compose up -d --build
+docker compose up -d --build
 
 # stop the container
-docker-compose down
+docker compose down
 ```
 
 ## Configuration

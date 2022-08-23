@@ -229,7 +229,7 @@ This option can be changed in the environment files.
 ## `general/useDocker`
 
 Defines whether the project could be build within docker.
-An empty Dockerfile and a docker-compose file will be created.
+An empty Dockerfile and a docker compose file will be created.
 
 * default: `false`
 * type: `boolean`
