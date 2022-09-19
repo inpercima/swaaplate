@@ -280,7 +280,7 @@ function replaceSectionsInFiles() {
   const cypress = path.join(projectPath, swConst.CYPRESS);
   const cypressE2eSpec = path.join(cypress, 'e2e', 'spec.cy.ts');
   lightjs.replacement(`(cy\\.visit\\('\\/'\\))\\n    cy\\.contains\\('Welcome'\\)\\n    `, `$1${os.EOL}    `, [cypressE2eSpec]);
-  lightjs.replacement('sandbox app is running!', generalConfig.title, [cypressE2eSpec]);
+  lightjs.replacement('app is running!', generalConfig.title, [cypressE2eSpec]);
 
   const clientConfig = projectConfig.client;
   const srcPath = path.join(projectPath, swConst.SRC);
