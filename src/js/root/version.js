@@ -2,18 +2,18 @@
 
 module.exports = Object.freeze({
   // https://www.npmjs.com/package/@angular/material
-  ANGULAR_CDK_MATERIAL: '14.2.2',
+  ANGULAR_CDK_MATERIAL: '14.2.5',
   // https://www.npmjs.com/package/@angular/cli
-  ANGULAR_CLI: '14.2.3',
+  ANGULAR_CLI: '14.2.6',
   // https://www.npmjs.com/package/@angular-eslint/schematics
-  ANGULAR_ESLINT_SCHEMATICS: '14.1.1',
+  ANGULAR_ESLINT_SCHEMATICS: '14.1.2',
   // https://www.npmjs.com/package/@angular/flex-layout
-  ANGULAR_FLEX: '14.0.0-beta.40',
+  ANGULAR_FLEX: '14.0.0-beta.41',
   // https://www.npmjs.com/package/@auth0/angular-jwt
-  ANGULAR_JWT: '5.0.2',
+  ANGULAR_JWT: '5.1.0',
   APACHE: '2.4',
   // https://www.npmjs.com/package/@cypress/schematic
-  CYPRESS_SCHEMATIC: '2.1.1',
+  CYPRESS_SCHEMATIC: '2.2.0',
   // https://www.npmjs.com/package/copy-webpack-plugin
   COPY_WEBPACK_PLUGIN: '11.0.0',
   // https://www.npmjs.com/package/@angular-builders/custom-webpack
@@ -31,6 +31,6 @@ module.exports = Object.freeze({
   NPM: '8.19.2',
   PHP: '7.4',
   // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
-  SPRING_BOOT: '2.7.3',
+  SPRING_BOOT: '2.7.4',
   YARN: '1.22.19',
 });
