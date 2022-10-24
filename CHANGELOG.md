@@ -5,15 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.3.8] - 2022-10-24
 
 ### Changed
 
-- [Update spring-boot to 2.7.2](https://github.com/inpercima/swaaplate/commit/dfe9452b4aea51dad3d60b45dcdf5f6a8091dc5b)
-
-### Changed
-
-- [Update light-js to 1.1.6](https://github.com/inpercima/swaaplate/commit/205500cbd4b9cbb7c9816b8d977f6095e78c5754)
+- [Update spring-boot to 2.7.5](https://github.com/inpercima/swaaplate/commit/9e0dd2661fb021eaed40467697a4ce0fad6838c6)
+- [Update maven wrapper to 3.1.1](https://github.com/inpercima/swaaplate/commit/a041ab0f83c1d771998ebc74671411789ed1a9fb)
+- [Update angular/cli to 14.2.6](https://github.com/inpercima/swaaplate/commit/481df1065348121235a95377706310fa17ff7adc)
+- [Define frontend and backend instead of client and server](https://github.com/inpercima/swaaplate/commit/e51dc4168b3466cae0dac2293ac2426eb27fdf21)
 
 ## [2.3.7] - 2022-07-24
 
