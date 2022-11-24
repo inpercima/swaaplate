@@ -6,10 +6,10 @@ const os = require('os');
 const path = require('path');
 const shjs = require('shelljs');
 
-const swConst = require('../root/const');
+const swProjectConst = require('../root/project.const');
 const swFrontendModule = require('./frontend-module');
 const swHelper = require('../root/helper');
-const swVersion = require('../root/version');
+const swVersionConst = require('../root/version.const');
 
 let exp = {};
 let projectConfig = {};
@@ -33,7 +33,7 @@ function configure(workspacePath, pConfig, pPath) {
     shjs.cd(workspacePath);
     const params = [
       '--interactive=false --skip-install=true --style=css',
-      `--package-manager=${swHelper.isYarn() ? swConst.YARN : swConst.NPM}`,
+      `--package-manager=${swHelper.isYarn() ? swProjectConst.YARN : swProjectConst.NPM}`,
       `--directory=${projectName}`,
       `--prefix=${clientConfig.prefix}`,
       `--routing=${swHelper.isRouting()}`
@@ -42,10 +42,10 @@ function configure(workspacePath, pConfig, pPath) {
     shjs.exec(`ng new ${projectName} ${params.join(" ")}`);
 
     shjs.cd(path.join(workspacePath, projectName));
-    const addCypress = `ng add @cypress/schematic@${swVersion.CYPRESS_SCHEMATIC} --skip-confirmation=true`;
+    const addCypress = `ng add @cypress/schematic@${swVersionConst.CYPRESS_SCHEMATIC} --skip-confirmation=true`;
     lightjs.info(`run '${addCypress}'`);
     shjs.exec(`${addCypress}`);
-    const esLint = `ng add @angular-eslint/schematics@${swVersion.ANGULAR_ESLINT_SCHEMATICS} --skip-confirmation=true`;
+    const esLint = `ng add @angular-eslint/schematics@${swVersionConst.ANGULAR_ESLINT_SCHEMATICS} --skip-confirmation=true`;
     lightjs.info(`run '${esLint}'`);
     shjs.exec(`${esLint}`);
   } else {
@@ -73,22 +73,22 @@ function configure(workspacePath, pConfig, pPath) {
 function copyFiles() {
   lightjs.info('task: copy client files');
 
-  const srcPath = path.join(projectPath, swConst.SRC);
-  shjs.cp(path.join(swConst.SRC_TEMPLATE_CLIENT, 'src/favicon.ico'), srcPath);
-  shjs.cp(path.join(swConst.SRC_TEMPLATE_CLIENT, 'src/themes.scss'), srcPath);
+  const srcPath = path.join(projectPath, swProjectConst.SRC);
+  shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_CLIENT, 'src/favicon.ico'), srcPath);
+  shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_CLIENT, 'src/themes.scss'), srcPath);
 
   const generalConfig = projectConfig.general;
   if (projectConfig.general.useSecurity) {
     lightjs.info('      option useSecurity is activated: copy authentication files');
-    const corePath = path.join(srcPath, swConst.APP, swConst.CORE);
+    const corePath = path.join(srcPath, swProjectConst.APP, swProjectConst.CORE);
     shjs.mkdir(corePath);
-    shjs.cp('-r', path.join(swConst.SRC_TEMPLATE_CLIENT, swConst.SRC, swConst.CORE, '*'), corePath);
+    shjs.cp('-r', path.join(swProjectConst.SRC_TEMPLATE_CLIENT, swProjectConst.SRC, swProjectConst.CORE, '*'), corePath);
   } else {
     lightjs.info('      option useSecurity is deactivated: nothing todo');
   }
 
   if (generalConfig.modRewriteIndex) {
-    shjs.cp(path.join(swConst.SRC_TEMPLATE_CLIENT, 'src/.htaccess'), srcPath);
+    shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_CLIENT, 'src/.htaccess'), srcPath);
   }
 }
 
@@ -102,9 +102,9 @@ function prepareMock() {
   if (swHelper.isMock()) {
     lightjs.info('      option useMock is activated, prepare files for mock');
 
-    const mockPath = path.join(projectPath, swConst.MOCK);
+    const mockPath = path.join(projectPath, swProjectConst.MOCK);
     shjs.mkdir(mockPath);
-    shjs.cp(path.join(swConst.SRC_TEMPLATE_CLIENT, swConst.MOCK, 'middleware.js'), mockPath);
+    shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_CLIENT, swProjectConst.MOCK, 'middleware.js'), mockPath);
 
     const generalConfig = projectConfig.general;
     const dbJsonData = {
@@ -129,7 +129,7 @@ function prepareMock() {
  *
  */
 function updateAngularJsonFile() {
-  const angularJsonFile = path.join(projectPath, swConst.ANGULAR_JSON);
+  const angularJsonFile = path.join(projectPath, swProjectConst.ANGULAR_JSON);
   let angularJsonData = lightjs.readJson(angularJsonFile);
   const generalConfig = projectConfig.general;
   const name = generalConfig.name;
@@ -166,7 +166,7 @@ function updateAngularJsonFile() {
   architectData.build.configurations.production.vendorChunk = true;
   angularJsonData.projects[name].architect = architectData;
   lightjs.writeJson(angularJsonFile, angularJsonData);
-  lightjs.replacement('$', os.EOL, [path.join(projectPath, swConst.ANGULAR_JSON)]);
+  lightjs.replacement('$', os.EOL, [path.join(projectPath, swProjectConst.ANGULAR_JSON)]);
 }
 
 /**
@@ -238,20 +238,20 @@ function updateEnvironmentTsFiles() {
   production: false,
   theme: '${clientConfig.theme}',`;
 
-  const environmentsPath = path.join(projectPath, swConst.SRC, 'environments');
+  const environmentsPath = path.join(projectPath, swProjectConst.SRC, 'environments');
 
-  createEnvironmentTsFile(environments, environmentsPath, swConst.ENVIRONMENT_DEV_TS);
+  createEnvironmentTsFile(environments, environmentsPath, swProjectConst.ENVIRONMENT_DEV_TS);
   if (swHelper.isMock()) {
-    createEnvironmentTsFile(environments, environmentsPath, swConst.ENVIRONMENT_MOCK_TS);
+    createEnvironmentTsFile(environments, environmentsPath, swProjectConst.ENVIRONMENT_MOCK_TS);
   }
-  createEnvironmentTsFile(environments, environmentsPath, swConst.ENVIRONMENT_PROD_TS);
+  createEnvironmentTsFile(environments, environmentsPath, swProjectConst.ENVIRONMENT_PROD_TS);
 
-  lightjs.replacement('production: false', environments, [path.join(environmentsPath, swConst.ENVIRONMENT_TS)]);
-  lightjs.replacement('(production: )false', `$1true`, [path.join(environmentsPath, swConst.ENVIRONMENT_PROD_TS)]);
+  lightjs.replacement('production: false', environments, [path.join(environmentsPath, swProjectConst.ENVIRONMENT_TS)]);
+  lightjs.replacement('(production: )false', `$1true`, [path.join(environmentsPath, swProjectConst.ENVIRONMENT_PROD_TS)]);
 }
 
 function createEnvironmentTsFile(environments, environmentsPath, environmentTsFile) {
-  shjs.cp(path.join(environmentsPath, swConst.ENVIRONMENT_TS), path.join(environmentsPath, environmentTsFile));
+  shjs.cp(path.join(environmentsPath, swProjectConst.ENVIRONMENT_TS), path.join(environmentsPath, environmentTsFile));
   replaceCommentsInEnvironmentTsFile(environmentsPath, environmentTsFile);
   lightjs.replacement('production: false', environments, [path.join(environmentsPath, environmentTsFile)]);
 }
@@ -259,14 +259,14 @@ function createEnvironmentTsFile(environments, environmentsPath, environmentTsFi
 function replaceCommentsInEnvironmentTsFile(environmentsPath, environmentTsFile) {
   const environmentFile = path.join(environmentsPath, environmentTsFile);
   // remove first lines in environment.x.ts files
-  if (environmentTsFile !== swConst.ENVIRONMENT_TS) {
-    lightjs.replacement('\\/\\/\\sTh.*|\\/\\/\\s`n.*', swConst.EMPTY, [environmentFile]);
-    lightjs.replacement(`${swConst.EOL_EXPRESSION}(export)`, '$1', [environmentFile]);
+  if (environmentTsFile !== swProjectConst.ENVIRONMENT_TS) {
+    lightjs.replacement('\\/\\/\\sTh.*|\\/\\/\\s`n.*', swProjectConst.EMPTY, [environmentFile]);
+    lightjs.replacement(`${swProjectConst.EOL_EXPRESSION}(export)`, '$1', [environmentFile]);
   }
   // remove last lines in environment.prod.ts files
-  if (environmentTsFile === swConst.ENVIRONMENT_PROD_TS) {
+  if (environmentTsFile === swProjectConst.ENVIRONMENT_PROD_TS) {
     lightjs.replacement('\\/\\*.*|\\s\\*.*|\\/\\/.*', '', [environmentFile]);
-    lightjs.replacement(`(};)${swConst.EOL_EXPRESSION}`, `$1${os.EOL}`, [environmentFile]);
+    lightjs.replacement(`(};)${swProjectConst.EOL_EXPRESSION}`, `$1${os.EOL}`, [environmentFile]);
   }
 }
 
@@ -277,18 +277,18 @@ function replaceCommentsInEnvironmentTsFile(environmentsPath, environmentTsFile)
 function replaceSectionsInFiles() {
   const generalConfig = projectConfig.general;
   // replace in cypress/
-  const cypress = path.join(projectPath, swConst.CYPRESS);
+  const cypress = path.join(projectPath, swProjectConst.CYPRESS);
   const cypressE2eSpec = path.join(cypress, 'e2e', 'spec.cy.ts');
   lightjs.replacement(`(cy\\.visit\\('\\/'\\))\\n    cy\\.contains\\('Welcome'\\)\\n    `, `$1${os.EOL}    `, [cypressE2eSpec]);
   lightjs.replacement('app is running!', generalConfig.title, [cypressE2eSpec]);
 
   const clientConfig = projectConfig.client;
-  const srcPath = path.join(projectPath, swConst.SRC);
+  const srcPath = path.join(projectPath, swProjectConst.SRC);
   // replace in index.html
-  const indexHtmlPath = path.join(srcPath, swConst.INDEX_HTML);
+  const indexHtmlPath = path.join(srcPath, swProjectConst.INDEX_HTML);
   lightjs.replacement('(lang=")en', `$1${clientConfig.language}`, [indexHtmlPath]);
-  lightjs.replacement('  <title>.*<\/title>', swConst.EMPTY, [indexHtmlPath]);
-  lightjs.replacement(swConst.EOL_EXPRESSION, os.EOL, [indexHtmlPath]);
+  lightjs.replacement('  <title>.*<\/title>', swProjectConst.EMPTY, [indexHtmlPath]);
+  lightjs.replacement(swProjectConst.EOL_EXPRESSION, os.EOL, [indexHtmlPath]);
 
   if (clientConfig.useGoogleFonts) {
     const fonts = `${createLink('Material+Icons')}${os.EOL}${createLink('Roboto:wght@400;700&display=swap')}`;
@@ -299,10 +299,10 @@ function replaceSectionsInFiles() {
   lightjs.replacement(`(<${prefix}-root>)(</${prefix}-root>)`, '$1Loading...$2', [indexHtmlPath]);
 
   // replace in app.component.spec.ts
-  const tabsImport = swHelper.isRouting() ? `${swConst.IMPORT_MATERIAL_TABS_MODULE}${os.EOL}` : '';
+  const tabsImport = swHelper.isRouting() ? `${swProjectConst.IMPORT_MATERIAL_TABS_MODULE}${os.EOL}` : '';
   const toolbarImport = `import { MatToolbarModule } from '@angular/material/toolbar';`;
-  const pipeImport = swHelper.isRouting() ? os.EOL + swConst.IMPORT_APP_ROUTING_PIPE : '';
-  const specPath = path.join(projectPath, swConst.SRC, swConst.APP, 'app.component.spec.ts');
+  const pipeImport = swHelper.isRouting() ? os.EOL + swProjectConst.IMPORT_APP_ROUTING_PIPE : '';
+  const specPath = path.join(projectPath, swProjectConst.SRC, swProjectConst.APP, 'app.component.spec.ts');
   const tabsModule = swHelper.isRouting() ? `${os.EOL}        MatTabsModule,` : '';
   const routingPipe = swHelper.isRouting() ? `${os.EOL}        AppRoutingPipe` : '';
   lightjs.replacement(`(core/testing';)`, `$1${os.EOL}${tabsImport}${toolbarImport}${os.EOL}`, [specPath]);
@@ -315,14 +315,14 @@ function replaceSectionsInFiles() {
   lightjs.replacement('(declarations: \\[\\n        AppComponent)', `$1,${routingPipe}`, [specPath]);
 
   lightjs.replacement(generalConfig.name, generalConfig.title, [specPath]);
-  lightjs.replacement(swConst.APP_RUNNING, swConst.EMPTY, [specPath]);
-  lightjs.replacement(swConst.CONTENT_SPAN, swConst.CONTENT_SPAN_REP, [specPath]);
+  lightjs.replacement(swProjectConst.APP_RUNNING, swProjectConst.EMPTY, [specPath]);
+  lightjs.replacement(swProjectConst.CONTENT_SPAN, swProjectConst.CONTENT_SPAN_REP, [specPath]);
   lightjs.replacement('(as )title', '$1appname', [specPath]);
   lightjs.replacement('(app.)title', '$1appname', [specPath]);
   lightjs.replacement('(render )title', '$1toolbar', [specPath]);
 
   // misc
-  lightjs.replacement(swConst.EOL, `@import 'app/app.component.css';${os.EOL}`, [path.join(projectPath, swConst.SRC, 'styles.css')]);
+  lightjs.replacement(swProjectConst.EOL, `@import 'app/app.component.css';${os.EOL}`, [path.join(projectPath, swProjectConst.SRC, 'styles.css')]);
 }
 
 /**
@@ -331,13 +331,13 @@ function replaceSectionsInFiles() {
  */
 function replaceTemplatesInFiles() {
   // replace in app.module.ts
-  const appModuleTsPath = path.join(projectPath, swConst.SRC, swConst.APP, 'app.module.ts');
+  const appModuleTsPath = path.join(projectPath, swProjectConst.SRC, swProjectConst.APP, 'app.module.ts');
   const clientConfig = projectConfig.client;
   const modulesConfig = clientConfig.modules;
-  lightjs.replacement('{{PROJECT.MATERIALTABSMODULE}}', swHelper.isRouting() ? os.EOL + swConst.IMPORT_MATERIAL_TABS_MODULE : '', [appModuleTsPath]);
-  lightjs.replacement('{{PROJECT.APPROUTING}}', swHelper.isRouting() ? os.EOL + swConst.IMPORT_APP_ROUTING_MODULE + os.EOL + swConst.IMPORT_APP_ROUTING_PIPE : '', [appModuleTsPath]);
-  lightjs.replacement('{{PROJECT.FEATURESMODULE}}', swHelper.isRouting() || modulesConfig.enabled ? os.EOL + swConst.IMPORT_FEATURES_MODULE : '', [appModuleTsPath]);
-  lightjs.replacement('{{PROJECT.NOTFOUNDMODULE}}', swHelper.isRouting() && modulesConfig.notFound.enabled ? os.EOL + swConst.IMPORT_NOT_FOUND_MODULE : '', [appModuleTsPath]);
+  lightjs.replacement('{{PROJECT.MATERIALTABSMODULE}}', swHelper.isRouting() ? os.EOL + swProjectConst.IMPORT_MATERIAL_TABS_MODULE : '', [appModuleTsPath]);
+  lightjs.replacement('{{PROJECT.APPROUTING}}', swHelper.isRouting() ? os.EOL + swProjectConst.IMPORT_APP_ROUTING_MODULE + os.EOL + swProjectConst.IMPORT_APP_ROUTING_PIPE : '', [appModuleTsPath]);
+  lightjs.replacement('{{PROJECT.FEATURESMODULE}}', swHelper.isRouting() || modulesConfig.enabled ? os.EOL + swProjectConst.IMPORT_FEATURES_MODULE : '', [appModuleTsPath]);
+  lightjs.replacement('{{PROJECT.NOTFOUNDMODULE}}', swHelper.isRouting() && modulesConfig.notFound.enabled ? os.EOL + swProjectConst.IMPORT_NOT_FOUND_MODULE : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.APPROUTINGPIPENAME}}', swHelper.isRouting() ? os.EOL + '    AppRoutingPipe,' : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.MATERIALTABSMODULENAME}}', swHelper.isRouting() ? os.EOL + '    MatTabsModule,' : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.APPROUTINGMODULENAME}}', swHelper.isRouting() ? os.EOL + '    AppRoutingModule,' : '', [appModuleTsPath]);
@@ -345,17 +345,17 @@ function replaceTemplatesInFiles() {
   lightjs.replacement('{{PROJECT.NOTFOUNDMODULENAME}}', swHelper.isRouting() && modulesConfig.notFound.enabled ? os.EOL + '    NotFoundModule,' : '', [appModuleTsPath]);
 
   // replace in app.component.html
-  const appComponentHtmlPath = path.join(projectPath, swConst.SRC, swConst.APP, 'app.component.html');
+  const appComponentHtmlPath = path.join(projectPath, swProjectConst.SRC, swProjectConst.APP, 'app.component.html');
   const component = clientConfig.prefix + '-' + modulesConfig.features.defaultRoute;
-  lightjs.replacement('{{PROJECT.NAVIGATION}}', os.EOL + (swHelper.isRouting() ? swConst.NAVIGATION : `  <${component}></${component}>`), [appComponentHtmlPath]);
+  lightjs.replacement('{{PROJECT.NAVIGATION}}', os.EOL + (swHelper.isRouting() ? swProjectConst.NAVIGATION : `  <${component}></${component}>`), [appComponentHtmlPath]);
 
   // replace in app.component.ts
-  const appComponentTsPath = path.join(projectPath, swConst.SRC, swConst.APP, 'app.component.ts');
-  lightjs.replacement('{{PROJECT.APPROUTINGMODULE}}', swHelper.isRouting() ? swConst.IMPORT_APP_ROUTING_MODULE + os.EOL : '', [appComponentTsPath]);
-  lightjs.replacement('{{PROJECT.FEATURESROUTINGMODULE}}', swHelper.isRouting() ? swConst.IMPORT_FEATURES_ROUTING_MODULE + os.EOL : '', [appComponentTsPath]);
-  lightjs.replacement('{{PROJECT.ROUTESMODULE}}', swHelper.isRouting() ? os.EOL + swConst.IMPORT_ANGULAR_ROUTER : '', [appComponentTsPath]);
-  lightjs.replacement('{{PROJECT.ROUTESDECLARATION}}', swHelper.isRouting() ? os.EOL + os.EOL + swConst.ROUTES_DECLARATION : '', [appComponentTsPath]);
-  lightjs.replacement('{{PROJECT.ROUTESALLOCATION}}', swHelper.isRouting() ? os.EOL + swConst.ROUTES_ALLOCATION : '', [appComponentTsPath]);
+  const appComponentTsPath = path.join(projectPath, swProjectConst.SRC, swProjectConst.APP, 'app.component.ts');
+  lightjs.replacement('{{PROJECT.APPROUTINGMODULE}}', swHelper.isRouting() ? swProjectConst.IMPORT_APP_ROUTING_MODULE + os.EOL : '', [appComponentTsPath]);
+  lightjs.replacement('{{PROJECT.FEATURESROUTINGMODULE}}', swHelper.isRouting() ? swProjectConst.IMPORT_FEATURES_ROUTING_MODULE + os.EOL : '', [appComponentTsPath]);
+  lightjs.replacement('{{PROJECT.ROUTESMODULE}}', swHelper.isRouting() ? os.EOL + swProjectConst.IMPORT_ANGULAR_ROUTER : '', [appComponentTsPath]);
+  lightjs.replacement('{{PROJECT.ROUTESDECLARATION}}', swHelper.isRouting() ? os.EOL + os.EOL + swProjectConst.ROUTES_DECLARATION : '', [appComponentTsPath]);
+  lightjs.replacement('{{PROJECT.ROUTESALLOCATION}}', swHelper.isRouting() ? os.EOL + swProjectConst.ROUTES_ALLOCATION : '', [appComponentTsPath]);
 }
 
 /**
@@ -388,7 +388,7 @@ function createLink(font) {
  *
  */
 function updatePackageJsonFile() {
-  const packageJsonFile = path.join(projectPath, swConst.PACKAGE_JSON);
+  const packageJsonFile = path.join(projectPath, swProjectConst.PACKAGE_JSON);
   let packageJsonData = lightjs.readJson(packageJsonFile);
   const generalConfig = projectConfig.general;
 
@@ -413,26 +413,26 @@ function updatePackageJsonFile() {
   packageJsonTemplateData.author = generalConfig.author;
   packageJsonTemplateData.contributors = clientConfig.packageJson.contributors;
   packageJsonTemplateData.dependencies = packageJsonData.dependencies;
-  packageJsonTemplateData.dependencies['@angular/cdk'] = swVersion.ANGULAR_CDK_MATERIAL;
-  packageJsonTemplateData.dependencies['@angular/flex-layout'] = swVersion.ANGULAR_FLEX;
-  packageJsonTemplateData.dependencies['@angular/material'] = swVersion.ANGULAR_CDK_MATERIAL;
+  packageJsonTemplateData.dependencies['@angular/cdk'] = swVersionConst.ANGULAR_CDK_MATERIAL;
+  packageJsonTemplateData.dependencies['@angular/flex-layout'] = swVersionConst.ANGULAR_FLEX;
+  packageJsonTemplateData.dependencies['@angular/material'] = swVersionConst.ANGULAR_CDK_MATERIAL;
   if (!swHelper.isRouting()) {
     packageJsonTemplateData.dependencies['@angular/router'] = undefined;
   }
   if (projectConfig.general.useSecurity) {
-    packageJsonTemplateData.dependencies['@auth0/angular-jwt'] = swVersion.ANGULAR_JWT;
+    packageJsonTemplateData.dependencies['@auth0/angular-jwt'] = swVersionConst.ANGULAR_JWT;
   }
   if (swHelper.isMock()) {
-    packageJsonTemplateData.dependencies['json-server'] = swVersion.JSON_SERVER;
+    packageJsonTemplateData.dependencies['json-server'] = swVersionConst.JSON_SERVER;
   }
   if (swHelper.isMock() || projectConfig.general.useSecurity) {
-    packageJsonTemplateData.dependencies['jsonwebtoken'] = swVersion.JSONWEBTOKEN;
+    packageJsonTemplateData.dependencies['jsonwebtoken'] = swVersionConst.JSONWEBTOKEN;
   }
   packageJsonTemplateData.description = generalConfig.description;
   packageJsonTemplateData.devDependencies = packageJsonData.devDependencies;
   if (swHelper.isPhp()) {
-    packageJsonTemplateData.devDependencies['copy-webpack-plugin'] = swVersion.COPY_WEBPACK_PLUGIN;
-    packageJsonTemplateData.devDependencies['@angular-builders/custom-webpack'] = swVersion.CUSTOM_WEBPACK;
+    packageJsonTemplateData.devDependencies['copy-webpack-plugin'] = swVersionConst.COPY_WEBPACK_PLUGIN;
+    packageJsonTemplateData.devDependencies['@angular-builders/custom-webpack'] = swVersionConst.CUSTOM_WEBPACK;
 
     scripts['build:dev'] = updateTask(scripts, 'build:dev', 'dev');
     scripts['watch:dev'] = updateTask(scripts, 'watch:dev', 'dev');
@@ -443,7 +443,7 @@ function updatePackageJsonFile() {
     }
   }
   packageJsonTemplateData.engines = {
-    node: '>=' + swVersion.NODE,
+    node: '>=' + swVersionConst.NODE,
   };
   packageJsonTemplateData.homepage = clientConfig.packageJson.homepage;
   if (generalConfig.useMITLicense) {
@@ -499,7 +499,7 @@ function updateDependencies(pPath) {
     lightjs.info('update dependencies');
     const pwd = shjs.pwd();
     if (!swHelper.isJs()) {
-      shjs.cd(path.join(pPath, swConst.CLIENT));
+      shjs.cd(path.join(pPath, swProjectConst.CLIENT));
     } else {
       shjs.cd(pPath);
     }

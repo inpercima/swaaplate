@@ -1,7 +1,7 @@
 'use strict';
 
 /* requirements */
-const swConst = require('./const');
+const swProjectConst = require('./project.const');
 
 let exp = {};
 let projectConfig = {};
@@ -22,7 +22,7 @@ function configure(pConfig) {
 function getBackendFolder() {
   const serverConfig = projectConfig.server;
   const serverAsApi = isPhp() && serverConfig.php.serverAsApi;
-  return serverAsApi ? swConst.API : swConst.SERVER;
+  return serverAsApi ? swProjectConst.API : swProjectConst.SERVER;
 }
 
 /**
@@ -30,7 +30,7 @@ function getBackendFolder() {
  *
  */
 function isJs() {
-  return projectConfig.server.backend === swConst.JS;
+  return projectConfig.server.backend === swProjectConst.JS;
 }
 
 /**
@@ -38,7 +38,7 @@ function isJs() {
  *
  */
 function isJava() {
-  return projectConfig.server.backend === swConst.JAVA;
+  return projectConfig.server.backend === swProjectConst.JAVA;
 }
 
 /**
@@ -54,7 +54,7 @@ function isMock() {
  *
  */
 function isPhp() {
-  return projectConfig.server.backend === swConst.PHP;
+  return projectConfig.server.backend === swProjectConst.PHP;
 }
 
 /**
@@ -63,7 +63,7 @@ function isPhp() {
  */
 function isJavaKotlin() {
   const serverConfig = projectConfig.server;
-  return serverConfig.backend === swConst.JAVA || serverConfig.backend === swConst.KOTLIN;
+  return serverConfig.backend === swProjectConst.JAVA || serverConfig.backend === swProjectConst.KOTLIN;
 }
 
 /**
@@ -87,7 +87,7 @@ function isYarn() {
  *
  */
 function yarnOrNpm() {
-  return isYarn() ? swConst.YARN : swConst.NPM;
+  return isYarn() ? swProjectConst.YARN : swProjectConst.NPM;
 }
 
 /**

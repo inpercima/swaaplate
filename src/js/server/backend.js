@@ -6,7 +6,7 @@ const os = require('os');
 const path = require('path');
 const shjs = require('shelljs');
 
-const swConst = require('../root/const.js');
+const swProjectConst = require('../root/project.const.js');
 const swHelper = require('../root/helper.js');
 
 let exp = {};
@@ -26,10 +26,10 @@ function configure(pConfig, pPath) {
   lightjs.info('--> begin backend setup ...');
 
   if (!swHelper.isJs()) {
-    shjs.mkdir(path.join(projectPath, swConst.CLIENT));
-    shjs.mv(path.join(projectPath, `!(${swConst.CLIENT})`), path.join(projectPath, swConst.CLIENT));
-    shjs.mv(path.join(projectPath, '.browserslistrc'), path.join(projectPath, swConst.CLIENT));
-    shjs.mv(path.join(projectPath, '.eslintrc.json'), path.join(projectPath, swConst.CLIENT));
+    shjs.mkdir(path.join(projectPath, swProjectConst.CLIENT));
+    shjs.mv(path.join(projectPath, `!(${swProjectConst.CLIENT})`), path.join(projectPath, swProjectConst.CLIENT));
+    shjs.mv(path.join(projectPath, '.browserslistrc'), path.join(projectPath, swProjectConst.CLIENT));
+    shjs.mv(path.join(projectPath, '.eslintrc.json'), path.join(projectPath, swProjectConst.CLIENT));
     shjs.mkdir(path.join(projectPath, swHelper.getBackendFolder()));
 
     if (swHelper.isJavaKotlin()) {
@@ -53,8 +53,8 @@ function configureJavaKotlin() {
   const serverConfig = projectConfig.server;
   const generalConfig = projectConfig.general;
   const backend = serverConfig.backend;
-  const serverSrcMain = path.join(swConst.SERVER, swConst.SRC_MAIN);
-  const serverSrcTest = path.join(swConst.SERVER, swConst.SRC_TEST);
+  const serverSrcMain = path.join(swProjectConst.SERVER, swProjectConst.SRC_MAIN);
+  const serverSrcTest = path.join(swProjectConst.SERVER, swProjectConst.SRC_TEST);
   lightjs.info(`* configure backend '${backend}', create '${serverSrcMain}' and '${serverSrcTest}'`);
 
   const packagePath = serverConfig.javaKt.packagePath;
@@ -97,15 +97,15 @@ function configurePhp() {
   const phpTemplatePath = 'src/template/server/backend/php';
   const generalConfig = projectConfig.general;
 
-  shjs.cp('-r', path.join(phpTemplatePath, swConst.CONFIG), srcPath);
+  shjs.cp('-r', path.join(phpTemplatePath, swProjectConst.CONFIG), srcPath);
   shjs.cp('-r', path.join(phpTemplatePath, 'service'), srcPath);
 
-  shjs.cp(path.join(srcPath, swConst.CONFIG, 'config.default.php'), path.join(srcPath, swConst.CONFIG, 'config.dev.php'));
-  shjs.cp(path.join(srcPath, swConst.CONFIG, 'config.default.php'), path.join(srcPath, swConst.CONFIG, 'config.prod.php'));
+  shjs.cp(path.join(srcPath, swProjectConst.CONFIG, 'config.default.php'), path.join(srcPath, swProjectConst.CONFIG, 'config.dev.php'));
+  shjs.cp(path.join(srcPath, swProjectConst.CONFIG, 'config.default.php'), path.join(srcPath, swProjectConst.CONFIG, 'config.prod.php'));
   if (generalConfig.useSecurity) {
-    shjs.cp(path.join(phpTemplatePath, swConst.AUTH_SERVICE_PHP), path.join(srcPath, 'service'));
+    shjs.cp(path.join(phpTemplatePath, swProjectConst.AUTH_SERVICE_PHP), path.join(srcPath, 'service'));
 
-    const authServicePath = path.join(srcPath, 'service', swConst.AUTH_SERVICE_PHP);
+    const authServicePath = path.join(srcPath, 'service', swProjectConst.AUTH_SERVICE_PHP);
     lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [authServicePath]);
   }
   if (serverConfig.php.modRewritePhpExtension) {
@@ -113,8 +113,8 @@ function configurePhp() {
   }
 
   const configMode = generalConfig.useMock ? `if (process.env.NODE_ENV !== 'mock') {` + os.EOL + '  ' : '';
-  const webpackConfigFile = path.join(projectPath, swConst.CLIENT, swConst.WEBPACK_CONFIG_JS);
-  shjs.cp(path.join(phpTemplatePath, swConst.WEBPACK_CONFIG_JS), webpackConfigFile);
+  const webpackConfigFile = path.join(projectPath, swProjectConst.CLIENT, swProjectConst.WEBPACK_CONFIG_JS);
+  shjs.cp(path.join(phpTemplatePath, swProjectConst.WEBPACK_CONFIG_JS), webpackConfigFile);
   lightjs.replacement('{{PROJECT.INDENTATION}}', generalConfig.useMock ? '  ' : '', [webpackConfigFile]);
   lightjs.replacement('{{PROJECT.CONFIGMODE}}', configMode, [webpackConfigFile]);
   lightjs.replacement('{{PROJECT.SERVERDIR}}', serverDir, [webpackConfigFile]);
@@ -126,7 +126,7 @@ function configurePhp() {
  *
  */
 function updateReadmeFile() {
-  const readmeMd = path.join(projectPath, swHelper.getBackendFolder(), swConst.README_MD);
+  const readmeMd = path.join(projectPath, swHelper.getBackendFolder(), swProjectConst.README_MD);
   lightjs.info(`* update '${readmeMd}'`);
 
   shjs.cp(path.join('src/template/server/readme', `README.${swHelper.isPhp() ? 'php' : 'java-kotlin'}.md`), readmeMd);

@@ -7,9 +7,9 @@ const os = require('os');
 const path = require('path');
 const shjs = require('shelljs');
 
-const swConst = require('./const');
+const swProjectConst = require('./project.const');
 const swHelper = require('./helper');
-const swVersion = require('./version')
+const swVersionConst = require('./version.const')
 
 let exp = {};
 let projectConfig = {};
@@ -22,25 +22,25 @@ let projectPath = '';
  * @param {string} pPath
  */
 function configure(pConfig, pPath) {
-  const packageJsonData = lightjs.readJson(swConst.PACKAGE_JSON);
+  const packageJsonData = lightjs.readJson(swProjectConst.PACKAGE_JSON);
   projectConfig = pConfig;
   projectPath = pPath;
 
-  shjs.cp(path.join(swConst.SRC_TEMPLATE_ROOT_README, swConst.README_MD), projectPath);
-  const readmeMdPath = path.join(projectPath, swConst.README_MD);
+  shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_ROOT_README, swProjectConst.README_MD), projectPath);
+  const readmeMdPath = path.join(projectPath, swProjectConst.README_MD);
   updateReadmeHeader(readmeMdPath);
   updatePrerequisites(readmeMdPath);
 
-  lightjs.replacement('{{PROJECT.ANGULARCLIVERSION}}', swVersion.ANGULAR_CLI, [readmeMdPath]);
-  lightjs.replacement('{{PROJECT.USENPM}}', checkManager(swConst.NPM), [readmeMdPath]);
-  lightjs.replacement('{{PROJECT.USEYARN}}', checkManager(swConst.YARN), [readmeMdPath]);
-  lightjs.replacement('{{PROJECT.NODEVERSION}}', swVersion.NODE, [readmeMdPath]);
-  lightjs.replacement('{{PROJECT.NPMVERSION}}', swVersion.NPM, [readmeMdPath]);
-  lightjs.replacement('{{PROJECT.YARNVERSION}}', swVersion.YARN, [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.ANGULARCLIVERSION}}', swVersionConst.ANGULAR_CLI, [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.USENPM}}', checkManager(swProjectConst.NPM), [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.USEYARN}}', checkManager(swProjectConst.YARN), [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.NODEVERSION}}', swVersionConst.NODE, [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.NPMVERSION}}', swVersionConst.NPM, [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.YARNVERSION}}', swVersionConst.YARN, [readmeMdPath]);
 
   updateReadmeGettingStarted(readmeMdPath);
 
-  const readmeClientData = swHelper.isJs() ? fs.readFileSync(swConst.SRC_TEMPLATE_CLIENT_README, 'utf8') : os.EOL;
+  const readmeClientData = swHelper.isJs() ? fs.readFileSync(swProjectConst.SRC_TEMPLATE_CLIENT_README, 'utf8') : os.EOL;
   lightjs.replacement('{{PROJECT.READMEIMPORT}}', readmeClientData, [readmeMdPath]);
   if (swHelper.isJs()) {
     lightjs.replacement('{{PROJECT.READMEHEADER}}', '', [readmeMdPath]);
@@ -54,7 +54,7 @@ function configure(pConfig, pPath) {
   const serverConfig = projectConfig.server;
   const name = genaralConfig.name;
   const clientLink = `For the frontend check [${name} - client](./client).` + twoEol;
-  const apiOrServer = swHelper.isPhp() && serverConfig.php.serverAsApi ? swConst.API : swConst.SERVER;
+  const apiOrServer = swHelper.isPhp() && serverConfig.php.serverAsApi ? swProjectConst.API : swProjectConst.SERVER;
   const serverLink = `For the backend check [${name} - ${apiOrServer}](./${apiOrServer}).`;
   const dockerLink = twoEol + `For the docker check [${name} - docker](./README_docker.md).`;
   lightjs.replacement('{{PROJECT.CLIENT}}', !swHelper.isJs() ? clientLink : '', [readmeMdPath]);
@@ -66,7 +66,7 @@ function configure(pConfig, pPath) {
   const clientConfigModules = clientConfig.modules;
   const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && serverConfig.php.serverAsApi ? './api/' : './');
 
-  const readmeFile = swHelper.isJs() ? readmeMdPath : path.join(projectPath, swConst.CLIENT, swConst.README_MD);
+  const readmeFile = swHelper.isJs() ? readmeMdPath : path.join(projectPath, swProjectConst.CLIENT, swProjectConst.README_MD);
 
   const useMock = genaralConfig.useMock;
   replaceMockSection(useMock, 'MOCKMODE', ', `mockMode`', readmeFile);
@@ -106,11 +106,11 @@ function replaceMockSection(useMock, placeholder, replacement, file) {
  * @param {string} readmeMdPath
  */
 function updateReadmeHeader(readmeMdPath) {
-  const readmeHeaderData = fs.readFileSync(path.join(swConst.SRC_TEMPLATE_ROOT_README, 'README.header.md'), 'utf8');
+  const readmeHeaderData = fs.readFileSync(path.join(swProjectConst.SRC_TEMPLATE_ROOT_README, 'README.header.md'), 'utf8');
   lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, true), [readmeMdPath]);
   if (!swHelper.isJs()) {
-    shjs.cp(swConst.SRC_TEMPLATE_CLIENT_README, path.join(projectPath, swConst.CLIENT));
-    lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, false), [path.join(projectPath, swConst.CLIENT, swConst.README_MD)]);
+    shjs.cp(swProjectConst.SRC_TEMPLATE_CLIENT_README, path.join(projectPath, swProjectConst.CLIENT));
+    lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, false), [path.join(projectPath, swProjectConst.CLIENT, swProjectConst.README_MD)]);
   }
 }
 
@@ -161,7 +161,7 @@ function isLicense() {
 function checkManager(manager) {
   const usedText = ', used in this repository';
   const useYarn = swHelper.isYarn();
-  return useYarn && manager === swConst.YARN ? usedText : !useYarn && manager === swConst.NPM ? usedText + ',' : '';
+  return useYarn && manager === swProjectConst.YARN ? usedText : !useYarn && manager === swProjectConst.NPM ? usedText + ',' : '';
 }
 
 /**
@@ -170,10 +170,10 @@ function checkManager(manager) {
  * @param {string} readmeMdPath
  */
 function updateReadmeGettingStarted(readmeMdPath) {
-  const readmeGettingStartedData = fs.readFileSync(path.join(swConst.SRC_TEMPLATE_ROOT_README, 'README.getting-started.md'), 'utf8');
+  const readmeGettingStartedData = fs.readFileSync(path.join(swProjectConst.SRC_TEMPLATE_ROOT_README, 'README.getting-started.md'), 'utf8');
   lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', updateReadmeGettingStartedSection(readmeGettingStartedData, true), [readmeMdPath]);
   if (!swHelper.isJs()) {
-    const readmeMdClientPath = path.join(projectPath, swConst.CLIENT, swConst.README_MD);
+    const readmeMdClientPath = path.join(projectPath, swProjectConst.CLIENT, swProjectConst.README_MD);
     lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', updateReadmeGettingStartedSection(readmeGettingStartedData, false), [readmeMdClientPath]);
   }
 }
@@ -207,13 +207,13 @@ function updatePrerequisites(readmeMdPath) {
   let prerequisites = '';
   const twoEol = os.EOL + os.EOL;
   if (swHelper.isPhp()) {
-    prerequisites = twoEol + '### Apache and php' + twoEol + '* `Apache ' + swVersion.APACHE + '` or higher' + os.EOL + '* `php ' + swVersion.PHP + '` or higher';
+    prerequisites = twoEol + '### Apache and php' + twoEol + '* `Apache ' + swVersionConst.APACHE + '` or higher' + os.EOL + '* `php ' + swVersionConst.PHP + '` or higher';
   }
   if (projectConfig.general.useDocker) {
-    prerequisites = twoEol + '### Docker' + twoEol + '* `docker ' + swVersion.DOCKER + '` or higher' + os.EOL + '* `docker compose ' + swVersion.DOCKER_COMPOSE + '` or higher';
+    prerequisites = twoEol + '### Docker' + twoEol + '* `docker ' + swVersionConst.DOCKER + '` or higher' + os.EOL + '* `docker compose ' + swVersionConst.DOCKER_COMPOSE + '` or higher';
   }
   if (swHelper.isJava()) {
-    prerequisites += twoEol + '### Java' + twoEol + '* `jdk ' + swVersion.JDK + '` or higher';
+    prerequisites += twoEol + '### Java' + twoEol + '* `jdk ' + swVersionConst.JDK + '` or higher';
   }
   lightjs.replacement('{{PROJECT.PREREQUISITES}}', prerequisites, [readmeMdPath]);
 }

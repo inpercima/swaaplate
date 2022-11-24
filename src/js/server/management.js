@@ -5,9 +5,9 @@ const lightjs = require('light-js');
 const path = require('path');
 const shjs = require('shelljs');
 
-const swConst = require('../root/const.js');
+const swProjectConst = require('../root/project.const.js');
 const swHelper = require('../root/helper.js');
-const swVersion = require('../root/version');
+const swVersionConst = require('../root/version.const');
 
 let exp = {};
 let projectConfig = {};
@@ -27,7 +27,7 @@ function configure(pConfig, pPath) {
 
   const serverConfig = projectConfig.server;
   if (swHelper.isJavaKotlin()) {
-    const serverPath = path.join(projectPath, swConst.SERVER);
+    const serverPath = path.join(projectPath, swProjectConst.SERVER);
     const management = serverConfig.javaKt.management;
     const managementPath = path.join('src/template/server/management', management);
 
@@ -35,15 +35,15 @@ function configure(pConfig, pPath) {
 
     const backend = serverConfig.backend;
     shjs.cp('-r', path.join(managementPath, '*'), serverPath);
-    if (management === swConst.MAVEN || management === 'gradle') {
+    if (management === swProjectConst.MAVEN || management === 'gradle') {
       lightjs.info(`* use management '${management}', copy wrapper and pom-file for ${backend}`);
 
-      if (management === swConst.MAVEN) {
+      if (management === swProjectConst.MAVEN) {
         shjs.cp('-r', path.join(managementPath, '.mvn'), serverPath);
       } else {
         shjs.cp('-r', path.join(managementPath, '.gradle'), serverPath);
       }
-      const dismatch = swHelper.isJava() ? swConst.KOTLIN : swConst.JAVA;
+      const dismatch = swHelper.isJava() ? swProjectConst.KOTLIN : swProjectConst.JAVA;
       const pomXml = path.join(serverPath, 'pom.xml');
       shjs.mv(path.join(serverPath, `pom.${backend}.xml`), pomXml);
       shjs.rm(path.join(serverPath, `pom.${dismatch}.xml`));
@@ -68,11 +68,11 @@ function replaceInPomFile(pomXml) {
   lightjs.replacement('{{PROJECT.DESCRIPTION}}', generalConfig.description, [pomXml]);
   lightjs.replacement('{{PROJECT.DIST}}', projectConfig.client.buildDir, [pomXml]);
   lightjs.replacement('{{PROJECT.GROUPID}}', projectConfig.server.javaKt.packagePath, [pomXml]);
-  lightjs.replacement('{{PROJECT.MAVENJARPLUGINVERSION}}', swVersion.MAVEN_JAR_PLUGIN, [pomXml]);
+  lightjs.replacement('{{PROJECT.MAVENJARPLUGINVERSION}}', swVersionConst.MAVEN_JAR_PLUGIN, [pomXml]);
   lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [pomXml]);
-  lightjs.replacement('{{PROJECT.SPRINGBOOTVERSION}}', swVersion.SPRING_BOOT, [pomXml]);
+  lightjs.replacement('{{PROJECT.SPRINGBOOTVERSION}}', swVersionConst.SPRING_BOOT, [pomXml]);
   lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.title, [pomXml]);
-  lightjs.replacement('{{PROJECT.JDK}}', swVersion.JDK, [pomXml]);
+  lightjs.replacement('{{PROJECT.JDK}}', swVersionConst.JDK, [pomXml]);
 }
 
 exp.configure = configure;

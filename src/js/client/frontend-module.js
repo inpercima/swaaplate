@@ -7,7 +7,7 @@ const path = require('path');
 const shjs = require('shelljs');
 const uppercamelcase = require('uppercamelcase');
 
-const swConst = require('../root/const');
+const swProjectConst = require('../root/project.const');
 const swHelper = require('../root/helper');
 
 let exp = {};
@@ -38,11 +38,11 @@ function generateModulesAndComponents(pConfig, pPath) {
     const notFoundName = notFoundConfig.name;
     generateModuleAndComponent(swHelper.isRouting() && notFoundConfig.enabled, notFoundName, notFoundName);
 
-    copyModuleFiles(swConst.APP);
+    copyModuleFiles(swProjectConst.APP);
     if (swHelper.isRouting()) {
-      addRouteInformation(swConst.APP, null);
+      addRouteInformation(swProjectConst.APP, null);
     }
-    replaceLinesInModule(swConst.APP, null);
+    replaceLinesInModule(swProjectConst.APP, null);
   } else {
     lightjs.info('      option modules is deactivated, noting todo');
   }
@@ -85,11 +85,11 @@ function copyModuleFiles(module) {
   lightjs.info(`copy module files for '${module}'`);
 
   const templatePath = 'src/template/client/src';
-  const appPath = path.join(projectPath, swConst.SRC, swConst.APP);
-  if (module === swConst.APP) {
-    shjs.cp('-r', path.join(templatePath, `${swConst.APP}.*`), appPath);
+  const appPath = path.join(projectPath, swProjectConst.SRC, swProjectConst.APP);
+  if (module === swProjectConst.APP) {
+    shjs.cp('-r', path.join(templatePath, `${swProjectConst.APP}.*`), appPath);
     if (swHelper.isRouting()) {
-      shjs.cp('-r', path.join(templatePath, `${swConst.APP}-routing*`), appPath);
+      shjs.cp('-r', path.join(templatePath, `${swProjectConst.APP}-routing*`), appPath);
     }
   } else {
     shjs.cp('-r', path.join(templatePath, module, `${module}.*`), path.join(appPath, module));
@@ -104,9 +104,9 @@ function copyModuleFiles(module) {
  *
  */
 function replaceLinesInModule(module, component) {
-  const appPath = path.join(projectPath, swConst.SRC, swConst.APP);
+  const appPath = path.join(projectPath, swProjectConst.SRC, swProjectConst.APP);
   const moduleFile = `${module}.module.ts`;
-  const appDir =  module == swConst.APP ? '' : module;
+  const appDir =  module == swProjectConst.APP ? '' : module;
   const moduleFilePath = path.join(appPath, appDir, moduleFile);
   lightjs.replacement('\\n\\n\\n', os.EOL + os.EOL, [moduleFilePath]);
   if (!swHelper.isRouting()) {
@@ -135,7 +135,7 @@ function replaceLinesInModule(module, component) {
     // the command above will also change exiting square brackets with comma so rechange it
     lightjs.replacement('],,', '],', [moduleFilePath]);
   }
-  if (module === swConst.APP) {
+  if (module === swProjectConst.APP) {
     lightjs.replacement('{{PROJECT.PREFIX}}', clientConfig.prefix, [path.join(appPath, appDir, `${module}.component.ts`)]);
   }
 }
@@ -151,7 +151,7 @@ function addRouteInformation(module, component) {
 
   const twoEol = os.EOL + os.EOL;
   const moduleName = uppercamelcase(module);
-  const routingModuleFile = path.join(projectPath, swConst.SRC, module === swConst.APP ? '' : swConst.APP, module, `${module}-routing.module.ts`);
+  const routingModuleFile = path.join(projectPath, swProjectConst.SRC, module === swProjectConst.APP ? '' : swProjectConst.APP, module, `${module}-routing.module.ts`);
 
   const modulesConfig = projectConfig.client.modules;
   const featuresName = modulesConfig.features.name;
@@ -162,13 +162,13 @@ function addRouteInformation(module, component) {
 
   const authGuardImport = module === featuresName && projectConfig.general.useSecurity ? `import { AuthGuard } from '../core/auth-guard.service';` : '';
   const componentFolder = module === featuresName ? `${component}/` : '';
-  const componentImport = module === swConst.APP ? '' : `import { ${componentName}Component } from './${componentFolder}${component}.component';`;
-  const environmentFolder = module === swConst.APP ? '' : '../';
+  const componentImport = module === swProjectConst.APP ? '' : `import { ${componentName}Component } from './${componentFolder}${component}.component';`;
+  const environmentFolder = module === swProjectConst.APP ? '' : '../';
   const environmentImport = module === notFoundConfig.name && notFoundConfig.enabled ? '' : `${os.EOL}import { environment } from '../${environmentFolder}environments/environment';`;
   lightjs.replacement(`(router';)`, `$1${twoEol}${authGuardImport}${componentImport}${environmentImport}`, [routingModuleFile]);
 
   const routingModule = `${moduleName}RoutingModule`;
-  const typeRoutes = module === swConst.APP ? ': Routes' : '';
+  const typeRoutes = module === swProjectConst.APP ? ': Routes' : '';
   const staticRoutes = `static ROUTES${typeRoutes} = routes;`;
   lightjs.replacement(`(${routingModule} {) }`, `$1${twoEol}  ${staticRoutes}${os.EOL}}`, [routingModuleFile]);
 

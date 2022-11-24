@@ -8,7 +8,7 @@ const path = require('path');
 const shjs = require('shelljs');
 
 const swBackend = require('../server/backend');
-const swConst = require('./const.js');
+const swProjectConst = require('./project.const.js');
 const swFrontend = require('../client/frontend');
 const swHelper = require('./helper');
 const swManagement = require('../server/management');
@@ -24,7 +24,7 @@ let projectPath = '';
  * @param {string} workspacePath
  */
 function create(workspacePath) {
-  projectConfig = lightjs.readJson(swConst.SWAAPLATE_JSON);
+  projectConfig = lightjs.readJson(swProjectConst.SWAAPLATE_JSON);
   swHelper.configure(projectConfig);
 
   const projectName = projectConfig.general.name;
@@ -52,25 +52,25 @@ function configure() {
   const generalConfig = projectConfig.general;
   const templatePath = 'src/template/root';
   if (generalConfig.useMITLicense) {
-    shjs.cp(path.join(templatePath, swConst.LICENSE_MD), projectPath);
-    lightjs.replacement('{{PROJECT.YEAR}}', new Date().getFullYear(), [path.join(projectPath, swConst.LICENSE_MD)]);
+    shjs.cp(path.join(templatePath, swProjectConst.LICENSE_MD), projectPath);
+    lightjs.replacement('{{PROJECT.YEAR}}', new Date().getFullYear(), [path.join(projectPath, swProjectConst.LICENSE_MD)]);
   }
-  shjs.cp(path.join(templatePath, swConst.DOT_EDITORCONFIG), projectPath);
+  shjs.cp(path.join(templatePath, swProjectConst.DOT_EDITORCONFIG), projectPath);
   shjs.cp(path.join(templatePath, '.gitattributes'), projectPath);
-  shjs.cp(swConst.SWAAPLATE_JSON, projectPath);
+  shjs.cp(swProjectConst.SWAAPLATE_JSON, projectPath);
 
   if (generalConfig.useDocker) {
-    shjs.cp(path.join(templatePath, swConst.DOCKER, swConst.DOCKERFILE), path.join(projectPath, swConst.DOCKERFILE));
-    shjs.cp(path.join(templatePath, swConst.DOCKER, swConst.DOCKER_COMPOSE_YML), path.join(projectPath, swConst.DOCKER_COMPOSE_YML));
-    shjs.cp(path.join(templatePath, swConst.DOCKER, swConst.README_MD), path.join(projectPath, 'README_docker.md'));
-    shjs.cp(path.join(templatePath, swConst.DOCKER, 'default.env'), path.join(projectPath, 'default.env'));
-    shjs.cp(path.join(templatePath, swConst.DOCKER, 'default.env'), path.join(projectPath, '.env'));
-    lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.name, [path.join(projectPath, swConst.DOCKER_COMPOSE_YML)]);
+    shjs.cp(path.join(templatePath, swProjectConst.DOCKER, swProjectConst.DOCKERFILE), path.join(projectPath, swProjectConst.DOCKERFILE));
+    shjs.cp(path.join(templatePath, swProjectConst.DOCKER, swProjectConst.DOCKER_COMPOSE_YML), path.join(projectPath, swProjectConst.DOCKER_COMPOSE_YML));
+    shjs.cp(path.join(templatePath, swProjectConst.DOCKER, swProjectConst.README_MD), path.join(projectPath, 'README_docker.md'));
+    shjs.cp(path.join(templatePath, swProjectConst.DOCKER, 'default.env'), path.join(projectPath, 'default.env'));
+    shjs.cp(path.join(templatePath, swProjectConst.DOCKER, 'default.env'), path.join(projectPath, '.env'));
+    lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.name, [path.join(projectPath, swProjectConst.DOCKER_COMPOSE_YML)]);
     const contributors = projectConfig.client.packageJson.contributors;
     const name = contributors[0].name ? contributors[0].name : '';
     const email = contributors[0].name ? contributors[0].email : '';
-    lightjs.replacement('{{PROJECT.AUTHOR}}', name, [path.join(projectPath, swConst.DOCKERFILE)]);
-    lightjs.replacement('{{PROJECT.FIRSTCONTRIBUTORSMAIL}}', email, [path.join(projectPath, swConst.DOCKERFILE)]);
+    lightjs.replacement('{{PROJECT.AUTHOR}}', name, [path.join(projectPath, swProjectConst.DOCKERFILE)]);
+    lightjs.replacement('{{PROJECT.FIRSTCONTRIBUTORSMAIL}}', email, [path.join(projectPath, swProjectConst.DOCKERFILE)]);
   }
 }
 
@@ -82,9 +82,9 @@ function updateEditorConfigFile() {
   if (isJavaKotlin()) {
     const backend = projectConfig.server.backend;
     const twoEol = os.EOL + os.EOL;
-    const indentSize = backend === swConst.KOTLIN ? 2 : 4;
+    const indentSize = backend === swProjectConst.KOTLIN ? 2 : 4;
     const indention = `${twoEol}[*.${backend}]${os.EOL}indent_size = ${indentSize}`;
-    lightjs.replacement('(trim_trailing_whitespace = true)', `$1${indention}`, [path.join(projectPath, swConst.DOT_EDITORCONFIG)]);
+    lightjs.replacement('(trim_trailing_whitespace = true)', `$1${indention}`, [path.join(projectPath, swProjectConst.DOT_EDITORCONFIG)]);
   }
 }
 
@@ -94,7 +94,7 @@ function updateEditorConfigFile() {
  */
 function updateGitignoreFile() {
   const gitignoreFile = '.gitignore';
-  lightjs.info(`${swConst.UPDATE} '${gitignoreFile}'`);
+  lightjs.info(`${swProjectConst.UPDATE} '${gitignoreFile}'`);
 
   const serverConfig = projectConfig.server;
   const backend = serverConfig.backend;
@@ -107,7 +107,7 @@ function updateGitignoreFile() {
     `# ignore all in \'.vscode\' b/c some vsc config files contain user specific content${os.EOL}.vscode/*${os.EOL}`,
     `# end project specific${os.EOL}${os.EOL}`
   ];
-  const gitignoreUrl = swConst.GITIGNORE_URL + (isJavaKotlin() ? `,${backend},${serverConfig.javaKt.management}` : '');
+  const gitignoreUrl = swProjectConst.GITIGNORE_URL + (isJavaKotlin() ? `,${backend},${serverConfig.javaKt.management}` : '');
   const gitignoreFilePath = path.join(projectPath, gitignoreFile);
   axios.get(gitignoreUrl).then(function (response) {
     lightjs.writeFile(gitignoreFilePath, `${content.join(os.EOL)}${response.data}`);
@@ -120,7 +120,7 @@ function updateGitignoreFile() {
  */
 function isJavaKotlin() {
   const backend = projectConfig.server.backend;
-  return backend === swConst.JAVA || backend === swConst.KOTLIN;
+  return backend === swProjectConst.JAVA || backend === swProjectConst.KOTLIN;
 }
 
 /**
@@ -128,7 +128,7 @@ function isJavaKotlin() {
  *
  */
 function updateFiles() {
-  lightjs.info(`${swConst.UPDATE} all files with project meta data`);
+  lightjs.info(`${swProjectConst.UPDATE} all files with project meta data`);
 
   const generalConfig = projectConfig.general;
   lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [projectPath], true, true, 'node_modules');
@@ -143,7 +143,7 @@ function updateFiles() {
  * @param {string} pPath
  */
 function update(pPath) {
-  const pConfig = lightjs.readJson(path.join(pPath, swConst.SWAAPLATE_JSON));
+  const pConfig = lightjs.readJson(path.join(pPath, swProjectConst.SWAAPLATE_JSON));
   swHelper.configure(pConfig);
   lightjs.info(`update project '${pConfig.general.name}' in '${pPath}'`);
 
