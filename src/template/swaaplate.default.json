@@ -1,5 +1,16 @@
 {
-  "client": {
+  "backend": {
+    "javaKt": {
+      "management": "",
+      "packagePath": ""
+    },
+    "language": "js",
+    "php": {
+      "modRewritePhpExtension": false,
+      "runAsApi": false
+    }
+  },
+  "frontend": {
     "buildDir": "dist",
     "ghUser": "",
     "installDependencies": true,
@@ -36,16 +47,5 @@
     "useMITLicense": true,
     "useMock": false,
     "useSecurity": false
-  },
-  "server": {
-    "backend": "js",
-    "javaKt": {
-      "management": "",
-      "packagePath": ""
-    },
-    "php": {
-      "modRewritePhpExtension": false,
-      "serverAsApi": false
-    }
   }
 }

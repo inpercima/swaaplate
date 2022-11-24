@@ -20,9 +20,7 @@ function configure(pConfig) {
  *
  */
 function getBackendFolder() {
-  const serverConfig = projectConfig.server;
-  const serverAsApi = isPhp() && serverConfig.php.serverAsApi;
-  return serverAsApi ? swProjectConst.API : swProjectConst.SERVER;
+  return isPhp() && projectConfig.backend.php.runAsApi ? swProjectConst.API : swProjectConst.SERVER;
 }
 
 /**
@@ -30,7 +28,7 @@ function getBackendFolder() {
  *
  */
 function isJs() {
-  return projectConfig.server.backend === swProjectConst.JS;
+  return projectConfig.backend.language === swProjectConst.JS;
 }
 
 /**
@@ -38,7 +36,7 @@ function isJs() {
  *
  */
 function isJava() {
-  return projectConfig.server.backend === swProjectConst.JAVA;
+  return projectConfig.backend.language === swProjectConst.JAVA;
 }
 
 /**
@@ -54,7 +52,7 @@ function isMock() {
  *
  */
 function isPhp() {
-  return projectConfig.server.backend === swProjectConst.PHP;
+  return projectConfig.backend.language === swProjectConst.PHP;
 }
 
 /**
@@ -62,15 +60,15 @@ function isPhp() {
  *
  */
 function isJavaKotlin() {
-  const serverConfig = projectConfig.server;
-  return serverConfig.backend === swProjectConst.JAVA || serverConfig.backend === swProjectConst.KOTLIN;
+  const language = projectConfig.backend.language;
+  return language === swProjectConst.JAVA || language === swProjectConst.KOTLIN;
 }
 
 /**
  * Checks if routing is enabeld.
  */
 function isRouting() {
-  const modulesConfig = projectConfig.client.modules;
+  const modulesConfig = projectConfig.frontend.modules;
   return modulesConfig.enabled && modulesConfig.routing;
 }
 
@@ -79,7 +77,7 @@ function isRouting() {
  *
  */
 function isYarn() {
-  return projectConfig.client.useYarn;
+  return projectConfig.frontend.useYarn;
 }
 
 /**
