@@ -7,11 +7,11 @@ const os = require('os');
 const path = require('path');
 const shjs = require('shelljs');
 
-const swBackend = require('../server/backend');
+const swBackend = require('../backend/backend');
 const swProjectConst = require('./project.const.js');
-const swFrontend = require('../client/frontend');
+const swFrontend = require('../frontend/frontend');
 const swHelper = require('./helper');
-const swManagement = require('../server/management');
+const swManagement = require('../backend/management');
 const swReadme = require('./readme');
 
 let exp = {};

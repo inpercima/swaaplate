@@ -27,7 +27,7 @@ function configure(pConfig, pPath) {
 
   const serverConfig = projectConfig.server;
   if (swHelper.isJavaKotlin()) {
-    const serverPath = path.join(projectPath, swProjectConst.SERVER);
+    const serverPath = path.join(projectPath, swProjectConst.BACKEND);
     const management = serverConfig.javaKt.management;
     const managementPath = path.join('src/template/server/management', management);
 

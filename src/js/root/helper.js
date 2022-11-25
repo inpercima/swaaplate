@@ -20,7 +20,7 @@ function configure(pConfig) {
  *
  */
 function getBackendFolder() {
-  return isPhp() && projectConfig.backend.php.runAsApi ? swProjectConst.API : swProjectConst.SERVER;
+  return isPhp() && projectConfig.backend.php.runAsApi ? swProjectConst.API : swProjectConst.BACKEND;
 }
 
 /**

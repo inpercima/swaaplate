@@ -42,9 +42,9 @@ function generateModulesAndComponents(pConfig, pPath) {
 
     copyModuleFiles(swProjectConst.APP);
     if (swHelper.isRouting()) {
-      addRouteInformation(swProjectConst.APP, null);
+      //addRouteInformation(swProjectConst.APP, null);
     }
-    replaceLinesInModule(swProjectConst.APP, null);
+    //replaceLinesInModule(swProjectConst.APP, null);
   } else {
     lightjs.info('      option modules is deactivated, noting todo');
   }
@@ -70,9 +70,9 @@ function generateModuleAndComponent(module, component) {
 
   copyModuleFiles(module);
   if (swHelper.isRouting()) {
-    addRouteInformation(module, component);
+    //addRouteInformation(module, component);
   }
-  replaceLinesInModule(module, component);
+  //replaceLinesInModule(module, component);
 }
 
 /**

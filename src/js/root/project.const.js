@@ -42,6 +42,7 @@ module.exports = Object.freeze({
   // by name
   API: 'api',
   APP: 'app',
+  BACKEND: 'backend',
   CORE: 'core',
   DIST: 'dist',
   FRONTEND: 'frontend',
@@ -52,7 +53,6 @@ module.exports = Object.freeze({
   MOCK: 'mock',
   NPM: 'npm',
   PHP: 'php',
-  SERVER: 'server',
   UPDATE: 'update',
   YARN: 'yarn',
 

@@ -54,15 +54,15 @@ function configure(workspacePath, pConfig, pPath) {
   shjs.cd(pwd);
 
   swFrontendModule.generateModulesAndComponents(projectConfig, projectPath);
-  copyFiles();
-  prepareMock();
-  updateAngularJsonFile();
-  updateEnvironmentTsFiles();
-  replaceSectionsInFiles();
-  replaceTemplatesInFiles();
-  updateTsConfigJsonFile();
-  updatePackageJsonFile();
-  installDependencies();
+  // copyFiles();
+  // prepareMock();
+  // updateAngularJsonFile();
+  // updateEnvironmentTsFiles();
+  // replaceSectionsInFiles();
+  // replaceTemplatesInFiles();
+  // updateTsConfigJsonFile();
+  // updatePackageJsonFile();
+  // installDependencies();
 }
 
 /**

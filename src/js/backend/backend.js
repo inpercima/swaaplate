@@ -49,36 +49,36 @@ function configure(pConfig, pPath) {
  *
  */
 function configureJavaKotlin() {
-  const serverConfig = projectConfig.server;
+  const backendConfig = projectConfig.backend;
   const generalConfig = projectConfig.general;
-  const backend = serverConfig.backend;
-  const serverSrcMain = path.join(swProjectConst.SERVER, swProjectConst.SRC_MAIN);
-  const serverSrcTest = path.join(swProjectConst.SERVER, swProjectConst.SRC_TEST);
-  lightjs.info(`* configure backend '${backend}', create '${serverSrcMain}' and '${serverSrcTest}'`);
+  const language = backendConfig.language;
+  const srcMain = path.join(swProjectConst.BACKEND, swProjectConst.SRC_MAIN);
+  const srcTest = path.join(swProjectConst.BACKEND, swProjectConst.SRC_TEST);
+  lightjs.info(`* configure backend '${language}', create '${srcMain}' and '${srcTest}'`);
 
-  const packagePath = serverConfig.javaKt.packagePath;
-  const backendPath = path.join(backend, packagePath.replace(/\./g, '/'));
-  const serverSrcMainJavaPath = path.join(projectPath, serverSrcMain, backendPath);
+  const packagePath = backendConfig.javaKt.packagePath;
+  const backendPath = path.join(language, packagePath.replace(/\./g, '/'));
+  const serverSrcMainJavaPath = path.join(projectPath, srcMain, backendPath);
   shjs.mkdir('-p', serverSrcMainJavaPath);
 
-  const serverSrcMainResourcesPath = path.join(projectPath, serverSrcMain, 'resources');
+  const serverSrcMainResourcesPath = path.join(projectPath, srcMain, 'resources');
   const templatePath = 'src/template/server/backend';
 
-  shjs.cp(path.join(templatePath, backend, `Application.${backend}`), serverSrcMainJavaPath);
+  shjs.cp(path.join(templatePath, language, `Application.${language}`), serverSrcMainJavaPath);
 
   const webPath = path.join(serverSrcMainJavaPath, 'web');
   shjs.mkdir('-p', webPath);
-  shjs.cp(path.join(templatePath, backend, `AuthController.${backend}`), webPath);
+  shjs.cp(path.join(templatePath, language, `AuthController.${language}`), webPath);
   shjs.mkdir('-p', serverSrcMainResourcesPath);
   shjs.cp(path.join(templatePath, 'java-kt/*'), serverSrcMainResourcesPath);
 
-  shjs.mkdir('-p', path.join(projectPath, serverSrcTest, backendPath));
-  shjs.mkdir('-p', path.join(projectPath, serverSrcTest, 'resources'));
+  shjs.mkdir('-p', path.join(projectPath, srcTest, backendPath));
+  shjs.mkdir('-p', path.join(projectPath, srcTest, 'resources'));
 
-  lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(serverSrcMainJavaPath, `Application.${backend}`)]);
-  lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(webPath, `AuthController.${backend}`)]);
-  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(serverSrcMainJavaPath, `Application.${backend}`)]);
-  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(webPath, `AuthController.${backend}`)]);
+  lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(serverSrcMainJavaPath, `Application.${language}`)]);
+  lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(webPath, `AuthController.${language}`)]);
+  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(serverSrcMainJavaPath, `Application.${language}`)]);
+  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(webPath, `AuthController.${language}`)]);
   lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(serverSrcMainResourcesPath, 'logback-spring.xml')]);
 }
 
@@ -87,7 +87,7 @@ function configureJavaKotlin() {
  *
  */
 function configurePhp() {
-  const serverConfig = projectConfig.server;
+  const backendConfig = projectConfig.backend;
   const serverDir = swHelper.getBackendFolder();
   lightjs.info(`* configure backend 'php', create 'webpack config' and '${serverDir}' as server folder`);
 
@@ -107,7 +107,7 @@ function configurePhp() {
     const authServicePath = path.join(srcPath, 'service', swProjectConst.AUTH_SERVICE_PHP);
     lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [authServicePath]);
   }
-  if (serverConfig.php.modRewritePhpExtension) {
+  if (backendConfig.php.modRewritePhpExtension) {
     shjs.cp(path.join(phpTemplatePath, '.htaccess'), srcPath);
   }
 

@@ -54,7 +54,7 @@ function configure(pConfig, pPath) {
   const serverConfig = projectConfig.server;
   const name = genaralConfig.name;
   const clientLink = `For the frontend check [${name} - client](./client).` + twoEol;
-  const apiOrServer = swHelper.isPhp() && serverConfig.php.serverAsApi ? swProjectConst.API : swProjectConst.SERVER;
+  const apiOrServer = swHelper.isPhp() && serverConfig.php.serverAsApi ? swProjectConst.API : swProjectConst.BACKEND;
   const serverLink = `For the backend check [${name} - ${apiOrServer}](./${apiOrServer}).`;
   const dockerLink = twoEol + `For the docker check [${name} - docker](./README_docker.md).`;
   lightjs.replacement('{{PROJECT.CLIENT}}', !swHelper.isJs() ? clientLink : '', [readmeMdPath]);
