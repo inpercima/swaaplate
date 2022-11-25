@@ -73,21 +73,21 @@ function copyFiles() {
   lightjs.info('task: copy client files');
 
   const srcPath = path.join(projectPath, swProjectConst.SRC);
-  shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_CLIENT, 'src/favicon.ico'), srcPath);
-  shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_CLIENT, 'src/themes.scss'), srcPath);
+  shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_FRONTEND, 'src/favicon.ico'), srcPath);
+  shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_FRONTEND, 'src/themes.scss'), srcPath);
 
   const generalConfig = projectConfig.general;
   if (projectConfig.general.useSecurity) {
     lightjs.info('      option useSecurity is activated: copy authentication files');
     const corePath = path.join(srcPath, swProjectConst.APP, swProjectConst.CORE);
     shjs.mkdir(corePath);
-    shjs.cp('-r', path.join(swProjectConst.SRC_TEMPLATE_CLIENT, swProjectConst.SRC, swProjectConst.CORE, '*'), corePath);
+    shjs.cp('-r', path.join(swProjectConst.SRC_TEMPLATE_FRONTEND, swProjectConst.SRC, swProjectConst.CORE, '*'), corePath);
   } else {
     lightjs.info('      option useSecurity is deactivated: nothing todo');
   }
 
   if (generalConfig.modRewriteIndex) {
-    shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_CLIENT, 'src/.htaccess'), srcPath);
+    shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_FRONTEND, 'src/.htaccess'), srcPath);
   }
 }
 
@@ -103,7 +103,7 @@ function prepareMock() {
 
     const mockPath = path.join(projectPath, swProjectConst.MOCK);
     shjs.mkdir(mockPath);
-    shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_CLIENT, swProjectConst.MOCK, 'middleware.js'), mockPath);
+    shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_FRONTEND, swProjectConst.MOCK, 'middleware.js'), mockPath);
 
     const generalConfig = projectConfig.general;
     const dbJsonData = {

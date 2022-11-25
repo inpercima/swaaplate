@@ -40,7 +40,7 @@ function configure(pConfig, pPath) {
 
   updateReadmeGettingStarted(readmeMdPath);
 
-  const readmeClientData = swHelper.isJs() ? fs.readFileSync(swProjectConst.SRC_TEMPLATE_CLIENT_README, 'utf8') : os.EOL;
+  const readmeClientData = swHelper.isJs() ? fs.readFileSync(swProjectConst.SRC_TEMPLATE_FRONTEND_README, 'utf8') : os.EOL;
   lightjs.replacement('{{PROJECT.READMEIMPORT}}', readmeClientData, [readmeMdPath]);
   if (swHelper.isJs()) {
     lightjs.replacement('{{PROJECT.READMEHEADER}}', '', [readmeMdPath]);
@@ -51,10 +51,10 @@ function configure(pConfig, pPath) {
   lightjs.replacement('{{PROJECT.USAGE}}', !swHelper.isJs() ? '## Usage' + twoEol + '### Modules' + twoEol : '', [readmeMdPath]);
 
   const genaralConfig = projectConfig.general;
-  const serverConfig = projectConfig.server;
+  const backendConfig = projectConfig.backend;
   const name = genaralConfig.name;
   const clientLink = `For the frontend check [${name} - client](./client).` + twoEol;
-  const apiOrServer = swHelper.isPhp() && serverConfig.php.serverAsApi ? swProjectConst.API : swProjectConst.BACKEND;
+  const apiOrServer = swHelper.isPhp() && backendConfig.php.serverAsApi ? swProjectConst.API : swProjectConst.BACKEND;
   const serverLink = `For the backend check [${name} - ${apiOrServer}](./${apiOrServer}).`;
   const dockerLink = twoEol + `For the docker check [${name} - docker](./README_docker.md).`;
   lightjs.replacement('{{PROJECT.CLIENT}}', !swHelper.isJs() ? clientLink : '', [readmeMdPath]);
@@ -64,7 +64,7 @@ function configure(pConfig, pPath) {
 
   const clientConfig = projectConfig.frontend;
   const clientConfigModules = clientConfig.modules;
-  const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && serverConfig.php.serverAsApi ? './api/' : './');
+  const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && backendConfig.php.serverAsApi ? './api/' : './');
 
   const readmeFile = swHelper.isJs() ? readmeMdPath : path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.README_MD);
 
@@ -109,7 +109,7 @@ function updateReadmeHeader(readmeMdPath) {
   const readmeHeaderData = fs.readFileSync(path.join(swProjectConst.SRC_TEMPLATE_ROOT_README, 'README.header.md'), 'utf8');
   lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, true), [readmeMdPath]);
   if (!swHelper.isJs()) {
-    shjs.cp(swProjectConst.SRC_TEMPLATE_CLIENT_README, path.join(projectPath, swProjectConst.FRONTEND));
+    shjs.cp(swProjectConst.SRC_TEMPLATE_FRONTEND_README, path.join(projectPath, swProjectConst.FRONTEND));
     lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, false), [path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.README_MD)]);
   }
 }

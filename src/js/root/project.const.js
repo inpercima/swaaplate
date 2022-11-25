@@ -16,8 +16,8 @@ module.exports = Object.freeze({
   SRC_MAIN: 'src/main',
   SRC_TEST: 'src/test',
   SRC_TEMPLATE_ROOT_README: 'src/template/root/readme/',
-  SRC_TEMPLATE_CLIENT: 'src/template/client/',
-  SRC_TEMPLATE_CLIENT_README: 'src/template/client/README.md',
+  SRC_TEMPLATE_FRONTEND: 'src/template/frontend/',
+  SRC_TEMPLATE_FRONTEND_README: 'src/template/frontend/README.md',
 
   // by filename or foldername
   ANGULAR_JSON: 'angular.json',

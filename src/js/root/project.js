@@ -79,11 +79,11 @@ function configure() {
  *
  */
 function updateEditorConfigFile() {
-  if (isJavaKotlin()) {
-    const backend = projectConfig.server.backend;
+  if (swHelper.isJavaKotlin()) {
+    const language = projectConfig.backend.language;
     const twoEol = os.EOL + os.EOL;
-    const indentSize = backend === swProjectConst.KOTLIN ? 2 : 4;
-    const indention = `${twoEol}[*.${backend}]${os.EOL}indent_size = ${indentSize}`;
+    const indentSize = language === swProjectConst.KOTLIN ? 2 : 4;
+    const indention = `${twoEol}[*.${language}]${os.EOL}indent_size = ${indentSize}`;
     lightjs.replacement('(trim_trailing_whitespace = true)', `$1${indention}`, [path.join(projectPath, swProjectConst.DOT_EDITORCONFIG)]);
   }
 }
@@ -96,10 +96,9 @@ function updateGitignoreFile() {
   const gitignoreFile = '.gitignore';
   lightjs.info(`${swProjectConst.UPDATE} '${gitignoreFile}'`);
 
-  const serverConfig = projectConfig.server;
-  const backend = serverConfig.backend;
+  const backendConfig = projectConfig.backend;
   const phpContent = swHelper.isPhp() ? 'config.dev.php' + os.EOL + 'config.prod.php' + os.EOL : '';
-  const javaKotlinContent = isJavaKotlin() ? 'application-dev.yml' + os.EOL + 'application-prod.yml' + os.EOL : '';
+  const javaKotlinContent = swHelper.isJavaKotlin() ? 'application-dev.yml' + os.EOL + 'application-prod.yml' + os.EOL : '';
   const mockContent = projectConfig.general.useMock ? 'environment.mock.ts' + os.EOL : '';
   const content = [
     `# begin project specific${os.EOL}`,
@@ -107,20 +106,11 @@ function updateGitignoreFile() {
     `# ignore all in \'.vscode\' b/c some vsc config files contain user specific content${os.EOL}.vscode/*${os.EOL}`,
     `# end project specific${os.EOL}${os.EOL}`
   ];
-  const gitignoreUrl = swProjectConst.GITIGNORE_URL + (isJavaKotlin() ? `,${backend},${serverConfig.javaKt.management}` : '');
+  const gitignoreUrl = swProjectConst.GITIGNORE_URL + (swHelper.isJavaKotlin() ? `,${backendConfig.language},${backendConfig.javaKt.management}` : '');
   const gitignoreFilePath = path.join(projectPath, gitignoreFile);
   axios.get(gitignoreUrl).then(function (response) {
     lightjs.writeFile(gitignoreFilePath, `${content.join(os.EOL)}${response.data}`);
   });
-}
-
-/**
- * Checks if backend is java or kotlin.
- *
- */
-function isJavaKotlin() {
-  const backend = projectConfig.server.backend;
-  return backend === swProjectConst.JAVA || backend === swProjectConst.KOTLIN;
 }
 
 /**
