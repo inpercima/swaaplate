@@ -62,11 +62,11 @@ function configure(pConfig, pPath) {
   lightjs.replacement('{{PROJECT.DOCKER}}', genaralConfig.useDocker ? dockerLink : '', [readmeMdPath]);
   lightjs.replacement('{{PROJECT.VERSION}}', packageJsonData.version, [readmeMdPath]);
 
-  const clientConfig = projectConfig.client;
+  const clientConfig = projectConfig.frontend;
   const clientConfigModules = clientConfig.modules;
   const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && serverConfig.php.serverAsApi ? './api/' : './');
 
-  const readmeFile = swHelper.isJs() ? readmeMdPath : path.join(projectPath, swProjectConst.CLIENT, swProjectConst.README_MD);
+  const readmeFile = swHelper.isJs() ? readmeMdPath : path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.README_MD);
 
   const useMock = genaralConfig.useMock;
   replaceMockSection(useMock, 'MOCKMODE', ', `mockMode`', readmeFile);
@@ -109,8 +109,8 @@ function updateReadmeHeader(readmeMdPath) {
   const readmeHeaderData = fs.readFileSync(path.join(swProjectConst.SRC_TEMPLATE_ROOT_README, 'README.header.md'), 'utf8');
   lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, true), [readmeMdPath]);
   if (!swHelper.isJs()) {
-    shjs.cp(swProjectConst.SRC_TEMPLATE_CLIENT_README, path.join(projectPath, swProjectConst.CLIENT));
-    lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, false), [path.join(projectPath, swProjectConst.CLIENT, swProjectConst.README_MD)]);
+    shjs.cp(swProjectConst.SRC_TEMPLATE_CLIENT_README, path.join(projectPath, swProjectConst.FRONTEND));
+    lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, false), [path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.README_MD)]);
   }
 }
 
@@ -173,7 +173,7 @@ function updateReadmeGettingStarted(readmeMdPath) {
   const readmeGettingStartedData = fs.readFileSync(path.join(swProjectConst.SRC_TEMPLATE_ROOT_README, 'README.getting-started.md'), 'utf8');
   lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', updateReadmeGettingStartedSection(readmeGettingStartedData, true), [readmeMdPath]);
   if (!swHelper.isJs()) {
-    const readmeMdClientPath = path.join(projectPath, swProjectConst.CLIENT, swProjectConst.README_MD);
+    const readmeMdClientPath = path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.README_MD);
     lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', updateReadmeGettingStartedSection(readmeGettingStartedData, false), [readmeMdClientPath]);
   }
 }
@@ -185,7 +185,7 @@ function updateReadmeGettingStarted(readmeMdPath) {
  * @param {string} readmeMdPath
  */
 function updateReadmeGettingStartedSection(readmeGettingStartedData, isRoot) {
-  const cloneProcess = '# clone project' + os.EOL + 'git clone ' + projectConfig.client.packageJson.repository + os.EOL + 'cd ' + projectConfig.general.name;
+  const cloneProcess = '# clone project' + os.EOL + 'git clone ' + projectConfig.frontend.packageJson.repository + os.EOL + 'cd ' + projectConfig.general.name;
   const installTools = '# install tools and frontend dependencies' + os.EOL + swHelper.yarnNpmCommand('install');
   const commandsClient = '# all commands used in ./client' + os.EOL + 'cd client';
   const twoEol = os.EOL + os.EOL;

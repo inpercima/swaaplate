@@ -42,9 +42,9 @@ module.exports = Object.freeze({
   // by name
   API: 'api',
   APP: 'app',
-  CLIENT: 'client',
   CORE: 'core',
   DIST: 'dist',
+  FRONTEND: 'frontend',
   CYPRESS: 'cypress',
   JAVA: 'java',
   JS: 'js',

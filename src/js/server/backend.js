@@ -26,10 +26,9 @@ function configure(pConfig, pPath) {
   lightjs.info('--> begin backend setup ...');
 
   if (!swHelper.isJs()) {
-    shjs.mkdir(path.join(projectPath, swProjectConst.CLIENT));
-    shjs.mv(path.join(projectPath, `!(${swProjectConst.CLIENT})`), path.join(projectPath, swProjectConst.CLIENT));
-    shjs.mv(path.join(projectPath, '.browserslistrc'), path.join(projectPath, swProjectConst.CLIENT));
-    shjs.mv(path.join(projectPath, '.eslintrc.json'), path.join(projectPath, swProjectConst.CLIENT));
+    shjs.mkdir(path.join(projectPath, swProjectConst.FRONTEND));
+    shjs.mv(path.join(projectPath, `!(${swProjectConst.FRONTEND})`), path.join(projectPath, swProjectConst.FRONTEND));
+    shjs.mv(path.join(projectPath, '.eslintrc.json'), path.join(projectPath, swProjectConst.FRONTEND));
     shjs.mkdir(path.join(projectPath, swHelper.getBackendFolder()));
 
     if (swHelper.isJavaKotlin()) {
@@ -113,7 +112,7 @@ function configurePhp() {
   }
 
   const configMode = generalConfig.useMock ? `if (process.env.NODE_ENV !== 'mock') {` + os.EOL + '  ' : '';
-  const webpackConfigFile = path.join(projectPath, swProjectConst.CLIENT, swProjectConst.WEBPACK_CONFIG_JS);
+  const webpackConfigFile = path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.WEBPACK_CONFIG_JS);
   shjs.cp(path.join(phpTemplatePath, swProjectConst.WEBPACK_CONFIG_JS), webpackConfigFile);
   lightjs.replacement('{{PROJECT.INDENTATION}}', generalConfig.useMock ? '  ' : '', [webpackConfigFile]);
   lightjs.replacement('{{PROJECT.CONFIGMODE}}', configMode, [webpackConfigFile]);

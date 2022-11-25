@@ -66,7 +66,7 @@ function configure(pConfig, pPath) {
 function replaceInPomFile(pomXml) {
   const generalConfig = projectConfig.general;
   lightjs.replacement('{{PROJECT.DESCRIPTION}}', generalConfig.description, [pomXml]);
-  lightjs.replacement('{{PROJECT.DIST}}', projectConfig.client.buildDir, [pomXml]);
+  lightjs.replacement('{{PROJECT.DIST}}', projectConfig.frontend.buildDir, [pomXml]);
   lightjs.replacement('{{PROJECT.GROUPID}}', projectConfig.server.javaKt.packagePath, [pomXml]);
   lightjs.replacement('{{PROJECT.MAVENJARPLUGINVERSION}}', swVersionConst.MAVEN_JAR_PLUGIN, [pomXml]);
   lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [pomXml]);

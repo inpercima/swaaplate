@@ -26,7 +26,6 @@ function configure(workspacePath, pConfig, pPath) {
   projectConfig = pConfig;
   projectPath = pPath;
 
-  const clientConfig = projectConfig.client;
   const pwd = shjs.pwd();
   const projectName = projectConfig.general.name;
   if (shjs.which('ng')) {
@@ -35,19 +34,19 @@ function configure(workspacePath, pConfig, pPath) {
       '--interactive=false --skip-install=true --style=css',
       `--package-manager=${swHelper.isYarn() ? swProjectConst.YARN : swProjectConst.NPM}`,
       `--directory=${projectName}`,
-      `--prefix=${clientConfig.prefix}`,
+      `--prefix=${projectConfig.frontend.prefix}`,
       `--routing=${swHelper.isRouting()}`
     ];
     lightjs.info(`run 'ng new ${projectName} ${params.join(" ")}'`);
     shjs.exec(`ng new ${projectName} ${params.join(" ")}`);
 
     shjs.cd(path.join(workspacePath, projectName));
-    const addCypress = `ng add @cypress/schematic@${swVersionConst.CYPRESS_SCHEMATIC} --skip-confirmation=true`;
-    lightjs.info(`run '${addCypress}'`);
-    shjs.exec(`${addCypress}`);
-    const esLint = `ng add @angular-eslint/schematics@${swVersionConst.ANGULAR_ESLINT_SCHEMATICS} --skip-confirmation=true`;
-    lightjs.info(`run '${esLint}'`);
-    shjs.exec(`${esLint}`);
+    const schematicCypress = `ng add @cypress/schematic@${swVersionConst.CYPRESS_SCHEMATIC} --skip-confirmation=true`;
+    lightjs.info(`run '${schematicCypress}'`);
+    shjs.exec(`${schematicCypress}`);
+    const schematicEsLint = `ng add @angular-eslint/schematics@${swVersionConst.ANGULAR_ESLINT_SCHEMATICS} --skip-confirmation=true`;
+    lightjs.info(`run '${schematicEsLint}'`);
+    shjs.exec(`${schematicEsLint}`);
   } else {
     lightjs.error(`sorry, this script requires 'ng'`);
     shjs.exit(1);
@@ -133,7 +132,7 @@ function updateAngularJsonFile() {
   let angularJsonData = lightjs.readJson(angularJsonFile);
   const generalConfig = projectConfig.general;
   const name = generalConfig.name;
-  const clientConfig = projectConfig.client;
+  const clientConfig = projectConfig.frontend;
   const architectData = angularJsonData.projects[name].architect;
   architectData.build.options.outputPath = clientConfig.buildDir;
   if (swHelper.isPhp()) {
@@ -227,7 +226,7 @@ function addBrowserTarget(name, mode) {
  *
  */
 function updateEnvironmentTsFiles() {
-  const clientConfig = projectConfig.client;
+  const clientConfig = projectConfig.frontend;
   const modulesConfig = clientConfig.modules;
   const generalConfig = projectConfig.general;
   const serverConfig = projectConfig.server;
@@ -282,7 +281,7 @@ function replaceSectionsInFiles() {
   lightjs.replacement(`(cy\\.visit\\('\\/'\\))\\n    cy\\.contains\\('Welcome'\\)\\n    `, `$1${os.EOL}    `, [cypressE2eSpec]);
   lightjs.replacement('app is running!', generalConfig.title, [cypressE2eSpec]);
 
-  const clientConfig = projectConfig.client;
+  const clientConfig = projectConfig.frontend;
   const srcPath = path.join(projectPath, swProjectConst.SRC);
   // replace in index.html
   const indexHtmlPath = path.join(srcPath, swProjectConst.INDEX_HTML);
@@ -332,7 +331,7 @@ function replaceSectionsInFiles() {
 function replaceTemplatesInFiles() {
   // replace in app.module.ts
   const appModuleTsPath = path.join(projectPath, swProjectConst.SRC, swProjectConst.APP, 'app.module.ts');
-  const clientConfig = projectConfig.client;
+  const clientConfig = projectConfig.frontend;
   const modulesConfig = clientConfig.modules;
   lightjs.replacement('{{PROJECT.MATERIALTABSMODULE}}', swHelper.isRouting() ? os.EOL + swProjectConst.IMPORT_MATERIAL_TABS_MODULE : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.APPROUTING}}', swHelper.isRouting() ? os.EOL + swProjectConst.IMPORT_APP_ROUTING_MODULE + os.EOL + swProjectConst.IMPORT_APP_ROUTING_PIPE : '', [appModuleTsPath]);
@@ -409,7 +408,7 @@ function updatePackageJsonFile() {
   Object.assign(scripts, { "build:prod": "ng lint && ng build" });
 
   let packageJsonTemplateData = {};
-  const clientConfig = projectConfig.client;
+  const clientConfig = projectConfig.frontend;
   packageJsonTemplateData.author = generalConfig.author;
   packageJsonTemplateData.contributors = clientConfig.packageJson.contributors;
   packageJsonTemplateData.dependencies = packageJsonData.dependencies;
@@ -477,7 +476,7 @@ function updateTask(packageJsonData, task, mode) {
 function installDependencies() {
   lightjs.info('task: install dependencies');
 
-  if (projectConfig.client.installDependencies) {
+  if (projectConfig.frontend.installDependencies) {
     lightjs.info('      option installDependencies is activated, install dependencies');
     const pwd = shjs.pwd();
     shjs.cd(projectPath);
@@ -499,7 +498,7 @@ function updateDependencies(pPath) {
     lightjs.info('update dependencies');
     const pwd = shjs.pwd();
     if (!swHelper.isJs()) {
-      shjs.cd(path.join(pPath, swProjectConst.CLIENT));
+      shjs.cd(path.join(pPath, swProjectConst.FRONTEND));
     } else {
       shjs.cd(pPath);
     }

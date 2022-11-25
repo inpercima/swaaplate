@@ -66,7 +66,7 @@ function configure() {
     shjs.cp(path.join(templatePath, swProjectConst.DOCKER, 'default.env'), path.join(projectPath, 'default.env'));
     shjs.cp(path.join(templatePath, swProjectConst.DOCKER, 'default.env'), path.join(projectPath, '.env'));
     lightjs.replacement('{{PROJECT.TITLE}}', generalConfig.name, [path.join(projectPath, swProjectConst.DOCKER_COMPOSE_YML)]);
-    const contributors = projectConfig.client.packageJson.contributors;
+    const contributors = projectConfig.frontend.packageJson.contributors;
     const name = contributors[0].name ? contributors[0].name : '';
     const email = contributors[0].name ? contributors[0].email : '';
     lightjs.replacement('{{PROJECT.AUTHOR}}', name, [path.join(projectPath, swProjectConst.DOCKERFILE)]);

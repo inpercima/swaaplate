@@ -24,7 +24,7 @@ function generateModulesAndComponents(pConfig, pPath) {
   projectConfig = pConfig;
   projectPath = pPath;
 
-  const modulesConfig = projectConfig.client.modules;
+  const modulesConfig = projectConfig.frontend.modules;
   if (modulesConfig.enabled) {
     lightjs.info('      option modules is activated, modules, components will be generated');
     if (swHelper.isRouting()) {
@@ -33,10 +33,12 @@ function generateModulesAndComponents(pConfig, pPath) {
       lightjs.info('      option routing is deactivated, noting todo');
     }
     const featuresConfig = modulesConfig.features;
-    generateModuleAndComponent(true, featuresConfig.name, featuresConfig.defaultRoute);
+    generateModuleAndComponent(featuresConfig.name, featuresConfig.defaultRoute);
     const notFoundConfig = modulesConfig.notFound;
     const notFoundName = notFoundConfig.name;
-    generateModuleAndComponent(swHelper.isRouting() && notFoundConfig.enabled, notFoundName, notFoundName);
+    if (swHelper.isRouting() && notFoundConfig.enabled) {
+      generateModuleAndComponent(notFoundName, notFoundName);
+    }
 
     copyModuleFiles(swProjectConst.APP);
     if (swHelper.isRouting()) {
@@ -51,29 +53,26 @@ function generateModulesAndComponents(pConfig, pPath) {
 /**
  * Generate a single module and component.
  *
- * @param {boolean} generate
  * @param {string} module
  * @param {string} component
  */
-function generateModuleAndComponent(generate, module, component) {
-  if (generate) {
-    const pwd = shjs.pwd();
-    shjs.cd(projectPath);
+function generateModuleAndComponent(module, component) {
+  const pwd = shjs.pwd();
+  shjs.cd(projectPath);
 
-    lightjs.info(`... generate module '${module}'`);
-    shjs.exec(`ng g m ${module} --routing=${swHelper.isRouting()}`);
-    lightjs.info(`... generate component '${component}'`);
-    const moduleComponent = module === component ? module : `${module}/${component}`;
-    shjs.exec(`ng g c ${moduleComponent}`);
+  lightjs.info(`... generate module '${module}'`);
+  shjs.exec(`ng g m ${module} --routing=${swHelper.isRouting()}`);
+  lightjs.info(`... generate component '${component}'`);
+  const moduleComponent = module === component ? module : `${module}/${component}`;
+  shjs.exec(`ng g c ${moduleComponent}`);
 
-    shjs.cd(pwd);
+  shjs.cd(pwd);
 
-    copyModuleFiles(module);
-    if (swHelper.isRouting()) {
-      addRouteInformation(module, component);
-    }
-    replaceLinesInModule(module, component);
+  copyModuleFiles(module);
+  if (swHelper.isRouting()) {
+    addRouteInformation(module, component);
   }
+  replaceLinesInModule(module, component);
 }
 
 /**
@@ -84,7 +83,7 @@ function generateModuleAndComponent(generate, module, component) {
 function copyModuleFiles(module) {
   lightjs.info(`copy module files for '${module}'`);
 
-  const templatePath = 'src/template/client/src';
+  const templatePath = 'src/template/frontend/src';
   const appPath = path.join(projectPath, swProjectConst.SRC, swProjectConst.APP);
   if (module === swProjectConst.APP) {
     shjs.cp('-r', path.join(templatePath, `${swProjectConst.APP}.*`), appPath);
@@ -119,7 +118,7 @@ function replaceLinesInModule(module, component) {
     lightjs.replacement('\\n\\n\\n', os.EOL + os.EOL, [path.join(appPath, appDir, moduleRoutingFile)]);
   }
 
-  const clientConfig = projectConfig.client;
+  const clientConfig = projectConfig.frontend;
   const featuresName = clientConfig.modules.features.name;
   const componentName = module === featuresName ? uppercamelcase(component) : uppercamelcase(module);
 
@@ -153,7 +152,7 @@ function addRouteInformation(module, component) {
   const moduleName = uppercamelcase(module);
   const routingModuleFile = path.join(projectPath, swProjectConst.SRC, module === swProjectConst.APP ? '' : swProjectConst.APP, module, `${module}-routing.module.ts`);
 
-  const modulesConfig = projectConfig.client.modules;
+  const modulesConfig = projectConfig.frontend.modules;
   const featuresName = modulesConfig.features.name;
   const notFoundConfig = modulesConfig.notFound;
   const componentName = module === featuresName ? uppercamelcase(component) : moduleName;
@@ -182,7 +181,7 @@ function addRouteInformation(module, component) {
  * @param {string} componentName
  */
 function addRoute(module, componentName) {
-  const clientConfigModules = projectConfig.client.modules;
+  const clientConfigModules = projectConfig.frontend.modules;
   const clientConfigNotFound = clientConfigModules.notFound;
   let routes = '';
   if (module === clientConfigNotFound.name && clientConfigNotFound.enabled) {
