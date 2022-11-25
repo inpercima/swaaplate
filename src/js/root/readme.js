@@ -40,8 +40,8 @@ function configure(pConfig, pPath) {
 
   updateReadmeGettingStarted(readmeMdPath);
 
-  const readmeClientData = swHelper.isJs() ? fs.readFileSync(swProjectConst.SRC_TEMPLATE_FRONTEND_README, 'utf8') : os.EOL;
-  lightjs.replacement('{{PROJECT.READMEIMPORT}}', readmeClientData, [readmeMdPath]);
+  const readmeFrontendData = swHelper.isJs() ? fs.readFileSync(swProjectConst.SRC_TEMPLATE_FRONTEND_README, 'utf8') : os.EOL;
+  lightjs.replacement('{{PROJECT.READMEIMPORT}}', readmeFrontendData, [readmeMdPath]);
   if (swHelper.isJs()) {
     lightjs.replacement('{{PROJECT.READMEHEADER}}', '', [readmeMdPath]);
     lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', '', [readmeMdPath]);
@@ -53,18 +53,18 @@ function configure(pConfig, pPath) {
   const genaralConfig = projectConfig.general;
   const backendConfig = projectConfig.backend;
   const name = genaralConfig.name;
-  const clientLink = `For the frontend check [${name} - client](./client).` + twoEol;
-  const apiOrServer = swHelper.isPhp() && backendConfig.php.serverAsApi ? swProjectConst.API : swProjectConst.BACKEND;
-  const serverLink = `For the backend check [${name} - ${apiOrServer}](./${apiOrServer}).`;
+  const frontendLink = `For the frontend check [${name} - frontend](./frontend).` + twoEol;
+  const backendFolder = swHelper.isPhp() && backendConfig.php.runAsApi ? swProjectConst.API : swProjectConst.BACKEND;
+  const backendLink = `For the backend check [${name} - ${backendFolder}](./${backendFolder}).`;
   const dockerLink = twoEol + `For the docker check [${name} - docker](./README_docker.md).`;
-  lightjs.replacement('{{PROJECT.CLIENT}}', !swHelper.isJs() ? clientLink : '', [readmeMdPath]);
-  lightjs.replacement('{{PROJECT.SERVER}}', !swHelper.isJs() ? serverLink : '', [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.FRONTEND}}', !swHelper.isJs() ? frontendLink : '', [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.BACKEND}}', !swHelper.isJs() ? backendLink : '', [readmeMdPath]);
   lightjs.replacement('{{PROJECT.DOCKER}}', genaralConfig.useDocker ? dockerLink : '', [readmeMdPath]);
   lightjs.replacement('{{PROJECT.VERSION}}', packageJsonData.version, [readmeMdPath]);
 
-  const clientConfig = projectConfig.frontend;
-  const clientConfigModules = clientConfig.modules;
-  const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && backendConfig.php.serverAsApi ? './api/' : './');
+  const frontendConfig = projectConfig.frontend;
+  const frontendConfigModules = frontendConfig.modules;
+  const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && backendConfig.php.runAsApi ? './api/' : './');
 
   const readmeFile = swHelper.isJs() ? readmeMdPath : path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.README_MD);
 
@@ -89,8 +89,8 @@ function configure(pConfig, pPath) {
   replaceMockSection(useMock, 'MOCKCONFIG', ' and for mockMode the option `api` to `http://localhost:3000/`', readmeFile);
 
   lightjs.replacement('{{PROJECT.API}}', api, [readmeFile]);
-  lightjs.replacement('{{PROJECT.DEFAULTROUTE}}', clientConfigModules.features.defaultRoute, [readmeFile]);
-  lightjs.replacement('{{PROJECT.THEME}}', clientConfig.theme, [readmeFile]);
+  lightjs.replacement('{{PROJECT.DEFAULTROUTE}}', frontendConfigModules.features.defaultRoute, [readmeFile]);
+  lightjs.replacement('{{PROJECT.THEME}}', frontendConfig.theme, [readmeFile]);
 
   lightjs.replacement('(`themes\\.scss`\\.)\\n\\s*', '$1' + os.EOL, [readmeFile]);
   lightjs.replacement('{{PROJECT.USAGEYN}}', swHelper.yarnNpmCommand('run'), [readmeFile]);
@@ -120,7 +120,7 @@ function updateReadmeHeader(readmeMdPath) {
  * @param {string} readmeMdPath
  */
 function updateReadmeHeaderSections(readmeHeaderData, isRoot) {
-  readmeHeaderData = readmeHeaderData.replace('{{PROJECT.TITLE}}', projectConfig.general.title + (isRoot ? '' : ' - client'));
+  readmeHeaderData = readmeHeaderData.replace('{{PROJECT.TITLE}}', projectConfig.general.title + (isRoot ? '' : ' - frontend'));
   readmeHeaderData = readmeHeaderData.replace('{{PROJECT.LICENSE}}', checkAndCreateLicense(isRoot));
   readmeHeaderData = readmeHeaderData.replace('{{PROJECT.DESCRIPTION}}', checkAndCreateDescription(isRoot));
   return readmeHeaderData;
@@ -173,8 +173,8 @@ function updateReadmeGettingStarted(readmeMdPath) {
   const readmeGettingStartedData = fs.readFileSync(path.join(swProjectConst.SRC_TEMPLATE_ROOT_README, 'README.getting-started.md'), 'utf8');
   lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', updateReadmeGettingStartedSection(readmeGettingStartedData, true), [readmeMdPath]);
   if (!swHelper.isJs()) {
-    const readmeMdClientPath = path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.README_MD);
-    lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', updateReadmeGettingStartedSection(readmeGettingStartedData, false), [readmeMdClientPath]);
+    const readmeMdFrontendPath = path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.README_MD);
+    lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', updateReadmeGettingStartedSection(readmeGettingStartedData, false), [readmeMdFrontendPath]);
   }
 }
 
@@ -187,13 +187,13 @@ function updateReadmeGettingStarted(readmeMdPath) {
 function updateReadmeGettingStartedSection(readmeGettingStartedData, isRoot) {
   const cloneProcess = '# clone project' + os.EOL + 'git clone ' + projectConfig.frontend.packageJson.repository + os.EOL + 'cd ' + projectConfig.general.name;
   const installTools = '# install tools and frontend dependencies' + os.EOL + swHelper.yarnNpmCommand('install');
-  const commandsClient = '# all commands used in ./frontend' + os.EOL + 'cd frontend';
+  const commandsFrontend = '# all commands used in ./frontend' + os.EOL + 'cd frontend';
   const twoEol = os.EOL + os.EOL;
 
   const gettingStarted = [
     isRoot ? cloneProcess : '',
     isRoot && swHelper.isJs() ? twoEol + installTools : '',
-    !isRoot && !swHelper.isJs() ? commandsClient + twoEol + installTools : ''
+    !isRoot && !swHelper.isJs() ? commandsFrontend + twoEol + installTools : ''
   ];
   return readmeGettingStartedData.replace('{{PROJECT.GETTINGSTARTED}}', gettingStarted.join(''));
 }

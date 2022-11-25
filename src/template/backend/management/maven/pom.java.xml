@@ -69,7 +69,7 @@
               <outputDirectory>${basedir}/target/classes/public</outputDirectory>
               <resources>
                 <resource>
-                  <directory>../client/{{PROJECT.DIST}}</directory>
+                  <directory>../frontend/{{PROJECT.DIST}}</directory>
                   <filtering>false</filtering>
                 </resource>
               </resources>

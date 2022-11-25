@@ -16,7 +16,7 @@ let projectConfig = {};
 let projectPath = '';
 
 /**
- * Configure the client.
+ * Configure the frontend.
  *
  * @param {string} workspacePath
  * @param {object} pConfig
@@ -54,23 +54,23 @@ function configure(workspacePath, pConfig, pPath) {
   shjs.cd(pwd);
 
   swFrontendModule.generateModulesAndComponents(projectConfig, projectPath);
-  // copyFiles();
-  // prepareMock();
-  // updateAngularJsonFile();
-  // updateEnvironmentTsFiles();
-  // replaceSectionsInFiles();
-  // replaceTemplatesInFiles();
-  // updateTsConfigJsonFile();
-  // updatePackageJsonFile();
-  // installDependencies();
+  copyFiles();
+  prepareMock();
+  updateAngularJsonFile();
+  createEnvironmentTsFiles();
+  replaceSectionsInFiles();
+  replaceTemplatesInFiles();
+  updateTsConfigJsonFile();
+  updatePackageJsonFile();
+  installDependencies();
 }
 
 /**
- * Copy client files.
+ * Copy frontend files.
  *
  */
 function copyFiles() {
-  lightjs.info('task: copy client files');
+  lightjs.info('task: copy frontend files');
 
   const srcPath = path.join(projectPath, swProjectConst.SRC);
   shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_FRONTEND, 'src/favicon.ico'), srcPath);
@@ -132,9 +132,9 @@ function updateAngularJsonFile() {
   let angularJsonData = lightjs.readJson(angularJsonFile);
   const generalConfig = projectConfig.general;
   const name = generalConfig.name;
-  const clientConfig = projectConfig.frontend;
+  const frontendConfig = projectConfig.frontend;
   const architectData = angularJsonData.projects[name].architect;
-  architectData.build.options.outputPath = clientConfig.buildDir;
+  architectData.build.options.outputPath = frontendConfig.buildDir;
   if (swHelper.isPhp()) {
     architectData.build.options.customWebpackConfig = {
       path: './webpack.config.js'
@@ -143,6 +143,7 @@ function updateAngularJsonFile() {
     architectData.serve.builder = '@angular-builders/custom-webpack:dev-server';
   }
   architectData.build.options.styles.push('src/themes.scss');
+  architectData.build.configurations.production.fileReplacements = addFileReplacements('prod');
   architectData.build.configurations.development.budgets = addBudgets();
   architectData.build.configurations.development.fileReplacements = addFileReplacements('dev');
   if (swHelper.isMock()) {
@@ -225,48 +226,33 @@ function addBrowserTarget(name, mode) {
  * Update environment.ts file.
  *
  */
-function updateEnvironmentTsFiles() {
-  const clientConfig = projectConfig.frontend;
-  const modulesConfig = clientConfig.modules;
+function createEnvironmentTsFiles() {
+  const environmentsPath = path.join(projectPath, swProjectConst.SRC, 'environments');
+  shjs.mkdir(environmentsPath);
+
+  createEnvironmentTsFile(path.join(environmentsPath, swProjectConst.ENVIRONMENT_TS), false);
+  createEnvironmentTsFile(path.join(environmentsPath, swProjectConst.ENVIRONMENT_DEV_TS), false);
+  if (swHelper.isMock()) {
+    createEnvironmentTsFile(path.join(environmentsPath, swProjectConst.ENVIRONMENT_MOCK_TS), false);
+  }
+  createEnvironmentTsFile(path.join(environmentsPath, swProjectConst.ENVIRONMENT_PROD_TS), true);
+}
+
+function createEnvironmentTsFile(environmentTsFile, production) {
+  const frontendConfig = projectConfig.frontend;
+  const modulesConfig = frontendConfig.modules;
   const generalConfig = projectConfig.general;
-  const serverConfig = projectConfig.server;
-  const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && serverConfig.php.serverAsApi ? './api/' : './');
-  const environments = `api: '${api}',
+  const backendConfig = projectConfig.backend;
+  const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && backendConfig.php.runAsApi ? './api/' : './');
+
+  const environments = `export const environment = {
+  api: '${api}',
   appname: '${generalConfig.title}',
   defaultRoute: '${modulesConfig.features.defaultRoute}',
-  production: false,
-  theme: '${clientConfig.theme}',`;
-
-  const environmentsPath = path.join(projectPath, swProjectConst.SRC, 'environments');
-
-  createEnvironmentTsFile(environments, environmentsPath, swProjectConst.ENVIRONMENT_DEV_TS);
-  if (swHelper.isMock()) {
-    createEnvironmentTsFile(environments, environmentsPath, swProjectConst.ENVIRONMENT_MOCK_TS);
-  }
-  createEnvironmentTsFile(environments, environmentsPath, swProjectConst.ENVIRONMENT_PROD_TS);
-
-  lightjs.replacement('production: false', environments, [path.join(environmentsPath, swProjectConst.ENVIRONMENT_TS)]);
-  lightjs.replacement('(production: )false', `$1true`, [path.join(environmentsPath, swProjectConst.ENVIRONMENT_PROD_TS)]);
-}
-
-function createEnvironmentTsFile(environments, environmentsPath, environmentTsFile) {
-  shjs.cp(path.join(environmentsPath, swProjectConst.ENVIRONMENT_TS), path.join(environmentsPath, environmentTsFile));
-  replaceCommentsInEnvironmentTsFile(environmentsPath, environmentTsFile);
-  lightjs.replacement('production: false', environments, [path.join(environmentsPath, environmentTsFile)]);
-}
-
-function replaceCommentsInEnvironmentTsFile(environmentsPath, environmentTsFile) {
-  const environmentFile = path.join(environmentsPath, environmentTsFile);
-  // remove first lines in environment.x.ts files
-  if (environmentTsFile !== swProjectConst.ENVIRONMENT_TS) {
-    lightjs.replacement('\\/\\/\\sTh.*|\\/\\/\\s`n.*', swProjectConst.EMPTY, [environmentFile]);
-    lightjs.replacement(`${swProjectConst.EOL_EXPRESSION}(export)`, '$1', [environmentFile]);
-  }
-  // remove last lines in environment.prod.ts files
-  if (environmentTsFile === swProjectConst.ENVIRONMENT_PROD_TS) {
-    lightjs.replacement('\\/\\*.*|\\s\\*.*|\\/\\/.*', '', [environmentFile]);
-    lightjs.replacement(`(};)${swProjectConst.EOL_EXPRESSION}`, `$1${os.EOL}`, [environmentFile]);
-  }
+  production: ${production},
+  theme: '${frontendConfig.theme}',
+};`;
+  lightjs.writeFile(environmentTsFile, environments);
 }
 
 /**
@@ -281,20 +267,20 @@ function replaceSectionsInFiles() {
   lightjs.replacement(`(cy\\.visit\\('\\/'\\))\\n    cy\\.contains\\('Welcome'\\)\\n    `, `$1${os.EOL}    `, [cypressE2eSpec]);
   lightjs.replacement('app is running!', generalConfig.title, [cypressE2eSpec]);
 
-  const clientConfig = projectConfig.frontend;
+  const frontendConfig = projectConfig.frontend;
   const srcPath = path.join(projectPath, swProjectConst.SRC);
   // replace in index.html
   const indexHtmlPath = path.join(srcPath, swProjectConst.INDEX_HTML);
-  lightjs.replacement('(lang=")en', `$1${clientConfig.language}`, [indexHtmlPath]);
+  lightjs.replacement('(lang=")en', `$1${frontendConfig.language}`, [indexHtmlPath]);
   lightjs.replacement('  <title>.*<\/title>', swProjectConst.EMPTY, [indexHtmlPath]);
   lightjs.replacement(swProjectConst.EOL_EXPRESSION, os.EOL, [indexHtmlPath]);
 
-  if (clientConfig.useGoogleFonts) {
+  if (frontendConfig.useGoogleFonts) {
     const fonts = `${createLink('Material+Icons')}${os.EOL}${createLink('Roboto:wght@400;700&display=swap')}`;
     lightjs.replacement('(  <link rel="icon")', `${fonts}${os.EOL}$1`, [indexHtmlPath]);
   }
 
-  const prefix = clientConfig.prefix;
+  const prefix = frontendConfig.prefix;
   lightjs.replacement(`(<${prefix}-root>)(</${prefix}-root>)`, '$1Loading...$2', [indexHtmlPath]);
 
   // replace in app.component.spec.ts
@@ -331,8 +317,8 @@ function replaceSectionsInFiles() {
 function replaceTemplatesInFiles() {
   // replace in app.module.ts
   const appModuleTsPath = path.join(projectPath, swProjectConst.SRC, swProjectConst.APP, 'app.module.ts');
-  const clientConfig = projectConfig.frontend;
-  const modulesConfig = clientConfig.modules;
+  const frontendConfig = projectConfig.frontend;
+  const modulesConfig = frontendConfig.modules;
   lightjs.replacement('{{PROJECT.MATERIALTABSMODULE}}', swHelper.isRouting() ? os.EOL + swProjectConst.IMPORT_MATERIAL_TABS_MODULE : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.APPROUTING}}', swHelper.isRouting() ? os.EOL + swProjectConst.IMPORT_APP_ROUTING_MODULE + os.EOL + swProjectConst.IMPORT_APP_ROUTING_PIPE : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.FEATURESMODULE}}', swHelper.isRouting() || modulesConfig.enabled ? os.EOL + swProjectConst.IMPORT_FEATURES_MODULE : '', [appModuleTsPath]);
@@ -345,7 +331,7 @@ function replaceTemplatesInFiles() {
 
   // replace in app.component.html
   const appComponentHtmlPath = path.join(projectPath, swProjectConst.SRC, swProjectConst.APP, 'app.component.html');
-  const component = clientConfig.prefix + '-' + modulesConfig.features.defaultRoute;
+  const component = frontendConfig.prefix + '-' + modulesConfig.features.defaultRoute;
   lightjs.replacement('{{PROJECT.NAVIGATION}}', os.EOL + (swHelper.isRouting() ? swProjectConst.NAVIGATION : `  <${component}></${component}>`), [appComponentHtmlPath]);
 
   // replace in app.component.ts
@@ -408,12 +394,11 @@ function updatePackageJsonFile() {
   Object.assign(scripts, { "build:prod": "ng lint && ng build" });
 
   let packageJsonTemplateData = {};
-  const clientConfig = projectConfig.frontend;
+  const frontendConfig = projectConfig.frontend;
   packageJsonTemplateData.author = generalConfig.author;
-  packageJsonTemplateData.contributors = clientConfig.packageJson.contributors;
+  packageJsonTemplateData.contributors = frontendConfig.packageJson.contributors;
   packageJsonTemplateData.dependencies = packageJsonData.dependencies;
   packageJsonTemplateData.dependencies['@angular/cdk'] = swVersionConst.ANGULAR_CDK_MATERIAL;
-  packageJsonTemplateData.dependencies['@angular/flex-layout'] = swVersionConst.ANGULAR_FLEX;
   packageJsonTemplateData.dependencies['@angular/material'] = swVersionConst.ANGULAR_CDK_MATERIAL;
   if (!swHelper.isRouting()) {
     packageJsonTemplateData.dependencies['@angular/router'] = undefined;
@@ -444,13 +429,13 @@ function updatePackageJsonFile() {
   packageJsonTemplateData.engines = {
     node: '>=' + swVersionConst.NODE,
   };
-  packageJsonTemplateData.homepage = clientConfig.packageJson.homepage;
+  packageJsonTemplateData.homepage = frontendConfig.packageJson.homepage;
   if (generalConfig.useMITLicense) {
     packageJsonTemplateData.license = 'MIT';
   }
   packageJsonTemplateData.name = generalConfig.name;
   packageJsonTemplateData.private = true;
-  packageJsonTemplateData.repository = clientConfig.packageJson.repository;
+  packageJsonTemplateData.repository = frontendConfig.packageJson.repository;
   packageJsonTemplateData.scripts = scripts;
   packageJsonTemplateData.version = '1.0.0-SNAPSHOT';
 

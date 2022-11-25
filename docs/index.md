@@ -35,7 +35,7 @@ In this way the `swaaplate.json` file from your project will be used.
 
 ### What does an update do
 
-An update only updates the client dependencies.
+An update only updates the frontend dependencies.
 No migration is carried out.
 
 ### How to enable the mock in a project

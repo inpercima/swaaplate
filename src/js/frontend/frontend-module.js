@@ -42,9 +42,9 @@ function generateModulesAndComponents(pConfig, pPath) {
 
     copyModuleFiles(swProjectConst.APP);
     if (swHelper.isRouting()) {
-      //addRouteInformation(swProjectConst.APP, null);
+      addRouteInformation(swProjectConst.APP, null);
     }
-    //replaceLinesInModule(swProjectConst.APP, null);
+    replaceLinesInModule(swProjectConst.APP, null);
   } else {
     lightjs.info('      option modules is deactivated, noting todo');
   }
@@ -70,9 +70,9 @@ function generateModuleAndComponent(module, component) {
 
   copyModuleFiles(module);
   if (swHelper.isRouting()) {
-    //addRouteInformation(module, component);
+    addRouteInformation(module, component);
   }
-  //replaceLinesInModule(module, component);
+  replaceLinesInModule(module, component);
 }
 
 /**
@@ -118,8 +118,8 @@ function replaceLinesInModule(module, component) {
     lightjs.replacement('\\n\\n\\n', os.EOL + os.EOL, [path.join(appPath, appDir, moduleRoutingFile)]);
   }
 
-  const clientConfig = projectConfig.frontend;
-  const featuresName = clientConfig.modules.features.name;
+  const frontendConfig = projectConfig.frontend;
+  const featuresName = frontendConfig.modules.features.name;
   const componentName = module === featuresName ? uppercamelcase(component) : uppercamelcase(module);
 
   // add a comma at the end of component name
@@ -135,7 +135,7 @@ function replaceLinesInModule(module, component) {
     lightjs.replacement('],,', '],', [moduleFilePath]);
   }
   if (module === swProjectConst.APP) {
-    lightjs.replacement('{{PROJECT.PREFIX}}', clientConfig.prefix, [path.join(appPath, appDir, `${module}.component.ts`)]);
+    lightjs.replacement('{{PROJECT.PREFIX}}', frontendConfig.prefix, [path.join(appPath, appDir, `${module}.component.ts`)]);
   }
 }
 
@@ -181,15 +181,15 @@ function addRouteInformation(module, component) {
  * @param {string} componentName
  */
 function addRoute(module, componentName) {
-  const clientConfigModules = projectConfig.frontend.modules;
-  const clientConfigNotFound = clientConfigModules.notFound;
+  const frontendConfigModules = projectConfig.frontend.modules;
+  const frontendConfigNotFound = frontendConfigModules.notFound;
   let routes = '';
-  if (module === clientConfigNotFound.name && clientConfigNotFound.enabled) {
+  if (module === frontendConfigNotFound.name && frontendConfigNotFound.enabled) {
     routes = `{
   component: ${componentName}Component,
   path: '**',
 }`;
-  } else if (module === clientConfigModules.features.name) {
+  } else if (module === frontendConfigModules.features.name) {
     routes = `{` + (projectConfig.general.useSecurity ? os.EOL + `  canActivate: [AuthGuard],` : '') + `
   component: ${componentName}Component,
   path: environment.defaultRoute,

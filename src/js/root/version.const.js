@@ -25,7 +25,7 @@ module.exports = Object.freeze({
   JSONWEBTOKEN: '8.5.1',
   // https://maven.apache.org/plugins/maven-jar-plugin/download.cgi
   MAVEN_JAR_PLUGIN: '3.3.0',
-  NODE: '16.17.0',
+  NODE: '18.10.0',
   NPM: '8.19.2',
   PHP: '7.4',
   // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web

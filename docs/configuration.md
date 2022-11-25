@@ -117,7 +117,7 @@ Defines whether swaaplate should install tools and frontend dependencies or not.
 
 ## `frontend/language`
 
-Defines the language of the app client side.
+Defines the language of the app in frontend.
 
 * default: `en`
 * type: `string`

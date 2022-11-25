@@ -12,9 +12,9 @@ cp default.env .env
 
 **Note**: This file will not be under version control but listed in .gitignore.
 
-Check for the existence of `environment.prod.ts` as described in [{{PROJECT.TITLE}} - client](./client).
+Check for the existence of `environment.prod.ts` as described in [{{PROJECT.TITLE}} - frontend](./frontend).
 
-Check for the existence of `application-prod.yml` as described in [{{PROJECT.TITLE}} - server](./server).
+Check for the existence of `application-prod.yml` as described in [{{PROJECT.TITLE}} - backend](./backend).
 
 ## Usage
 

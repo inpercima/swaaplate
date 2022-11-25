@@ -16,8 +16,8 @@ From:
 ```js
 ...
     new CopyWebpackPlugin([{
-      from: '../server/src/main',
-      to: './server',
+      from: '../backend/src/main',
+      to: './backend',
     }])
 ...
 ```
@@ -28,8 +28,8 @@ To:
 ...
     process.env.NODE_ENV !== 'mock' ?
       new CopyWebpackPlugin([{
-        from: '../server/src/main',
-        to: './server',
+        from: '../backend/src/main',
+        to: './backend',
       }]) : {}
 ...
 ```

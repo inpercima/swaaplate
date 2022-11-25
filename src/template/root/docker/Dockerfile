@@ -6,17 +6,17 @@ ENV USER node
 USER ${USER}
 WORKDIR /home/${USER}
 
-COPY client/src/ ./src/
-COPY client/.browserslistrc .
-COPY client/angular.json .
-COPY client/package.json .
-COPY client/tsconfig.app.json .
-COPY client/tsconfig.json .
-COPY client/tsconfig.spec.json .
-COPY client/e2e/tsconfig.json ./e2e/
-COPY client/tslint.json .
-COPY client/webpack.config.js .
-COPY client/yarn.lock .
+COPY frontend/src/ ./src/
+COPY frontend/.browserslistrc .
+COPY frontend/angular.json .
+COPY frontend/package.json .
+COPY frontend/tsconfig.app.json .
+COPY frontend/tsconfig.json .
+COPY frontend/tsconfig.spec.json .
+COPY frontend/e2e/tsconfig.json ./e2e/
+COPY frontend/tslint.json .
+COPY frontend/webpack.config.js .
+COPY frontend/yarn.lock .
 
 RUN yarn
 RUN yarn build:prod
