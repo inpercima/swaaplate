@@ -9,25 +9,32 @@ Some of this options will be copied in the environment files of the new project 
 
 ## Table of contents
 
-* [client/buildDir](#clientbuilddir)
-* [client/ghUser](#clientghuser)
-* [client/installDependencies](#clientinstalldependencies)
-* [client/language](#clientlanguage)
-* [client/modules/enabled](#clientmodulesenabled)
-* [client/modules/features](#clientmodulesfeatures)
-* [client/modules/features/defaultRoute](#clientmodulesfeaturesdefaultroute)
-* [client/modules/features/name](#clientmodulesfeaturesname)
-* [client/modules/notFound](#clientmodulesnotfound)
-* [client/modules/notFound/enabled](#clientmodulesnotfoundenabled)
-* [client/modules/notFound/name](#clientmodulesnotfoundname)
-* [client/modules/routing](#clientmodulesrouting)
-* [client/packageJson/contributors](#clientpackagejsoncontributors)
-* [client/packageJson/homepage](#clientpackagejsonhomepage)
-* [client/packageJson/repository](#clientpackagejsonrepository)
-* [client/prefix](#clientprefix)
-* [client/theme](#clienttheme)
-* [client/useGoogleFonts](#clientusegooglefonts)
-* [client/useYarn](#clientuseyarn)
+* [backend/language](#backendlanguage)
+* [backend/javaKt](#backendjavakt)
+* [backend/javaKt/management](#backendjavaktmanagement)
+* [backend/javaKt/packagePath](#backendjavaktpackagepath)
+* [backend/php](#backendphp)
+* [backend/php/modRewritePhpExtension](#backendphpmodrewritephpextension)
+* [backend/php/runAsApi](#backendphprunasapi)
+* [frontend/buildDir](#frontendbuilddir)
+* [frontend/ghUser](#frontendghuser)
+* [frontend/installDependencies](#frontendinstalldependencies)
+* [frontend/language](#frontendlanguage)
+* [frontend/modules/enabled](#frontendmodulesenabled)
+* [frontend/modules/features](#frontendmodulesfeatures)
+* [frontend/modules/features/defaultRoute](#frontendmodulesfeaturesdefaultroute)
+* [frontend/modules/features/name](#frontendmodulesfeaturesname)
+* [frontend/modules/notFound](#frontendmodulesnotfound)
+* [frontend/modules/notFound/enabled](#frontendmodulesnotfoundenabled)
+* [frontend/modules/notFound/name](#frontendmodulesnotfoundname)
+* [frontend/modules/routing](#frontendmodulesrouting)
+* [frontend/packageJson/contributors](#frontendpackagejsoncontributors)
+* [frontend/packageJson/homepage](#frontendpackagejsonhomepage)
+* [frontend/packageJson/repository](#frontendpackagejsonrepository)
+* [frontend/prefix](#frontendprefix)
+* [frontend/theme](#frontendtheme)
+* [frontend/useGoogleFonts](#frontendusegooglefonts)
+* [frontend/useYarn](#frontenduseyarn)
 * [general/author](#generalauthor)
 * [general/description](#generaldescription)
 * [general/modRewriteIndex](#generalmodrewriteindex)
@@ -36,29 +43,71 @@ Some of this options will be copied in the environment files of the new project 
 * [general/useDocker](#generalusedocker)
 * [general/useMITLicense](#generalusemitlicense)
 * [general/useSecurity](#generalusesecurity)
-* [server/backend](#serverbackend)
-* [server/javaKt](#serverjavakt)
-* [server/javaKt/management](#serverjavaktmanagement)
-* [server/javaKt/packagePath](#serverjavaktpackagepath)
-* [server/php](#serverphp)
-* [server/php/modRewritePhpExtension](#serverphpmodrewritephpextension)
-* [server/php/serverAsApi](#serverphpserverasapi)
 
-## `client/buildDir`
+## `backend/language`
+
+Defines the backend language of the app.
+
+* default: `js`
+* type: `string`
+* values: `java`/`kt`/`js`/`php`
+
+## `backend/javaKt`
+
+This option depends on [backend/language](#backendlanguage) with `java` or `kt`.
+
+## `backend/javaKt/management`
+
+Defines the management tool of the app.
+
+* default: `maven`
+* type: `string`
+* values: `maven`/`gradle`/
+
+## `backend/javaKt/packagePath`
+
+The package structure.
+
+* default: EMPTY
+* type: `string`
+
+## `backend/php`
+
+This option depends on [backend/language](#backendlanguage) with `php`.
+
+## `backend/php/modRewritePhpExtension`
+
+Defines whether a .htaccess file should used or not.
+This predefines no ending for php files.
+
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
+
+## `backend/php/runAsApi`
+
+Defines that the backend is used as a api reference or not.
+The api URL in frontend environment.ts and environment.prod.ts will be set to `./api/`.
+
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
+
+## `frontend/buildDir`
 
 Defines the build dir for the webapp.
 
 * default: `dist`
 * type: `string`
 
-## `client/ghUser`
+## `frontend/ghUser`
 
 Defines the username for github if this project is shared on github.
 
 * default: EMPTY
 * type: `string`
 
-## `client/installDependencies`
+## `frontend/installDependencies`
 
 Defines whether swaaplate should install tools and frontend dependencies or not.
 
@@ -66,29 +115,29 @@ Defines whether swaaplate should install tools and frontend dependencies or not.
 * type: `boolean`
 * values: `true`/`false`
 
-## `client/language`
+## `frontend/language`
 
 Defines the language of the app client side.
 
 * default: `en`
 * type: `string`
 
-## `client/modules/enabled`
+## `frontend/modules/enabled`
 
 Defines whether default modules for components should be created or not.
 On `true` a features module will be created.
 This can be used for components as pages like dashboard, contact, about or impress.
-A not found module could be created, this depends on [client/modules/notFound/enabled](#clientmodulesnotfoundenabled).
+A not found module could be created, this depends on [frontend/modules/notFound/enabled](#frontendmodulesnotfoundenabled).
 
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
 
-## `client/modules/features`
+## `frontend/modules/features`
 
-This option depends on [client/modules/enabled](#clientmodulesenabled).
+This option depends on [frontend/modules/enabled](#frontendmodulesenabled).
 
-## `client/modules/features/defaultRoute`
+## `frontend/modules/features/defaultRoute`
 
 The main route and the redirect route.
 This option ca be changed in the environment files.
@@ -97,18 +146,18 @@ This option ca be changed in the environment files.
 * default: `hello-world`
 * type: `string`
 
-## `client/modules/features/name`
+## `frontend/modules/features/name`
 
 Defines the name of the features module.
 
 * default: `features`
 * type: `string`
 
-## `client/modules/notFound`
+## `frontend/modules/notFound`
 
-This option depends on [client/modules/enabled](#clientmodulesenabled) and [client/modules/routing](#clientmodulesrouting) too.
+This option depends on [frontend/modules/enabled](#frontendmodulesenabled) and [frontend/modules/routing](#frontendmodulesrouting) too.
 
-## `client/modules/notFound/enabled`
+## `frontend/modules/notFound/enabled`
 
 Defines whether the notFound module will be created and used or not.
 On `true` a module and component will be created and used on routes are not existing.
@@ -117,51 +166,51 @@ On `true` a module and component will be created and used on routes are not exis
 * type: `boolean`
 * values: `true`/`false`
 
-## `client/modules/notFound/name`
+## `frontend/modules/notFound/name`
 
 The name of the 404 module and component where to redirect if a route not exists.
 
 * default: `not-found`
 * type: `string`
 
-## `client/modules/routing`
+## `frontend/modules/routing`
 
 Defines whether a navigation will be created and routing could be used.
-This option depends on [client/modules/enabled](#clientmodulesenabled).
+This option depends on [frontend/modules/enabled](#frontendmodulesenabled).
 
 * default: `true`
 * type: `boolean`
 * values: `true`/`false`
 
-## `client/packageJson/contributors`
+## `frontend/packageJson/contributors`
 
 An array of contributers.
 
 * default: EMPTY
 * type: `array`
 
-## `client/packageJson/homepage`
+## `frontend/packageJson/homepage`
 
-The website. If this option is empty and `client/packageJson/repository` is set, this will be the same.
-
-* default: EMPTY
-* type: `string`
-
-## `client/packageJson/repository`
-
-The repository. If `client/ghUser` is set, the repository will be generated automatically.
+The website. If this option is empty and `frontend/packageJson/repository` is set, this will be the same.
 
 * default: EMPTY
 * type: `string`
 
-## `client/prefix`
+## `frontend/packageJson/repository`
+
+The repository. If `frontend/ghUser` is set, the repository will be generated automatically.
+
+* default: EMPTY
+* type: `string`
+
+## `frontend/prefix`
 
 A shortcut of the project, used in components like `hw-home` or `hw-app`.
 
 * default: `hw`
 * type: `string`
 
-## `client/theme`
+## `frontend/theme`
 
 Name of a build-in theme from angular-material.
 This option ca be changed in the environment files.
@@ -171,7 +220,7 @@ This option ca be changed in the environment files.
 * type: `string`
 * values: `deeppurple-amber`/`indigo-pink`/`pink-bluegrey`/`purple-green`
 
-## `client/useGoogleFonts`
+## `frontend/useGoogleFonts`
 
 Defines whatever Google Fonts should be used or not.
 
@@ -179,7 +228,7 @@ Defines whatever Google Fonts should be used or not.
 * type: `boolean`
 * values: `true`/`false`
 
-## `client/useYarn`
+## `frontend/useYarn`
 
 Defines whatever yarn should be used or not.
 If this option is set to `false` npm will be used.
@@ -250,54 +299,5 @@ On `true` a login module and component and authentication services will be creat
 For backends like `php` or `java` special components will be created too.
 
 * default: `false`
-* type: `boolean`
-* values: `true`/`false`
-
-## `server/backend`
-
-Defines the backend of the app.
-
-* default: `js`
-* type: `string`
-* values: `java`/`kt`/`js`/`php`
-
-## `server/javaKt`
-
-This option depends on [server/backend](#serverbackend) with `java` or `kt`.
-
-## `server/javaKt/management`
-
-Defines the management tool of the app.
-
-* default: `maven`
-* type: `string`
-* values: `maven`/`gradle`/
-
-## `server/javaKt/packagePath`
-
-The package structure.
-
-* default: EMPTY
-* type: `string`
-
-## `server/php`
-
-This option depends on [server/backend](#serverbackend) with `php`.
-
-## `server/php/modRewritePhpExtension`
-
-Defines whether a .htaccess file should used or not.
-This predefines no ending for php files.
-
-* default: `true`
-* type: `boolean`
-* values: `true`/`false`
-
-## `server/php/serverAsApi`
-
-Defines that the server is used as a api reference or not.
-The api URL in environment.ts and environment.prod.ts will be set to `./api/`.
-
-* default: `true`
 * type: `boolean`
 * values: `true`/`false`

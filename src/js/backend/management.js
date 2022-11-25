@@ -25,28 +25,28 @@ function configure(pConfig, pPath) {
 
   lightjs.info('--> begin management setup ...');
 
-  const serverConfig = projectConfig.server;
+  const backendConfig = projectConfig.backend;
   if (swHelper.isJavaKotlin()) {
-    const serverPath = path.join(projectPath, swProjectConst.BACKEND);
-    const management = serverConfig.javaKt.management;
-    const managementPath = path.join('src/template/server/management', management);
+    const backendPath = path.join(projectPath, swProjectConst.BACKEND);
+    const management = backendConfig.javaKt.management;
+    const managementPath = path.join('src/template/backend/management', management);
 
-    shjs.mkdir('-p', serverPath);
+    shjs.mkdir('-p', backendPath);
 
-    const backend = serverConfig.backend;
-    shjs.cp('-r', path.join(managementPath, '*'), serverPath);
+    const language = backendConfig.language;
+    shjs.cp('-r', path.join(managementPath, '*'), backendPath);
     if (management === swProjectConst.MAVEN || management === 'gradle') {
-      lightjs.info(`* use management '${management}', copy wrapper and pom-file for ${backend}`);
+      lightjs.info(`* use management '${management}', copy wrapper and pom-file for ${language}`);
 
       if (management === swProjectConst.MAVEN) {
-        shjs.cp('-r', path.join(managementPath, '.mvn'), serverPath);
+        shjs.cp('-r', path.join(managementPath, '.mvn'), backendPath);
       } else {
-        shjs.cp('-r', path.join(managementPath, '.gradle'), serverPath);
+        shjs.cp('-r', path.join(managementPath, '.gradle'), backendPath);
       }
       const dismatch = swHelper.isJava() ? swProjectConst.KOTLIN : swProjectConst.JAVA;
-      const pomXml = path.join(serverPath, 'pom.xml');
-      shjs.mv(path.join(serverPath, `pom.${backend}.xml`), pomXml);
-      shjs.rm(path.join(serverPath, `pom.${dismatch}.xml`));
+      const pomXml = path.join(backendPath, 'pom.xml');
+      shjs.mv(path.join(backendPath, `pom.${language}.xml`), pomXml);
+      shjs.rm(path.join(backendPath, `pom.${dismatch}.xml`));
       replaceInPomFile(pomXml);
     } else {
       lightjs.info('* a management unlike maven or gradle is used, nothing todo by swaaplate');
@@ -67,7 +67,7 @@ function replaceInPomFile(pomXml) {
   const generalConfig = projectConfig.general;
   lightjs.replacement('{{PROJECT.DESCRIPTION}}', generalConfig.description, [pomXml]);
   lightjs.replacement('{{PROJECT.DIST}}', projectConfig.frontend.buildDir, [pomXml]);
-  lightjs.replacement('{{PROJECT.GROUPID}}', projectConfig.server.javaKt.packagePath, [pomXml]);
+  lightjs.replacement('{{PROJECT.GROUPID}}', projectConfig.backend.javaKt.packagePath, [pomXml]);
   lightjs.replacement('{{PROJECT.MAVENJARPLUGINVERSION}}', swVersionConst.MAVEN_JAR_PLUGIN, [pomXml]);
   lightjs.replacement('{{PROJECT.NAME}}', generalConfig.name, [pomXml]);
   lightjs.replacement('{{PROJECT.SPRINGBOOTVERSION}}', swVersionConst.SPRING_BOOT, [pomXml]);

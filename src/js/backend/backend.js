@@ -58,28 +58,28 @@ function configureJavaKotlin() {
 
   const packagePath = backendConfig.javaKt.packagePath;
   const backendPath = path.join(language, packagePath.replace(/\./g, '/'));
-  const serverSrcMainJavaPath = path.join(projectPath, srcMain, backendPath);
-  shjs.mkdir('-p', serverSrcMainJavaPath);
+  const srcMainJavaPath = path.join(projectPath, srcMain, backendPath);
+  shjs.mkdir('-p', srcMainJavaPath);
 
-  const serverSrcMainResourcesPath = path.join(projectPath, srcMain, 'resources');
-  const templatePath = 'src/template/server/backend';
+  const srcMainResourcesPath = path.join(projectPath, srcMain, 'resources');
+  const templatePath = 'src/template/backend/language';
 
-  shjs.cp(path.join(templatePath, language, `Application.${language}`), serverSrcMainJavaPath);
+  shjs.cp(path.join(templatePath, language, `Application.${language}`), srcMainJavaPath);
 
-  const webPath = path.join(serverSrcMainJavaPath, 'web');
+  const webPath = path.join(srcMainJavaPath, 'web');
   shjs.mkdir('-p', webPath);
   shjs.cp(path.join(templatePath, language, `AuthController.${language}`), webPath);
-  shjs.mkdir('-p', serverSrcMainResourcesPath);
-  shjs.cp(path.join(templatePath, 'java-kt/*'), serverSrcMainResourcesPath);
+  shjs.mkdir('-p', srcMainResourcesPath);
+  shjs.cp(path.join(templatePath, 'java-kt/*'), srcMainResourcesPath);
 
   shjs.mkdir('-p', path.join(projectPath, srcTest, backendPath));
   shjs.mkdir('-p', path.join(projectPath, srcTest, 'resources'));
 
-  lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(serverSrcMainJavaPath, `Application.${language}`)]);
+  lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(srcMainJavaPath, `Application.${language}`)]);
   lightjs.replacement('{{PROJECT.AUTHOR}}', generalConfig.author, [path.join(webPath, `AuthController.${language}`)]);
-  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(serverSrcMainJavaPath, `Application.${language}`)]);
+  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(srcMainJavaPath, `Application.${language}`)]);
   lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(webPath, `AuthController.${language}`)]);
-  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(serverSrcMainResourcesPath, 'logback-spring.xml')]);
+  lightjs.replacement('{{PROJECT.PACKAGEPATH}}', packagePath, [path.join(srcMainResourcesPath, 'logback-spring.xml')]);
 }
 
 /**
@@ -88,12 +88,12 @@ function configureJavaKotlin() {
  */
 function configurePhp() {
   const backendConfig = projectConfig.backend;
-  const serverDir = swHelper.getBackendFolder();
-  lightjs.info(`* configure backend 'php', create 'webpack config' and '${serverDir}' as server folder`);
+  const backendFolder = swHelper.getBackendFolder();
+  lightjs.info(`* configure backend 'php', create 'webpack config' and '${backendFolder}' as backend folder`);
 
-  const srcPath = path.join(projectPath, serverDir);
+  const srcPath = path.join(projectPath, backendFolder);
   shjs.mkdir('-p', srcPath);
-  const phpTemplatePath = 'src/template/server/backend/php';
+  const phpTemplatePath = 'src/template/backend/language/php';
   const generalConfig = projectConfig.general;
 
   shjs.cp('-r', path.join(phpTemplatePath, swProjectConst.CONFIG), srcPath);
@@ -116,23 +116,23 @@ function configurePhp() {
   shjs.cp(path.join(phpTemplatePath, swProjectConst.WEBPACK_CONFIG_JS), webpackConfigFile);
   lightjs.replacement('{{PROJECT.INDENTATION}}', generalConfig.useMock ? '  ' : '', [webpackConfigFile]);
   lightjs.replacement('{{PROJECT.CONFIGMODE}}', configMode, [webpackConfigFile]);
-  lightjs.replacement('{{PROJECT.SERVERDIR}}', serverDir, [webpackConfigFile]);
+  lightjs.replacement('{{PROJECT.BACKENDFOLDER}}', backendFolder, [webpackConfigFile]);
   lightjs.replacement('{{PROJECT.CONFIGMODEEND}}', generalConfig.useMock ? os.EOL + '}' : '', [webpackConfigFile]);
 }
 
 /**
- * Updates the readme file for the server.
+ * Updates the readme file for the backend.
  *
  */
 function updateReadmeFile() {
   const readmeMd = path.join(projectPath, swHelper.getBackendFolder(), swProjectConst.README_MD);
   lightjs.info(`* update '${readmeMd}'`);
 
-  shjs.cp(path.join('src/template/server/readme', `README.${swHelper.isPhp() ? 'php' : 'java-kotlin'}.md`), readmeMd);
+  shjs.cp(path.join('src/template/backend/readme', `README.${swHelper.isPhp() ? 'php' : 'java-kotlin'}.md`), readmeMd);
 
   lightjs.replacement('{{PROJECT.NAME}}', projectConfig.general.name, [readmeMd]);
   lightjs.replacement('{{PROJECT.TITLE}}', projectConfig.general.title, [readmeMd]);
-  lightjs.replacement('{{PROJECT.SERVERDIR}}', swHelper.getBackendFolder(), [readmeMd]);
+  lightjs.replacement('{{PROJECT.BACKENDFOLDER}}', swHelper.getBackendFolder(), [readmeMd]);
 }
 
 exp.configure = configure;

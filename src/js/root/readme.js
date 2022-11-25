@@ -187,7 +187,7 @@ function updateReadmeGettingStarted(readmeMdPath) {
 function updateReadmeGettingStartedSection(readmeGettingStartedData, isRoot) {
   const cloneProcess = '# clone project' + os.EOL + 'git clone ' + projectConfig.frontend.packageJson.repository + os.EOL + 'cd ' + projectConfig.general.name;
   const installTools = '# install tools and frontend dependencies' + os.EOL + swHelper.yarnNpmCommand('install');
-  const commandsClient = '# all commands used in ./client' + os.EOL + 'cd client';
+  const commandsClient = '# all commands used in ./frontend' + os.EOL + 'cd frontend';
   const twoEol = os.EOL + os.EOL;
 
   const gettingStarted = [

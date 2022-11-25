@@ -1,10 +1,10 @@
-# {{PROJECT.TITLE}} - {{PROJECT.SERVERDIR}}
+# {{PROJECT.TITLE}} - {{PROJECT.BACKENDFOLDER}}
 
 ## Getting started
 
 ```bash
-# all commands used in ./{{PROJECT.SERVERDIR}}
-cd {{PROJECT.SERVERDIR}}
+# all commands used in ./{{PROJECT.BACKENDFOLDER}}
+cd {{PROJECT.BACKENDFOLDER}}
 ```
 
 Create config files for `development mode` and `production mode`.
