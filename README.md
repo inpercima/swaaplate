@@ -16,19 +16,23 @@ Therefore, I decided to write a small tool, which puts together all the necessar
 ### The goal
 
 With swaaplate, the goal should be to create an angular web app with one of four backends, one of two management tools and one of two js dependency manager.
-You can choose between `js` (means angular only), `php`, `java` or `kt` as backend, `maven` or `gradle` as management tool and `npm` or `yarn` as js dependency manager.
+You can choose between `none` (means angular only), `nestjs`, `php`, `java` or `kt` as backend, `maven` or `gradle` as management tool and `npm` or `yarn` as js dependency manager.
 
 ## Prerequisites
 
-### Angular cli
+### Angular CLI
 
-* `angular-cli 14.0.2` or higher
+* `angular-cli 15.0.1` or higher
+
+### Nestjs CLI (if backend `nestjs` is used)
+
+* `nestjs-cli 9.1.5` or higher
 
 ### Node, npm or yarn
 
-* `node 16.13.0` or higher in combination with
-  * `npm 8.12.1` or higher or
-  * `yarn 1.22.17` or higher, used in this repository
+* `node 18.10.0` or higher in combination with
+  * `npm 8.19.2` or higher or
+  * `yarn 1.22.19` or higher, used in this repository
 
 ## Getting started
 

@@ -25,17 +25,20 @@ function configure(pConfig, pPath) {
 
   lightjs.info('--> begin backend setup ...');
 
-  if (!swHelper.isJs()) {
+  if (!swHelper.isNone()) {
     shjs.mkdir(path.join(projectPath, swProjectConst.FRONTEND));
     shjs.mv(path.join(projectPath, `!(${swProjectConst.FRONTEND})`), path.join(projectPath, swProjectConst.FRONTEND));
     shjs.mv(path.join(projectPath, '.eslintrc.json'), path.join(projectPath, swProjectConst.FRONTEND));
     shjs.mkdir(path.join(projectPath, swHelper.getBackendFolder()));
 
     if (swHelper.isJavaKotlin()) {
-      configureJavaKotlin(projectConfig, projectPath);
+      configureJavaKotlin();
     }
     if (swHelper.isPhp()) {
-      configurePhp(projectConfig, projectPath);
+      configurePhp();
+    }
+    if (swHelper.isNestJs()) {
+      configureNestjs();
     }
     updateReadmeFile();
   } else {
@@ -118,6 +121,28 @@ function configurePhp() {
   lightjs.replacement('{{PROJECT.CONFIGMODE}}', configMode, [webpackConfigFile]);
   lightjs.replacement('{{PROJECT.BACKENDFOLDER}}', backendFolder, [webpackConfigFile]);
   lightjs.replacement('{{PROJECT.CONFIGMODEEND}}', generalConfig.useMock ? os.EOL + '}' : '', [webpackConfigFile]);
+}
+
+/**
+ * Configures the backend for nestjs.
+ *
+ */
+ function configureNestjs() {
+  const backendConfig = projectConfig.backend;
+  const generalConfig = projectConfig.general;
+
+  lightjs.info(`* configure backend 'nestjs'`);
+  
+  const pwd = shjs.pwd();
+  const projectName = projectConfig.general.name;
+  if (shjs.which('nest')) {
+    lightjs.info(`run 'nest new ${projectName} --package-manager ${swHelper.yarnOrNpm()}'`);
+    shjs.exec(`nest new ${projectName} --package-manager ${swHelper.yarnOrNpm()}`);
+  } else {
+    lightjs.error(`sorry, this script requires 'nest'`);
+    shjs.exit(1);
+  }
+  shjs.cd(pwd);
 }
 
 /**

@@ -40,15 +40,15 @@ function configure(pConfig, pPath) {
 
   updateReadmeGettingStarted(readmeMdPath);
 
-  const readmeFrontendData = swHelper.isJs() ? fs.readFileSync(swProjectConst.SRC_TEMPLATE_FRONTEND_README, 'utf8') : os.EOL;
+  const readmeFrontendData = swHelper.isNone() ? fs.readFileSync(swProjectConst.SRC_TEMPLATE_FRONTEND_README, 'utf8') : os.EOL;
   lightjs.replacement('{{PROJECT.READMEIMPORT}}', readmeFrontendData, [readmeMdPath]);
-  if (swHelper.isJs()) {
+  if (swHelper.isNone()) {
     lightjs.replacement('{{PROJECT.READMEHEADER}}', '', [readmeMdPath]);
     lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', '', [readmeMdPath]);
   }
 
   const twoEol = os.EOL + os.EOL;
-  lightjs.replacement('{{PROJECT.USAGE}}', !swHelper.isJs() ? '## Usage' + twoEol + '### Modules' + twoEol : '', [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.USAGE}}', !swHelper.isNone() ? '## Usage' + twoEol + '### Modules' + twoEol : '', [readmeMdPath]);
 
   const genaralConfig = projectConfig.general;
   const backendConfig = projectConfig.backend;
@@ -57,8 +57,8 @@ function configure(pConfig, pPath) {
   const backendFolder = swHelper.isPhp() && backendConfig.php.runAsApi ? swProjectConst.API : swProjectConst.BACKEND;
   const backendLink = `For the backend check [${name} - ${backendFolder}](./${backendFolder}).`;
   const dockerLink = twoEol + `For the docker check [${name} - docker](./README_docker.md).`;
-  lightjs.replacement('{{PROJECT.FRONTEND}}', !swHelper.isJs() ? frontendLink : '', [readmeMdPath]);
-  lightjs.replacement('{{PROJECT.BACKEND}}', !swHelper.isJs() ? backendLink : '', [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.FRONTEND}}', !swHelper.isNone() ? frontendLink : '', [readmeMdPath]);
+  lightjs.replacement('{{PROJECT.BACKEND}}', !swHelper.isNone() ? backendLink : '', [readmeMdPath]);
   lightjs.replacement('{{PROJECT.DOCKER}}', genaralConfig.useDocker ? dockerLink : '', [readmeMdPath]);
   lightjs.replacement('{{PROJECT.VERSION}}', packageJsonData.version, [readmeMdPath]);
 
@@ -66,7 +66,7 @@ function configure(pConfig, pPath) {
   const frontendConfigModules = frontendConfig.modules;
   const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && backendConfig.php.runAsApi ? './api/' : './');
 
-  const readmeFile = swHelper.isJs() ? readmeMdPath : path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.README_MD);
+  const readmeFile = swHelper.isNone() ? readmeMdPath : path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.README_MD);
 
   const useMock = genaralConfig.useMock;
   replaceMockSection(useMock, 'MOCKMODE', ', `mockMode`', readmeFile);
@@ -108,7 +108,7 @@ function replaceMockSection(useMock, placeholder, replacement, file) {
 function updateReadmeHeader(readmeMdPath) {
   const readmeHeaderData = fs.readFileSync(path.join(swProjectConst.SRC_TEMPLATE_ROOT_README, 'README.header.md'), 'utf8');
   lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, true), [readmeMdPath]);
-  if (!swHelper.isJs()) {
+  if (!swHelper.isNone()) {
     shjs.cp(swProjectConst.SRC_TEMPLATE_FRONTEND_README, path.join(projectPath, swProjectConst.FRONTEND));
     lightjs.replacement('{{PROJECT.READMEHEADER}}', updateReadmeHeaderSections(readmeHeaderData, false), [path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.README_MD)]);
   }
@@ -172,7 +172,7 @@ function checkManager(manager) {
 function updateReadmeGettingStarted(readmeMdPath) {
   const readmeGettingStartedData = fs.readFileSync(path.join(swProjectConst.SRC_TEMPLATE_ROOT_README, 'README.getting-started.md'), 'utf8');
   lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', updateReadmeGettingStartedSection(readmeGettingStartedData, true), [readmeMdPath]);
-  if (!swHelper.isJs()) {
+  if (!swHelper.isNone()) {
     const readmeMdFrontendPath = path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.README_MD);
     lightjs.replacement('{{PROJECT.READMEGETTINGSTARTED}}', updateReadmeGettingStartedSection(readmeGettingStartedData, false), [readmeMdFrontendPath]);
   }
@@ -192,8 +192,8 @@ function updateReadmeGettingStartedSection(readmeGettingStartedData, isRoot) {
 
   const gettingStarted = [
     isRoot ? cloneProcess : '',
-    isRoot && swHelper.isJs() ? twoEol + installTools : '',
-    !isRoot && !swHelper.isJs() ? commandsFrontend + twoEol + installTools : ''
+    isRoot && swHelper.isNone() ? twoEol + installTools : '',
+    !isRoot && !swHelper.isNone() ? commandsFrontend + twoEol + installTools : ''
   ];
   return readmeGettingStartedData.replace('{{PROJECT.GETTINGSTARTED}}', gettingStarted.join(''));
 }

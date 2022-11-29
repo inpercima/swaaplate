@@ -48,9 +48,9 @@ Some of this options will be copied in the environment files of the new project 
 
 Defines the backend language of the app.
 
-* default: `js`
+* default: `none`
 * type: `string`
-* values: `java`/`kt`/`js`/`php`
+* values: `java`/`kt`/`nestjs`/`php`
 
 ## `backend/javaKt`
 
