@@ -57,7 +57,7 @@ module.exports = Object.freeze({
   YARN: 'yarn',
 
   // templates
-  NAVIGATION: `  <nav mat-tab-nav-bar>
+  NAVIGATION: `  <nav mat-tab-nav-bar mat-stretch-tabs="false" [tabPanel]="tabPanel">
     <a mat-tab-link
       *ngFor="let routeLink of routes | appRouting"
       [routerLink]="routeLink.path"
@@ -66,7 +66,9 @@ module.exports = Object.freeze({
       {{ routeLink.path }}
     </a>
   </nav>
-  <router-outlet></router-outlet>`,
+  <mat-tab-nav-panel #tabPanel>
+    <router-outlet></router-outlet>
+  </mat-tab-nav-panel>`,
 
   // imports
   IMPORT_ANGULAR_ROUTER: `import { Routes } from '@angular/router';`,
