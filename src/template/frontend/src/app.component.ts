@@ -13,19 +13,13 @@ export class AppComponent {
 
   public appname: string;{{PROJECT.ROUTESDECLARATION}}
 
-  /**
-   * Adds the custom theme to the app root.
-   * For overlays the OverlayContainer like in the constructor is used.
-   * For dialogs the panelClass of the configuration must added manually like
-   *
-   * const dialogConfig = new MatDialogConfig();
-   * dialogConfig.panelClass = `${environment.theme}-theme`;
-   */
+  // Adds the custom theme to the app root.
   @HostBinding('class') class = `${environment.theme}-theme`;
 
   public constructor(private titleService: Title, public overlayContainer: OverlayContainer) {
     this.appname = environment.appname;{{PROJECT.ROUTESALLOCATION}}
     this.titleService.setTitle(this.appname);
+    // Adds the custom theme to dialogs.
     this.overlayContainer.getContainerElement().classList.add(`${environment.theme}-theme`);
   }
 }
