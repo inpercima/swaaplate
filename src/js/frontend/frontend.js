@@ -482,10 +482,11 @@ function updateDependencies(pPath) {
   if (shjs.which('ng')) {
     lightjs.info('update dependencies');
     const pwd = shjs.pwd();
-    if (!swHelper.isJs()) {
-      shjs.cd(path.join(pPath, swProjectConst.FRONTEND));
-    } else {
+    if (swHelper.isNone()) {
       shjs.cd(pPath);
+    }
+    else {
+      shjs.cd(path.join(pPath, swProjectConst.FRONTEND));
     }
     shjs.exec('ng update --all --allowDirty=true --force=true');
     shjs.cd(pwd);

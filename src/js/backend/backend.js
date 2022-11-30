@@ -25,17 +25,23 @@ function configure(pConfig, pPath) {
 
   lightjs.info('--> begin backend setup ...');
 
-  if (!swHelper.isJs()) {
+  if (!swHelper.isNone()) {
     shjs.mkdir(path.join(projectPath, swProjectConst.FRONTEND));
     shjs.mv(path.join(projectPath, `!(${swProjectConst.FRONTEND})`), path.join(projectPath, swProjectConst.FRONTEND));
     shjs.mv(path.join(projectPath, '.eslintrc.json'), path.join(projectPath, swProjectConst.FRONTEND));
-    shjs.mkdir(path.join(projectPath, swHelper.getBackendFolder()));
+
+    if (swHelper.isJavaKotlin() || swHelper.isPhp()) {
+      shjs.mkdir(path.join(projectPath, swHelper.getBackendFolder()));
+    }
 
     if (swHelper.isJavaKotlin()) {
-      configureJavaKotlin(projectConfig, projectPath);
+      configureJavaKotlin();
     }
     if (swHelper.isPhp()) {
-      configurePhp(projectConfig, projectPath);
+      configurePhp();
+    }
+    if (swHelper.isNestJs()) {
+      configureNestjs();
     }
     updateReadmeFile();
   } else {
@@ -121,6 +127,29 @@ function configurePhp() {
 }
 
 /**
+ * Configures the backend for nestjs.
+ *
+ */
+function configureNestjs() {
+  lightjs.info(`* configure backend 'nestjs'`);
+  
+  const pwd = shjs.pwd();
+  const projectName = projectConfig.general.name;
+  if (shjs.which('nest')) {
+    shjs.cd(projectPath);
+    lightjs.info(`run 'nest new ${projectName} --strict --skip-git --package-manager ${swHelper.yarnOrNpm()}'`);
+    shjs.exec(`nest new ${projectName} --strict --skip-git --package-manager ${swHelper.yarnOrNpm()}`);
+    
+    // rename folder named as project to backend
+    shjs.mv(projectName, swProjectConst.BACKEND);
+  } else {
+    lightjs.error(`sorry, this script requires 'nest'`);
+    shjs.exit(1);
+  }
+  shjs.cd(pwd);
+}
+
+/**
  * Updates the readme file for the backend.
  *
  */
@@ -128,11 +157,13 @@ function updateReadmeFile() {
   const readmeMd = path.join(projectPath, swHelper.getBackendFolder(), swProjectConst.README_MD);
   lightjs.info(`* update '${readmeMd}'`);
 
-  shjs.cp(path.join('src/template/backend/readme', `README.${swHelper.isPhp() ? 'php' : 'java-kotlin'}.md`), readmeMd);
+  const readmSuffix = swHelper.isJavaKotlin() ? 'java-kotlin' : swHelper.isNestJs() ? 'nestjs' : 'php';
+  shjs.cp(path.join('src/template/backend/readme', `README.${readmSuffix}.md`), readmeMd);
 
   lightjs.replacement('{{PROJECT.NAME}}', projectConfig.general.name, [readmeMd]);
   lightjs.replacement('{{PROJECT.TITLE}}', projectConfig.general.title, [readmeMd]);
   lightjs.replacement('{{PROJECT.BACKENDFOLDER}}', swHelper.getBackendFolder(), [readmeMd]);
+  lightjs.replacement('{{PROJECT.USAGEYN}}', swHelper.yarnNpmCommand('run'), [readmeMd]);
 }
 
 exp.configure = configure;

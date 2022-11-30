@@ -24,11 +24,19 @@ function getBackendFolder() {
 }
 
 /**
- * Checks for js.
+ * Checks for none backend.
  *
  */
-function isJs() {
-  return projectConfig.backend.language === swProjectConst.JS;
+ function isNone() {
+  return projectConfig.backend.language === swProjectConst.NONE;
+}
+
+/**
+ * Checks for nestjs.
+ *
+ */
+function isNestJs() {
+  return projectConfig.backend.language === swProjectConst.NESTJS;
 }
 
 /**
@@ -99,7 +107,8 @@ function yarnNpmCommand(command) {
 
 exp.configure = configure;
 exp.getBackendFolder = getBackendFolder;
-exp.isJs = isJs;
+exp.isNone = isNone;
+exp.isNestJs = isNestJs;
 exp.isJava = isJava;
 exp.isMock = isMock;
 exp.isJavaKotlin = isJavaKotlin;
