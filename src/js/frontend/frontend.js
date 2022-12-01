@@ -276,7 +276,7 @@ function replaceSectionsInFiles() {
   lightjs.replacement(swProjectConst.EOL_EXPRESSION, os.EOL, [indexHtmlPath]);
 
   if (frontendConfig.useGoogleFonts) {
-    const fonts = `${createLink('Material+Icons')}${os.EOL}${createLink('Roboto:wght@400;700&display=swap')}`;
+    const fonts = `${createLink('Roboto:wght@400;700&display=swap')}`;
     lightjs.replacement('(  <link rel="icon")', `${fonts}${os.EOL}$1`, [indexHtmlPath]);
   }
 
@@ -307,7 +307,8 @@ function replaceSectionsInFiles() {
   lightjs.replacement('(render )title', '$1toolbar', [specPath]);
 
   // misc
-  lightjs.replacement(swProjectConst.EOL, `@import 'app/app.component.css';${os.EOL}`, [path.join(projectPath, swProjectConst.SRC, 'styles.css')]);
+  let materialIcons = frontendConfig.useGoogleFonts ? `${os.EOL}@import 'material-icons/iconfont/material-icons.css';${os.EOL}` : os.EOL;
+  lightjs.replacement(swProjectConst.EOL, `@import 'app/app.component.css';${materialIcons}`, [path.join(projectPath, swProjectConst.SRC, 'styles.css')]);
 }
 
 /**
@@ -361,7 +362,7 @@ function updateTsConfigJsonFile() {
 }
 
 /**
- * Create a link for font files.
+ * Integrate Google Font locally.
  *
  */
 function createLink(font) {
@@ -400,16 +401,19 @@ function updatePackageJsonFile() {
   packageJsonTemplateData.dependencies = packageJsonData.dependencies;
   packageJsonTemplateData.dependencies['@angular/cdk'] = swVersionConst.ANGULAR_CDK_MATERIAL;
   packageJsonTemplateData.dependencies['@angular/material'] = swVersionConst.ANGULAR_CDK_MATERIAL;
+  if (frontendConfig.useGoogleFonts) {
+    packageJsonTemplateData.dependencies['material-icons'] = swVersionConst.MATERIAL_ICONS;
+  }
   if (!swHelper.isRouting()) {
     packageJsonTemplateData.dependencies['@angular/router'] = undefined;
   }
-  if (projectConfig.general.useSecurity) {
+  if (generalConfig.useSecurity) {
     packageJsonTemplateData.dependencies['@auth0/angular-jwt'] = swVersionConst.ANGULAR_JWT;
   }
   if (swHelper.isMock()) {
     packageJsonTemplateData.dependencies['json-server'] = swVersionConst.JSON_SERVER;
   }
-  if (swHelper.isMock() || projectConfig.general.useSecurity) {
+  if (swHelper.isMock() || generalConfig.useSecurity) {
     packageJsonTemplateData.dependencies['jsonwebtoken'] = swVersionConst.JSONWEBTOKEN;
   }
   packageJsonTemplateData.description = generalConfig.description;
