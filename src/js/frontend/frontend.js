@@ -25,6 +25,7 @@ let projectPath = '';
 function configure(workspacePath, pConfig, pPath) {
   projectConfig = pConfig;
   projectPath = pPath;
+  const frontendConfig = projectConfig.frontend;
 
   const pwd = shjs.pwd();
   const projectName = projectConfig.general.name;
@@ -34,7 +35,7 @@ function configure(workspacePath, pConfig, pPath) {
       '--interactive=false --skip-install=true --style=css',
       `--package-manager=${swHelper.isYarn() ? swProjectConst.YARN : swProjectConst.NPM}`,
       `--directory=${projectName}`,
-      `--prefix=${projectConfig.frontend.prefix}`,
+      `--prefix=${frontendConfig.prefix}`,
       `--routing=${swHelper.isRouting()}`
     ];
     lightjs.info(`run 'ng new ${projectName} ${params.join(" ")}'`);
@@ -62,6 +63,9 @@ function configure(workspacePath, pConfig, pPath) {
   replaceTemplatesInFiles();
   updateTsConfigJsonFile();
   updatePackageJsonFile();
+  if (frontendConfig.useGoogleFonts) {
+    addGoogleFonts();
+  }
   installDependencies();
 }
 
@@ -275,11 +279,6 @@ function replaceSectionsInFiles() {
   lightjs.replacement('  <title>.*<\/title>', swProjectConst.EMPTY, [indexHtmlPath]);
   lightjs.replacement(swProjectConst.EOL_EXPRESSION, os.EOL, [indexHtmlPath]);
 
-  if (frontendConfig.useGoogleFonts) {
-    const fonts = `${createLink('Roboto:wght@400;700&display=swap')}`;
-    lightjs.replacement('(  <link rel="icon")', `${fonts}${os.EOL}$1`, [indexHtmlPath]);
-  }
-
   const prefix = frontendConfig.prefix;
   lightjs.replacement(`(<${prefix}-root>)(</${prefix}-root>)`, '$1Loading...$2', [indexHtmlPath]);
 
@@ -307,8 +306,8 @@ function replaceSectionsInFiles() {
   lightjs.replacement('(render )title', '$1toolbar', [specPath]);
 
   // misc
-  let materialIcons = frontendConfig.useGoogleFonts ? `${os.EOL}@import 'material-icons/iconfont/material-icons.css';${os.EOL}` : os.EOL;
-  lightjs.replacement(swProjectConst.EOL, `@import 'app/app.component.css';${materialIcons}`, [path.join(projectPath, swProjectConst.SRC, 'styles.css')]);
+  let googleFonts = frontendConfig.useGoogleFonts ? `${os.EOL}@import 'fonts.css';${os.EOL}@import 'material-icons/iconfont/material-icons.css';${os.EOL}` : os.EOL;
+  lightjs.replacement(swProjectConst.EOL, `@import 'app/app.component.css';${googleFonts}`, [path.join(projectPath, swProjectConst.SRC, 'styles.css')]);
 }
 
 /**
@@ -359,14 +358,6 @@ function updateTsConfigJsonFile() {
   ]
 }`;
   lightjs.replacement('  }\\r?\\n\\s*}', include, [tsConfigJsonFile]);
-}
-
-/**
- * Integrate Google Font locally.
- *
- */
-function createLink(font) {
-  return `  <link href="https://fonts.googleapis.com/css2?family=${font}" rel="stylesheet">`;
 }
 
 /**
@@ -456,6 +447,16 @@ function updatePackageJsonFile() {
  */
 function updateTask(packageJsonData, task, mode) {
   return `export NODE_ENV='${mode}' && ${packageJsonData[task]}`;
+}
+
+/**
+ * Add Google Fonts locally.
+ *
+ */
+function addGoogleFonts() {
+  shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_FRONTEND, 'fonts.css'), path.join(projectPath, swProjectConst.SRC));
+  shjs.cp('-r', swProjectConst.SRC_TEMPLATE_FRONTEND_FONTS, path.join(projectPath, swProjectConst.SRC_ASSETS));
+  shjs.rm(path.join(projectPath, swProjectConst.SRC_ASSETS, '.gitkeep'));
 }
 
 /**

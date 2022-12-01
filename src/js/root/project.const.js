@@ -13,10 +13,12 @@ module.exports = Object.freeze({
 
   // src
   SRC: 'src',
+  SRC_ASSETS: 'src/assets',
   SRC_MAIN: 'src/main',
   SRC_TEST: 'src/test',
   SRC_TEMPLATE_ROOT_README: 'src/template/root/readme/',
   SRC_TEMPLATE_FRONTEND: 'src/template/frontend/',
+  SRC_TEMPLATE_FRONTEND_FONTS: 'src/template/frontend/fonts/',
   SRC_TEMPLATE_FRONTEND_README: 'src/template/frontend/README.md',
 
   // by filename or foldername
