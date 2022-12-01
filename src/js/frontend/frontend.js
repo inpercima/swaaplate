@@ -25,6 +25,7 @@ let projectPath = '';
 function configure(workspacePath, pConfig, pPath) {
   projectConfig = pConfig;
   projectPath = pPath;
+  const frontendConfig = projectConfig.frontend;
 
   const pwd = shjs.pwd();
   const projectName = projectConfig.general.name;
@@ -34,7 +35,7 @@ function configure(workspacePath, pConfig, pPath) {
       '--interactive=false --skip-install=true --style=css',
       `--package-manager=${swHelper.isYarn() ? swProjectConst.YARN : swProjectConst.NPM}`,
       `--directory=${projectName}`,
-      `--prefix=${projectConfig.frontend.prefix}`,
+      `--prefix=${frontendConfig.prefix}`,
       `--routing=${swHelper.isRouting()}`
     ];
     lightjs.info(`run 'ng new ${projectName} ${params.join(" ")}'`);
@@ -62,6 +63,9 @@ function configure(workspacePath, pConfig, pPath) {
   replaceTemplatesInFiles();
   updateTsConfigJsonFile();
   updatePackageJsonFile();
+  if (frontendConfig.useGoogleFonts) {
+    addGoogleFonts();
+  }
   installDependencies();
 }
 
@@ -275,11 +279,6 @@ function replaceSectionsInFiles() {
   lightjs.replacement('  <title>.*<\/title>', swProjectConst.EMPTY, [indexHtmlPath]);
   lightjs.replacement(swProjectConst.EOL_EXPRESSION, os.EOL, [indexHtmlPath]);
 
-  if (frontendConfig.useGoogleFonts) {
-    const fonts = `${createLink('Material+Icons')}${os.EOL}${createLink('Roboto:wght@400;700&display=swap')}`;
-    lightjs.replacement('(  <link rel="icon")', `${fonts}${os.EOL}$1`, [indexHtmlPath]);
-  }
-
   const prefix = frontendConfig.prefix;
   lightjs.replacement(`(<${prefix}-root>)(</${prefix}-root>)`, '$1Loading...$2', [indexHtmlPath]);
 
@@ -307,7 +306,8 @@ function replaceSectionsInFiles() {
   lightjs.replacement('(render )title', '$1toolbar', [specPath]);
 
   // misc
-  lightjs.replacement(swProjectConst.EOL, `@import 'app/app.component.css';${os.EOL}`, [path.join(projectPath, swProjectConst.SRC, 'styles.css')]);
+  let googleFonts = frontendConfig.useGoogleFonts ? `${os.EOL}@import 'fonts.css';${os.EOL}@import 'material-icons/iconfont/material-icons.css';${os.EOL}` : os.EOL;
+  lightjs.replacement(swProjectConst.EOL, `@import 'app/app.component.css';${googleFonts}`, [path.join(projectPath, swProjectConst.SRC, 'styles.css')]);
 }
 
 /**
@@ -361,14 +361,6 @@ function updateTsConfigJsonFile() {
 }
 
 /**
- * Create a link for font files.
- *
- */
-function createLink(font) {
-  return `  <link href="https://fonts.googleapis.com/css2?family=${font}" rel="stylesheet">`;
-}
-
-/**
  * Update package.json file.
  *
  */
@@ -400,16 +392,19 @@ function updatePackageJsonFile() {
   packageJsonTemplateData.dependencies = packageJsonData.dependencies;
   packageJsonTemplateData.dependencies['@angular/cdk'] = swVersionConst.ANGULAR_CDK_MATERIAL;
   packageJsonTemplateData.dependencies['@angular/material'] = swVersionConst.ANGULAR_CDK_MATERIAL;
+  if (frontendConfig.useGoogleFonts) {
+    packageJsonTemplateData.dependencies['material-icons'] = swVersionConst.MATERIAL_ICONS;
+  }
   if (!swHelper.isRouting()) {
     packageJsonTemplateData.dependencies['@angular/router'] = undefined;
   }
-  if (projectConfig.general.useSecurity) {
+  if (generalConfig.useSecurity) {
     packageJsonTemplateData.dependencies['@auth0/angular-jwt'] = swVersionConst.ANGULAR_JWT;
   }
   if (swHelper.isMock()) {
     packageJsonTemplateData.dependencies['json-server'] = swVersionConst.JSON_SERVER;
   }
-  if (swHelper.isMock() || projectConfig.general.useSecurity) {
+  if (swHelper.isMock() || generalConfig.useSecurity) {
     packageJsonTemplateData.dependencies['jsonwebtoken'] = swVersionConst.JSONWEBTOKEN;
   }
   packageJsonTemplateData.description = generalConfig.description;
@@ -452,6 +447,16 @@ function updatePackageJsonFile() {
  */
 function updateTask(packageJsonData, task, mode) {
   return `export NODE_ENV='${mode}' && ${packageJsonData[task]}`;
+}
+
+/**
+ * Add Google Fonts locally.
+ *
+ */
+function addGoogleFonts() {
+  shjs.cp(path.join(swProjectConst.SRC_TEMPLATE_FRONTEND, 'fonts.css'), path.join(projectPath, swProjectConst.SRC));
+  shjs.cp('-r', swProjectConst.SRC_TEMPLATE_FRONTEND_FONTS, path.join(projectPath, swProjectConst.SRC_ASSETS));
+  shjs.rm(path.join(projectPath, swProjectConst.SRC_ASSETS, '.gitkeep'));
 }
 
 /**
