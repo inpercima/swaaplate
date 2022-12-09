@@ -139,13 +139,6 @@ function updateAngularJsonFile() {
   const frontendConfig = projectConfig.frontend;
   const architectData = angularJsonData.projects[name].architect;
   architectData.build.options.outputPath = frontendConfig.buildDir;
-  if (swHelper.isPhp()) {
-    architectData.build.options.customWebpackConfig = {
-      path: './webpack.config.js'
-    };
-    architectData.build.builder = '@angular-builders/custom-webpack:browser';
-    architectData.serve.builder = '@angular-builders/custom-webpack:dev-server';
-  }
   architectData.build.options.styles.push('src/themes.scss');
   architectData.build.configurations.production.fileReplacements = addFileReplacements('prod');
   architectData.build.configurations.development.budgets = addBudgets();
@@ -306,7 +299,7 @@ function replaceSectionsInFiles() {
   lightjs.replacement('(render )title', '$1toolbar', [specPath]);
 
   // misc
-  let googleFonts = frontendConfig.useGoogleFonts ? `${os.EOL}@import 'fonts.css';${os.EOL}@import 'material-icons/iconfont/material-icons.css';${os.EOL}` : os.EOL;
+  let googleFonts = frontendConfig.useGoogleFonts ? `${os.EOL}@import 'fonts.css';${os.EOL}` : os.EOL;
   lightjs.replacement(swProjectConst.EOL, `@import 'app/app.component.css';${googleFonts}`, [path.join(projectPath, swProjectConst.SRC, 'styles.css')]);
 }
 
@@ -410,15 +403,12 @@ function updatePackageJsonFile() {
   packageJsonTemplateData.description = generalConfig.description;
   packageJsonTemplateData.devDependencies = packageJsonData.devDependencies;
   if (swHelper.isPhp()) {
-    packageJsonTemplateData.devDependencies['copy-webpack-plugin'] = swVersionConst.COPY_WEBPACK_PLUGIN;
-    packageJsonTemplateData.devDependencies['@angular-builders/custom-webpack'] = swVersionConst.CUSTOM_WEBPACK;
-
-    scripts['build:dev'] = updateTask(scripts, 'build:dev', 'dev');
-    scripts['watch:dev'] = updateTask(scripts, 'watch:dev', 'dev');
-    scripts['build:prod'] = updateTask(scripts, 'build:prod', 'prod');
+    scripts['build:dev'] = updateTask(scripts, 'build:dev');
+    scripts['watch:dev'] = updateTask(scripts, 'watch:dev');
+    scripts['build:prod'] = updateTask(scripts, 'build:prod');
     if (swHelper.isMock()) {
-      scripts['build:mock'] = updateTask(scripts, 'build:mock', 'mock');
-      scripts['watch:mock'] = updateTask(scripts, 'watch:mock', 'mock');
+      scripts['build:mock'] = updateTask(scripts, 'build:mock');
+      scripts['watch:mock'] = updateTask(scripts, 'watch:mock');
     }
   }
   packageJsonTemplateData.engines = {
@@ -443,10 +433,9 @@ function updatePackageJsonFile() {
  *
  * @param {object} packageJsonData
  * @param {string} task
- * @param {mode} mode
  */
-function updateTask(packageJsonData, task, mode) {
-  return `export NODE_ENV='${mode}' && ${packageJsonData[task]}`;
+function updateTask(packageJsonData, task) {
+  return `${packageJsonData[task]}`;
 }
 
 /**

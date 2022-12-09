@@ -12,10 +12,6 @@ module.exports = Object.freeze({
   APACHE: '2.4',
   // https://www.npmjs.com/package/@cypress/schematic
   CYPRESS_SCHEMATIC: '2.3.0',
-  // https://www.npmjs.com/package/copy-webpack-plugin
-  COPY_WEBPACK_PLUGIN: '11.0.0',
-  // https://www.npmjs.com/package/@angular-builders/custom-webpack
-  CUSTOM_WEBPACK: '14.1.0',
   DOCKER_COMPOSE: '2.11.0',
   DOCKER: '20.10.18',
   JDK: '17',
@@ -24,7 +20,7 @@ module.exports = Object.freeze({
   // https://www.npmjs.com/package/jsonwebtoken
   JSONWEBTOKEN: '8.5.1',
   // https://www.npmjs.com/package/material-icons
-  MATERIAL_ICONS: '1.12.2',
+  MATERIAL_ICONS: '1.13.1',
   // https://maven.apache.org/plugins/maven-jar-plugin/download.cgi
   MAVEN_JAR_PLUGIN: '3.3.0',
   NODE: '18.10.0',

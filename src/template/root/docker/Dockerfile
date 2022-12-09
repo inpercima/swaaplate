@@ -15,7 +15,6 @@ COPY frontend/tsconfig.json .
 COPY frontend/tsconfig.spec.json .
 COPY frontend/e2e/tsconfig.json ./e2e/
 COPY frontend/tslint.json .
-COPY frontend/webpack.config.js .
 COPY frontend/yarn.lock .
 
 RUN yarn

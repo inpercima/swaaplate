@@ -95,7 +95,7 @@ function configureJavaKotlin() {
 function configurePhp() {
   const backendConfig = projectConfig.backend;
   const backendFolder = swHelper.getBackendFolder();
-  lightjs.info(`* configure backend 'php', create 'webpack config' and '${backendFolder}' as backend folder`);
+  lightjs.info(`* configure backend 'php' and create '${backendFolder}' as backend folder`);
 
   const srcPath = path.join(projectPath, backendFolder);
   shjs.mkdir('-p', srcPath);
@@ -116,14 +116,6 @@ function configurePhp() {
   if (backendConfig.php.modRewritePhpExtension) {
     shjs.cp(path.join(phpTemplatePath, '.htaccess'), srcPath);
   }
-
-  const configMode = generalConfig.useMock ? `if (process.env.NODE_ENV !== 'mock') {` + os.EOL + '  ' : '';
-  const webpackConfigFile = path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.WEBPACK_CONFIG_JS);
-  shjs.cp(path.join(phpTemplatePath, swProjectConst.WEBPACK_CONFIG_JS), webpackConfigFile);
-  lightjs.replacement('{{PROJECT.INDENTATION}}', generalConfig.useMock ? '  ' : '', [webpackConfigFile]);
-  lightjs.replacement('{{PROJECT.CONFIGMODE}}', configMode, [webpackConfigFile]);
-  lightjs.replacement('{{PROJECT.BACKENDFOLDER}}', backendFolder, [webpackConfigFile]);
-  lightjs.replacement('{{PROJECT.CONFIGMODEEND}}', generalConfig.useMock ? os.EOL + '}' : '', [webpackConfigFile]);
 }
 
 /**

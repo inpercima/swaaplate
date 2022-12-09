@@ -39,7 +39,6 @@ module.exports = Object.freeze({
   PACKAGE_JSON: 'package.json',
   README_MD: 'README.md',
   SWAAPLATE_JSON: 'swaaplate.json',
-  WEBPACK_CONFIG_JS: 'webpack.config.js',
 
   // by name
   API: 'api',
