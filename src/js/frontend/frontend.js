@@ -150,9 +150,22 @@ function updateAngularJsonFile() {
     architectData.serve.configurations.mock = addBrowserTarget(name, 'mock');
   }
 
-  if (generalConfig.modRewriteIndex) {
+  if (generalConfig.modRewriteIndex || swHelper.isPhp()) {
     const assets = architectData.build.options.assets;
-    assets.unshift("src/.htaccess");
+    if (generalConfig.modRewriteIndex) {
+      assets.unshift("src/.htaccess");
+    }
+    if (swHelper.isPhp()) {
+      const backendFolder = swHelper.getBackendFolder();
+      const assetsPhp = {
+        "glob": "**/*",
+        "ignore": ["**/config.default.php", "**/config.dev.php", "**/README.md"],
+        "input": "../" + backendFolder + "/",
+        "output": "/" + backendFolder + "/"
+      };
+      assets.push(assetsPhp);
+    }
+
     architectData.build.options.assets = assets;
   }
 
