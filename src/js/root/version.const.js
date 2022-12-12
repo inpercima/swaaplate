@@ -2,16 +2,16 @@
 
 module.exports = Object.freeze({
   // https://www.npmjs.com/package/@angular/material
-  ANGULAR_CDK_MATERIAL: '15.0.1',
+  ANGULAR_CDK_MATERIAL: '15.0.2',
   // https://www.npmjs.com/package/@angular/cli
-  ANGULAR_CLI: '15.0.2',
+  ANGULAR_CLI: '15.0.3',
   // https://www.npmjs.com/package/@angular-eslint/schematics
   ANGULAR_ESLINT_SCHEMATICS: '15.1.0',
   // https://www.npmjs.com/package/@auth0/angular-jwt
   ANGULAR_JWT: '5.1.0',
   APACHE: '2.4',
   // https://www.npmjs.com/package/@cypress/schematic
-  CYPRESS_SCHEMATIC: '2.3.0',
+  CYPRESS_SCHEMATIC: '2.4.0',
   DOCKER_COMPOSE: '2.11.0',
   DOCKER: '20.10.18',
   JDK: '17',
