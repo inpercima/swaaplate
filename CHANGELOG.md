@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2022-10-24
+
+## [2.4.0] - 2022-12-01
+
+### Changed
+
+- [Update node to 16.17.0](https://github.com/inpercima/swaaplate/commit/2bb0d411772ef00de14a400ecfa2686177d39b83)
+- [Add Google Font Roboto](https://github.com/inpercima/swaaplate/commit/293edfe58bd8ef4dfe4fb54147bdabf7c2962d63)
+- [Add material-icons locally](https://github.com/inpercima/swaaplate/commit/936ab30feb454c39a6fd08b0445f5cad4f4da9d9)
+- [Update dependencies for swaaplate](https://github.com/inpercima/swaaplate/commit/d57966d4af4e2cda2b6d735a0dfe8ab72e1b6865)
+- [Prepare integration with nestjs](https://github.com/inpercima/swaaplate/commit/c71248412901d1663c98dcaabc29fe0aed4ac654)
+- [Rename client to frontend and server to backend in helper](https://github.com/inpercima/swaaplate/commit/773c6cfa7e5b2e30a01666c25d4ec3a8538fbdb2)
+
+### Fixed
+
+- [Update theming for angular](https://github.com/inpercima/swaaplate/commit/cf8267067dbd634b89f58af3d1471c16141fe7e7)
+- [Migrate mat-tab-nav-bar to new mdc behaviour](https://github.com/inpercima/swaaplate/commit/1676d4d8b8502a3566861d5b21d00a2da00f6fd3)
+- [Downgrade axios from 1.2.0 to 1.1.3 b/c of response errors](https://github.com/inpercima/swaaplate/commit/4615f37a906ac63cbbf2fa312aefad876ab085b1)
+- [Apply changes for Angular 15](https://github.com/inpercima/swaaplate/commit/9e44fb6dbfc09ee76c30938b5dd521d046192cb1)
+
 ## [2.3.8] - 2022-10-24
 
 ### Changed
