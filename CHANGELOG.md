@@ -5,7 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.5.0] - 2022-10-24
+## [2.5.0] - 2022-12-29
+
+### Changed
+
+- [Update versions](https://github.com/inpercima/swaaplate/commit/f1bbc9a7773abf6cec4041df11dcad196891f50d)
+- [Update Angular to 15.0.2](https://github.com/inpercima/swaaplate/commit/24b0e487afd4f7041ef97f0faef4f8be7bcc137d)
+- [Add more font weights for Roboto](https://github.com/inpercima/swaaplate/commit/41e10e2a83f0d996daa3d26d628250fccd009b5e)
+- [Check configuration for php and copy files](https://github.com/inpercima/swaaplate/commit/cea01d6e42509c8d2f8364b6637877bb810fd688)
+
+### Fixed
+
+- [Revert axios update b/c of known errors with version 1.2.0 and 1.2.1](https://github.com/inpercima/swaaplate/commit/c988cba93a519d1426c5388cb551824cd93b3158)
+
+### Removed
+
+- [Remove extra webpack configuration](https://github.com/inpercima/swaaplate/commit/c975352f20dbd89c10ccbe209b970cff6e623063)
 
 ## [2.4.0] - 2022-12-01
 
