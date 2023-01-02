@@ -9,10 +9,10 @@ Some of this options will be copied in the environment files of the new project 
 
 ## Table of contents
 
-* [backend/language](#backendlanguage)
 * [backend/javaKt](#backendjavakt)
 * [backend/javaKt/management](#backendjavaktmanagement)
 * [backend/javaKt/packagePath](#backendjavaktpackagepath)
+* [backend/language](#backendlanguage)
 * [backend/php](#backendphp)
 * [backend/php/modRewritePhpExtension](#backendphpmodrewritephpextension)
 * [backend/php/runAsApi](#backendphprunasapi)
@@ -44,14 +44,6 @@ Some of this options will be copied in the environment files of the new project 
 * [general/useMITLicense](#generalusemitlicense)
 * [general/useSecurity](#generalusesecurity)
 
-## `backend/language`
-
-Defines the backend language of the app.
-
-* default: `none`
-* type: `string`
-* values: `java`/`kt`/`nestjs`/`php`
-
 ## `backend/javaKt`
 
 This option depends on [backend/language](#backendlanguage) with `java` or `kt`.
@@ -70,6 +62,14 @@ The package structure.
 
 * default: EMPTY
 * type: `string`
+
+## `backend/language`
+
+Defines the backend language of the app.
+
+* default: `none`
+* type: `string`
+* values: `java`/`kt`/`nestjs`/`php`
 
 ## `backend/php`
 
