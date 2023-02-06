@@ -76,8 +76,7 @@ function isJavaKotlin() {
  * Checks if routing is enabeld.
  */
 function isRouting() {
-  const modulesConfig = projectConfig.frontend.modules;
-  return modulesConfig.enabled && modulesConfig.routing;
+  return projectConfig.frontend.architecture.routing;
 }
 
 /**

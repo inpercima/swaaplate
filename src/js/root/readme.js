@@ -63,7 +63,6 @@ function configure(pConfig, pPath) {
   lightjs.replacement('{{PROJECT.VERSION}}', packageJsonData.version, [readmeMdPath]);
 
   const frontendConfig = projectConfig.frontend;
-  const frontendConfigModules = frontendConfig.modules;
   const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && backendConfig.php.runAsApi ? './api/' : './');
 
   const readmeFile = swHelper.isNone() ? readmeMdPath : path.join(projectPath, swProjectConst.FRONTEND, swProjectConst.README_MD);
@@ -89,7 +88,7 @@ function configure(pConfig, pPath) {
   replaceMockSection(useMock, 'MOCKCONFIG', ' and for mockMode the option `api` to `http://localhost:3000/`', readmeFile);
 
   lightjs.replacement('{{PROJECT.API}}', api, [readmeFile]);
-  lightjs.replacement('{{PROJECT.DEFAULTROUTE}}', frontendConfigModules.features.defaultRoute, [readmeFile]);
+  lightjs.replacement('{{PROJECT.DEFAULTROUTE}}', frontendConfig.architecture.modules.features.firstComponent, [readmeFile]);
   lightjs.replacement('{{PROJECT.THEME}}', frontendConfig.theme, [readmeFile]);
 
   lightjs.replacement('(`themes\\.scss`\\.)\\n\\s*', '$1' + os.EOL, [readmeFile]);

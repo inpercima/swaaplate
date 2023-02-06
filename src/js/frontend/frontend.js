@@ -250,7 +250,6 @@ function createEnvironmentTsFiles() {
 
 function createEnvironmentTsFile(environmentTsFile, production) {
   const frontendConfig = projectConfig.frontend;
-  const modulesConfig = frontendConfig.modules;
   const generalConfig = projectConfig.general;
   const backendConfig = projectConfig.backend;
   const api = swHelper.isJavaKotlin() ? 'http://localhost:8080/' : (swHelper.isPhp() && backendConfig.php.runAsApi ? './api/' : './');
@@ -258,7 +257,7 @@ function createEnvironmentTsFile(environmentTsFile, production) {
   const environments = `export const environment = {
   api: '${api}',
   appname: '${generalConfig.title}',
-  defaultRoute: '${modulesConfig.features.defaultRoute}',
+  defaultRoute: '${frontendConfig.architecture.modules.features.firstComponent}',
   production: ${production},
   theme: '${frontendConfig.theme}',
 };`;
@@ -324,20 +323,21 @@ function replaceTemplatesInFiles() {
   // replace in app.module.ts
   const appModuleTsPath = path.join(projectPath, swProjectConst.SRC, swProjectConst.APP, 'app.module.ts');
   const frontendConfig = projectConfig.frontend;
-  const modulesConfig = frontendConfig.modules;
+  const architectureConfig = frontendConfig.architecture;
+  const modulesConfig = architectureConfig.modules;
   lightjs.replacement('{{PROJECT.MATERIALTABSMODULE}}', swHelper.isRouting() ? os.EOL + swProjectConst.IMPORT_MATERIAL_TABS_MODULE : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.APPROUTING}}', swHelper.isRouting() ? os.EOL + swProjectConst.IMPORT_APP_ROUTING_MODULE + os.EOL + swProjectConst.IMPORT_APP_ROUTING_PIPE : '', [appModuleTsPath]);
-  lightjs.replacement('{{PROJECT.FEATURESMODULE}}', swHelper.isRouting() || modulesConfig.enabled ? os.EOL + swProjectConst.IMPORT_FEATURES_MODULE : '', [appModuleTsPath]);
+  lightjs.replacement('{{PROJECT.FEATURESMODULE}}', swHelper.isRouting() || !architectureConfig.standalone ? os.EOL + swProjectConst.IMPORT_FEATURES_MODULE : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.NOTFOUNDMODULE}}', swHelper.isRouting() && modulesConfig.notFound.enabled ? os.EOL + swProjectConst.IMPORT_NOT_FOUND_MODULE : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.APPROUTINGPIPENAME}}', swHelper.isRouting() ? os.EOL + '    AppRoutingPipe,' : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.MATERIALTABSMODULENAME}}', swHelper.isRouting() ? os.EOL + '    MatTabsModule,' : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.APPROUTINGMODULENAME}}', swHelper.isRouting() ? os.EOL + '    AppRoutingModule,' : '', [appModuleTsPath]);
-  lightjs.replacement('{{PROJECT.FEATURESMODULENAME}}', swHelper.isRouting() || modulesConfig.enabled ? os.EOL + '    FeaturesModule,' : '', [appModuleTsPath]);
+  lightjs.replacement('{{PROJECT.FEATURESMODULENAME}}', swHelper.isRouting() || !architectureConfig.standalone ? os.EOL + '    FeaturesModule,' : '', [appModuleTsPath]);
   lightjs.replacement('{{PROJECT.NOTFOUNDMODULENAME}}', swHelper.isRouting() && modulesConfig.notFound.enabled ? os.EOL + '    NotFoundModule,' : '', [appModuleTsPath]);
 
   // replace in app.component.html
   const appComponentHtmlPath = path.join(projectPath, swProjectConst.SRC, swProjectConst.APP, 'app.component.html');
-  const component = frontendConfig.prefix + '-' + modulesConfig.features.defaultRoute;
+  const component = frontendConfig.prefix + '-' + modulesConfig.features.firstComponent;
   lightjs.replacement('{{PROJECT.NAVIGATION}}', os.EOL + (swHelper.isRouting() ? swProjectConst.NAVIGATION : `  <${component}></${component}>`), [appComponentHtmlPath]);
 
   // replace in app.component.ts

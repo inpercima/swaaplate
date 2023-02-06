@@ -20,14 +20,14 @@ Some of this options will be copied in the environment files of the new project 
 * [frontend/ghUser](#frontendghuser)
 * [frontend/installDependencies](#frontendinstalldependencies)
 * [frontend/language](#frontendlanguage)
-* [frontend/modules/enabled](#frontendmodulesenabled)
-* [frontend/modules/features](#frontendmodulesfeatures)
-* [frontend/modules/features/defaultRoute](#frontendmodulesfeaturesdefaultroute)
-* [frontend/modules/features/name](#frontendmodulesfeaturesname)
-* [frontend/modules/notFound](#frontendmodulesnotfound)
-* [frontend/modules/notFound/enabled](#frontendmodulesnotfoundenabled)
-* [frontend/modules/notFound/name](#frontendmodulesnotfoundname)
-* [frontend/modules/routing](#frontendmodulesrouting)
+* [frontend/architecture/modules/features](#frontendarchitecturemodulesfeatures)
+* [frontend/architecture/modules/features/firstComponent](#frontendarchitecturemodulesfeaturesfirstcomponent)
+* [frontend/architecture/modules/features/name](#frontendarchitecturemodulesfeaturesname)
+* [frontend/architecture/modules/notFound](#frontendarchitecturemodulesnotfound)
+* [frontend/architecture/modules/notFound/enabled](#frontendarchitecturemodulesnotfoundenabled)
+* [frontend/architecture/modules/notFound/name](#frontendmodulesnotfoundname)
+* [frontend/architecture/routing](#frontendarchitecturerouting)
+* [frontend/architecture/standalone](#frontendarchitecturestandalone)
 * [frontend/packageJson/contributors](#frontendpackagejsoncontributors)
 * [frontend/packageJson/homepage](#frontendpackagejsonhomepage)
 * [frontend/packageJson/repository](#frontendpackagejsonrepository)
@@ -93,6 +93,68 @@ The api URL in frontend environment.ts and environment.prod.ts will be set to `.
 * type: `boolean`
 * values: `true`/`false`
 
+## `frontend/architecture/modules/features`
+
+This option depends on [frontend/architecture/standalone](#frontendarchitecturestandalone).
+
+## `frontend/architecture/modules/features/firstComponent`
+
+The first component to be created.
+This defines the default route and the redirect route.
+This option ca be changed in the environment files.
+
+* environment name: `defaultRoute`
+* default: `hello-world`
+* type: `string`
+
+## `frontend/architecture/modules/features/name`
+
+Defines the name of the features module.
+
+* default: `features`
+* type: `string`
+
+## `frontend/architecture/modules/notFound`
+
+This option depends on [frontend/architecture/standalone](#frontendarchitecturestandalone).
+
+## `frontend/architecture/modules/notFound/enabled`
+
+Defines whether the notFound module will be created and used or not.
+On `true` a module and component will be created and used on routes are not existing.
+
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
+
+## `frontend/modules/notFound/name`
+
+The name of the 404 module and component where to redirect if a route not exists.
+
+* default: `not-found`
+* type: `string`
+
+## `frontend/architecture/routing`
+
+Defines whether a navigation will be created and routing could be used.
+
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
+
+## `frontend/architecture/standalone`
+
+Defines whether no modules for components should be created or not.
+The hole app will be created with standalone components and the app root will be generated to react on this.
+On `true` no module will be created.
+On `false` modules will be created.
+This can be used for components as pages like dashboard, contact, about or impress.
+A not found module could be created, this depends on [frontend/architecture/modules/notFound/enabled](#frontendarchitecturemodulesnotfoundenabled).
+
+* default: `true`
+* type: `boolean`
+* values: `true`/`false`
+
 ## `frontend/buildDir`
 
 Defines the build dir for the webapp.
@@ -121,66 +183,6 @@ Defines the language of the app in frontend.
 
 * default: `en`
 * type: `string`
-
-## `frontend/modules/enabled`
-
-Defines whether default modules for components should be created or not.
-On `true` a features module will be created.
-This can be used for components as pages like dashboard, contact, about or impress.
-A not found module could be created, this depends on [frontend/modules/notFound/enabled](#frontendmodulesnotfoundenabled).
-
-* default: `true`
-* type: `boolean`
-* values: `true`/`false`
-
-## `frontend/modules/features`
-
-This option depends on [frontend/modules/enabled](#frontendmodulesenabled).
-
-## `frontend/modules/features/defaultRoute`
-
-The main route and the redirect route.
-This option ca be changed in the environment files.
-
-* environment name: `defaultRoute`
-* default: `hello-world`
-* type: `string`
-
-## `frontend/modules/features/name`
-
-Defines the name of the features module.
-
-* default: `features`
-* type: `string`
-
-## `frontend/modules/notFound`
-
-This option depends on [frontend/modules/enabled](#frontendmodulesenabled) and [frontend/modules/routing](#frontendmodulesrouting) too.
-
-## `frontend/modules/notFound/enabled`
-
-Defines whether the notFound module will be created and used or not.
-On `true` a module and component will be created and used on routes are not existing.
-
-* default: `true`
-* type: `boolean`
-* values: `true`/`false`
-
-## `frontend/modules/notFound/name`
-
-The name of the 404 module and component where to redirect if a route not exists.
-
-* default: `not-found`
-* type: `string`
-
-## `frontend/modules/routing`
-
-Defines whether a navigation will be created and routing could be used.
-This option depends on [frontend/modules/enabled](#frontendmodulesenabled).
-
-* default: `true`
-* type: `boolean`
-* values: `true`/`false`
 
 ## `frontend/packageJson/contributors`
 

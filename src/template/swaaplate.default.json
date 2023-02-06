@@ -11,22 +11,24 @@
     }
   },
   "frontend": {
+    "architecture": {
+      "modules": {
+        "features": {
+          "firstComponent": "",
+          "name": ""
+        },
+        "notFound": {
+          "enabled": false,
+          "name": ""
+        }
+      },
+      "routing": false,
+      "standalone": true
+    },
     "buildDir": "dist",
     "ghUser": "",
     "installDependencies": true,
     "language": "en",
-    "modules": {
-      "enabled": true,
-      "features": {
-        "defaultRoute": "hello-world",
-        "name": "features"
-      },
-      "notFound": {
-        "enabled": true,
-        "name": "not-found"
-      },
-      "routing": true
-    },
     "packageJson": {
       "contributors": [],
       "homepage": "",

@@ -24,19 +24,22 @@ function generateModulesAndComponents(pConfig, pPath) {
   projectConfig = pConfig;
   projectPath = pPath;
 
-  const modulesConfig = projectConfig.frontend.modules;
-  if (modulesConfig.enabled) {
-    lightjs.info('      option modules is activated, modules, components will be generated');
+  const architectureConfig = projectConfig.frontend.architecture;
+  if (architectureConfig.standalone) {
+    lightjs.info('      option standalone is activated, no modules and extra components will be generated');
+    // tbd
+  } else {
+    lightjs.info('      option standalone is deactivated, modules will be generated');
     if (swHelper.isRouting()) {
       lightjs.info('      option routing is activated, routing will be generated');
     } else {
-      lightjs.info('      option routing is deactivated, noting todo');
+      lightjs.info('      option routing is deactivated, routing will not be generated');
     }
-    const featuresConfig = modulesConfig.features;
-    generateModuleAndComponent(featuresConfig.name, featuresConfig.defaultRoute);
-    const notFoundConfig = modulesConfig.notFound;
-    const notFoundName = notFoundConfig.name;
-    if (swHelper.isRouting() && notFoundConfig.enabled) {
+    const featuresConfig = architectureConfig.modules.features;
+    generateModuleAndComponent(featuresConfig.name, featuresConfig.firstComponent);
+    const notFoundConfig = architectureConfig.modules.notFound;
+    if (notFoundConfig.enabled) {
+      const notFoundName = notFoundConfig.name;
       generateModuleAndComponent(notFoundName, notFoundName);
     }
 
@@ -45,8 +48,6 @@ function generateModulesAndComponents(pConfig, pPath) {
       addRouteInformation(swProjectConst.APP, null);
     }
     replaceLinesInModule(swProjectConst.APP, null);
-  } else {
-    lightjs.info('      option modules is deactivated, noting todo');
   }
 }
 
@@ -119,7 +120,7 @@ function replaceLinesInModule(module, component) {
   }
 
   const frontendConfig = projectConfig.frontend;
-  const featuresName = frontendConfig.modules.features.name;
+  const featuresName = frontendConfig.architecture.modules.features.name;
   const componentName = module === featuresName ? uppercamelcase(component) : uppercamelcase(module);
 
   // add a comma at the end of component name
@@ -152,7 +153,7 @@ function addRouteInformation(module, component) {
   const moduleName = uppercamelcase(module);
   const routingModuleFile = path.join(projectPath, swProjectConst.SRC, module === swProjectConst.APP ? '' : swProjectConst.APP, module, `${module}-routing.module.ts`);
 
-  const modulesConfig = projectConfig.frontend.modules;
+  const modulesConfig = projectConfig.frontend.architecture.modules;
   const featuresName = modulesConfig.features.name;
   const notFoundConfig = modulesConfig.notFound;
   const componentName = module === featuresName ? uppercamelcase(component) : moduleName;
@@ -181,15 +182,15 @@ function addRouteInformation(module, component) {
  * @param {string} componentName
  */
 function addRoute(module, componentName) {
-  const frontendConfigModules = projectConfig.frontend.modules;
-  const frontendConfigNotFound = frontendConfigModules.notFound;
+  const modulesConfig = projectConfig.frontend.architecture.modules;
+  const notFoundConfig = modulesConfig.notFound;
   let routes = '';
-  if (module === frontendConfigNotFound.name && frontendConfigNotFound.enabled) {
+  if (module === notFoundConfig.name && notFoundConfig.enabled) {
     routes = `{
   component: ${componentName}Component,
   path: '**',
 }`;
-  } else if (module === frontendConfigModules.features.name) {
+  } else if (module === modulesConfig.features.name) {
     routes = `{` + (projectConfig.general.useSecurity ? os.EOL + `  canActivate: [AuthGuard],` : '') + `
   component: ${componentName}Component,
   path: environment.defaultRoute,
