@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2023-02-xx
+
+- [Update dependencies for projects](https://github.com/inpercima/swaaplate/commit/aed78025dd5d105d750e63dd21005ba5938b3208)
+- [Update axios to 1.3.2](https://github.com/inpercima/swaaplate/commit/aed78025dd5d105d750e63dd21005ba5938b3208)
+
 ## [2.5.1] - 2023-01-02
 
 ### Changed
