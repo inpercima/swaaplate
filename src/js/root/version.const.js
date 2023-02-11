@@ -2,11 +2,11 @@
 
 module.exports = Object.freeze({
   // https://www.npmjs.com/package/@angular/material
-  ANGULAR_CDK_MATERIAL: '15.1.3',
+  ANGULAR_CDK_MATERIAL: '15.1.4',
   // https://www.npmjs.com/package/@angular/cli
-  ANGULAR_CLI: '15.1.4',
+  ANGULAR_CLI: '15.1.5',
   // https://www.npmjs.com/package/@angular-eslint/schematics
-  ANGULAR_ESLINT_SCHEMATICS: '15.2.0',
+  ANGULAR_ESLINT_SCHEMATICS: '15.2.1',
   // https://www.npmjs.com/package/@auth0/angular-jwt
   ANGULAR_JWT: '5.1.2',
   APACHE: '2.4',
