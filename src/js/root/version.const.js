@@ -2,9 +2,9 @@
 
 module.exports = Object.freeze({
   // https://www.npmjs.com/package/@angular/material
-  ANGULAR_CDK_MATERIAL: '15.2.0',
+  ANGULAR_CDK_MATERIAL: '15.2.2',
   // https://www.npmjs.com/package/@angular/cli
-  ANGULAR_CLI: '15.2.0',
+  ANGULAR_CLI: '15.2.2',
   // https://www.npmjs.com/package/@angular-eslint/schematics
   ANGULAR_ESLINT_SCHEMATICS: '15.2.1',
   // https://www.npmjs.com/package/@auth0/angular-jwt
@@ -20,13 +20,13 @@ module.exports = Object.freeze({
   // https://www.npmjs.com/package/jsonwebtoken
   JSONWEBTOKEN: '9.0.0',
   // https://www.npmjs.com/package/material-icons
-  MATERIAL_ICONS: '1.13.1',
+  MATERIAL_ICONS: '1.13.2',
   // https://maven.apache.org/plugins/maven-jar-plugin/download.cgi
   MAVEN_JAR_PLUGIN: '3.3.0',
   NODE: '18.14.2',
-  NPM: '8.19.3',
+  NPM: '9.5.0',
   PHP: '8.0',
   // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
-  SPRING_BOOT: '3.0.3',
+  SPRING_BOOT: '3.0.4',
   YARN: '1.22.19',
 });
