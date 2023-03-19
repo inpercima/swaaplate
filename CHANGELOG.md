@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+# [2.5.2] - 2023-03-19
+
+### Changed
+
+- [Update dependencies for projects](https://github.com/inpercima/swaaplate/commit/cef1b23ef34c247c0be4d655f313f65f7f07adb7)
+- [Update Angular to 15.2.4](https://github.com/inpercima/swaaplate/commit/6926a061adb0e633080514831f1b00df5720d43a)
+- [Update axios to 1.3.4](https://github.com/inpercima/swaaplate/commit/33a94f71461f91305db236bcf9870dc9ba163230)
+
 ## [2.5.1] - 2023-01-02
 
 ### Changed

@@ -22,7 +22,7 @@ You can choose between `none` (means angular only), `nestjs`, `php`, `java` or `
 
 ### Angular CLI
 
-* `angular-cli 15.0.1` or higher
+* `angular-cli 15.2.4` or higher
 
 ### Nestjs CLI (if backend `nestjs` is used)
 
@@ -30,8 +30,8 @@ You can choose between `none` (means angular only), `nestjs`, `php`, `java` or `
 
 ### Node, npm or yarn
 
-* `node 18.10.0` or higher in combination with
-  * `npm 8.19.2` or higher or
+* `node 18.14.2` or higher in combination with
+  * `npm 9.5.0` or higher or
   * `yarn 1.22.19` or higher, used in this repository
 
 ## Getting started
