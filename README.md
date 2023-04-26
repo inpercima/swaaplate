@@ -22,7 +22,7 @@ You can choose between `none` (means angular only), `nestjs`, `php`, `java` or `
 
 ### Angular CLI
 
-* `@angular/cli 15.2.6` or higher
+* `@angular/cli 15.2.7` or higher
 
 ### Nestjs CLI (if backend `nestjs` is used)
 

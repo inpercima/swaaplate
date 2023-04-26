@@ -4,7 +4,7 @@ module.exports = Object.freeze({
   // https://www.npmjs.com/package/@angular/material
   ANGULAR_CDK_MATERIAL: '15.2.8',
   // https://www.npmjs.com/package/@angular/cli
-  ANGULAR_CLI: '15.2.6',
+  ANGULAR_CLI: '15.2.7',
   // https://www.npmjs.com/package/@angular-eslint/schematics
   ANGULAR_ESLINT_SCHEMATICS: '15.2.1',
   // https://www.npmjs.com/package/@auth0/angular-jwt
