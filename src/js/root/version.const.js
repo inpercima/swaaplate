@@ -2,11 +2,11 @@
 
 module.exports = Object.freeze({
   // https://www.npmjs.com/package/@angular/material
-  ANGULAR_CDK_MATERIAL: '15.2.8',
+  ANGULAR_CDK_MATERIAL: '16.0.1',
   // https://www.npmjs.com/package/@angular/cli
-  ANGULAR_CLI: '15.2.7',
+  ANGULAR_CLI: '16.0.1',
   // https://www.npmjs.com/package/@angular-eslint/schematics
-  ANGULAR_ESLINT_SCHEMATICS: '15.2.1',
+  ANGULAR_ESLINT_SCHEMATICS: '16.0.1',
   // https://www.npmjs.com/package/@auth0/angular-jwt
   ANGULAR_JWT: '5.1.2',
   APACHE: '2.4',
@@ -20,7 +20,7 @@ module.exports = Object.freeze({
   // https://www.npmjs.com/package/jsonwebtoken
   JSONWEBTOKEN: '9.0.0',
   // https://www.npmjs.com/package/material-icons
-  MATERIAL_ICONS: '1.13.5',
+  MATERIAL_ICONS: '1.13.6',
   // https://maven.apache.org/plugins/maven-jar-plugin/download.cgi
   MAVEN_JAR_PLUGIN: '3.3.0',
   NODE: '18.14.2',
