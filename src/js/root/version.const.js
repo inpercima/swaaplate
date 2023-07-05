@@ -2,11 +2,11 @@
 
 module.exports = Object.freeze({
   // https://www.npmjs.com/package/@angular/material
-  ANGULAR_CDK_MATERIAL: '16.0.1',
+  ANGULAR_CDK_MATERIAL: '16.1.3',
   // https://www.npmjs.com/package/@angular/cli
-  ANGULAR_CLI: '16.0.1',
+  ANGULAR_CLI: '16.1.3',
   // https://www.npmjs.com/package/@angular-eslint/schematics
-  ANGULAR_ESLINT_SCHEMATICS: '16.0.1',
+  ANGULAR_ESLINT_SCHEMATICS: '16.0.3',
   // https://www.npmjs.com/package/@auth0/angular-jwt
   ANGULAR_JWT: '5.1.2',
   APACHE: '2.4',
@@ -20,13 +20,13 @@ module.exports = Object.freeze({
   // https://www.npmjs.com/package/jsonwebtoken
   JSONWEBTOKEN: '9.0.0',
   // https://www.npmjs.com/package/material-icons
-  MATERIAL_ICONS: '1.13.6',
+  MATERIAL_ICONS: '1.13.8',
   // https://maven.apache.org/plugins/maven-jar-plugin/download.cgi
   MAVEN_JAR_PLUGIN: '3.3.0',
-  NODE: '18.14.2',
-  NPM: '9.5.0',
+  NODE: '18.16.0',
+  NPM: '9.5.1',
   PHP: '8.0',
   // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
-  SPRING_BOOT: '3.0.6',
+  SPRING_BOOT: '3.1.1',
   YARN: '1.22.19',
 });
