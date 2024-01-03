@@ -283,6 +283,7 @@ function replaceSectionsInFiles() {
   const indexHtmlPath = path.join(srcPath, swProjectConst.INDEX_HTML);
   lightjs.replacement('(lang=")en', `$1${frontendConfig.language}`, [indexHtmlPath]);
   lightjs.replacement('  <title>.*<\/title>', swProjectConst.EMPTY, [indexHtmlPath]);
+  lightjs.replacement('<body>', '<body class="mat-typography mat-app-background">');
   lightjs.replacement(swProjectConst.EOL_EXPRESSION, os.EOL, [indexHtmlPath]);
 
   const prefix = frontendConfig.prefix;
