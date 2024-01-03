@@ -1,5 +1,5 @@
-import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, HostBinding } from '@angular/core';{{PROJECT.ROUTESMODULE}}
+import { Component, Inject } from '@angular/core';{{PROJECT.ROUTESMODULE}}
+import { DOCUMENT } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 
 {{PROJECT.APPROUTINGMODULE}}{{PROJECT.FEATURESROUTINGMODULE}}import { environment } from '../environments/environment';
@@ -13,13 +13,9 @@ export class AppComponent {
 
   public appname: string;{{PROJECT.ROUTESDECLARATION}}
 
-  // Adds the custom theme to the app root.
-  @HostBinding('class') class = `${environment.theme}-theme`;
-
-  public constructor(private titleService: Title, public overlayContainer: OverlayContainer) {
+  public constructor(private titleService: Title, @Inject(DOCUMENT) private document: Document) {
     this.appname = environment.appname;{{PROJECT.ROUTESALLOCATION}}
     this.titleService.setTitle(this.appname);
-    // Adds the custom theme to dialogs.
-    this.overlayContainer.getContainerElement().classList.add(`${environment.theme}-theme`);
+    this.document.body.classList.add(`${environment.theme}-theme`);
   }
 }
